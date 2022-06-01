@@ -118,12 +118,6 @@ INSERT INTO Review values(101, 10, 3, '2022-05-16', '1684yoon');
 
 -- view
 -- 1. 뮤지컬 이름, 해당 뮤지컬의 평균 별점
-CREATE VIEW Ratings AS 
-SELECT Musical.Title, avg(Review.Rate) as Rate
-FROM Review, Musical
-GROUP BY Musical.Title
-HAVING Musical.ID = Review.Musical_id;
-
 SELECT Musical.Title, avg(Review.Rate) as Rate
 FROM Review, Musical
 WHERE Musical.ID = Review.Musical_id
@@ -135,7 +129,7 @@ SELECT Title
 FROM Musical
 WHERE Price <= 100000;
 
-CREATE VIEW 10만원부터_15만원 AS
+CREATE VIEW 10만원에서15만원 AS
 SELECT Title
 FROM Musical
 WHERE Price between 100000 and 150000;
