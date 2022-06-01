@@ -12,9 +12,9 @@ public class MainFrame extends JFrame {
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new FlowLayout());
 
-//		AuthenticationPanel authPanel = new AuthenticationPanel();
-//
-//		contentPane.add(authPanel);
+		AuthenticationPanel authPanel = new AuthenticationPanel();
+
+		contentPane.add(authPanel);
 
 		setVisible(true);
 	}
