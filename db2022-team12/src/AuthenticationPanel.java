@@ -18,27 +18,30 @@ import javax.swing.JTextField;
 public class AuthenticationPanel extends JPanel {
 
 	private JDialog signUpDialog;
-	private JPanel authPanel;
+	private JPanel authPanel, noticePanel, signInTextFieldPanel;
 	private JButton signInBtn, signUpBtn, submitBtn;
 	private JTextField idField, nameField, phoneField, emailField, addressField;
 	private JPasswordField pwField;
 	private JLabel noticeLabel, idLabel, pwLabel, nameLabel, phoneLabel, emailLabel, addressLabel;
 
 	// 유저 정보 검색 쿼리
-	private static String SIGNIN_QUERY = "SELECT pw FROM member WHERE id = ?";
-	
+	private static String SIGNIN_QUERY = "SELECT pw, name FROM member WHERE id = ?";
+
 	// 유저 정보 삽입 쿼리
 	// id, pw, name, phone, email, address
 	private static String SIGNUP_QUERY = "INSERT INTO member VALUES (?, ?, ?, ?, ?, ?)";
 
 	public AuthenticationPanel() {
+		this.setLayout(new GridLayout(2, 1));
+		
 		authPanel = new JPanel();
-		JPanel signInPanel = new JPanel(new GridLayout(2, 1));
-		JPanel signInTextFieldPanel = new JPanel(new GridLayout(2, 3));
+		noticePanel = new JPanel();
+		signInTextFieldPanel = new JPanel(new GridLayout(2, 3));
 
 		noticeLabel = new JLabel();
-		signInPanel.add(noticeLabel);
-		
+		noticePanel.add(noticeLabel);
+		this.add(noticePanel);
+
 		idLabel = new JLabel("ID: ");
 		idField = new JTextField();
 		pwLabel = new JLabel("Password: ");
@@ -48,14 +51,13 @@ public class AuthenticationPanel extends JPanel {
 		signInTextFieldPanel.add(idField);
 		signInTextFieldPanel.add(pwLabel);
 		signInTextFieldPanel.add(pwField);
-		signInPanel.add(signInTextFieldPanel);
-		
+
 		signInBtn = new JButton("로그인");
 		signInBtn.addActionListener(new signInBtnListener());
 		signUpBtn = new JButton("회원가입");
 		signUpBtn.addActionListener(new signUpBtnListener());
 
-		authPanel.add(signInPanel);
+		authPanel.add(signInTextFieldPanel);
 		authPanel.add(signInBtn);
 		authPanel.add(signUpBtn);
 		this.add(authPanel);
@@ -69,32 +71,37 @@ public class AuthenticationPanel extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			String id = idField.getText().strip();
 			String pw = String.valueOf(pwField.getPassword()).strip();
-			
+
 			// 사용자 입력 유효성 검증
 			if (id.isEmpty()) {
 				noticeLabel.setText("아이디를 입력해주세요");
 			} else if (pw.isEmpty()) {
 				noticeLabel.setText("비밀번호를 입력해주세요");
 			} else {
-				
+
 				// 모든 필드가 유효하다면 데이터베이스 연결
 				try (Connection conn = new ConnectionClass().getConnection();
 						PreparedStatement preStmt = conn.prepareStatement(SIGNIN_QUERY);) {
 					// 유저 정보 검색을 위한 쿼리
 					preStmt.setString(1, id);
 					ResultSet res = preStmt.executeQuery();
-					
+
 					// 해당 아이디의 유저가 존재하는지 확인
 					if (!res.next()) {
 						noticeLabel.setText("존재하지 않는 아이디입니다");
 					} else {
-						// 비밀번호 검증
-						String stored_pw = res.getString("pw");
-						if (!pw.equals(stored_pw)) {
+						// 유저 정보 저장
+						String user_pw = res.getString("pw");
+						if (!pw.equals(user_pw)) {
 							noticeLabel.setText("잘못된 비밀번호입니다");
 						} else {
 							// 로그인 성공
+							User.ID = id;
+							User.NAME = res.getString("name");
+
+							// 로그인 및 회원가입 패널 숨기기
 							authPanel.setVisible(false);
+							noticeLabel.setText(User.NAME + "님 안녕하세요 :)");
 						}
 					}
 				} catch (SQLException sqle) {
@@ -213,10 +220,10 @@ public class AuthenticationPanel extends JPanel {
 					// ID(Primary Key) 중복 에러 처리
 					if (error == ConnectionClass.ER_DUP_ENTRY || error == ConnectionClass.ER_DUP_KEY)
 						noticeLabel.setText("중복된 아이디입니다");
-					
+
 					System.out.println(sqle);
 				}
-				
+
 				// 회원가입 dialog 닫기
 				signUpDialog.dispose();
 			}
