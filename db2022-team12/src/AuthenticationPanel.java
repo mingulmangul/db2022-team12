@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 
 public class AuthenticationPanel extends JPanel {
 
+	private JDialog signUpDialog;
 	private JButton signInBtn, signUpBtn, submitBtn;
 	private JTextField idField, nameField, phoneField, emailField, addressField;
 	private JPasswordField pwField;
@@ -61,9 +62,9 @@ public class AuthenticationPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JDialog d = new JDialog();
-			d.setSize(300, 400);
-			d.setLayout(new GridLayout(3, 1));
+			signUpDialog = new JDialog();
+			signUpDialog.setSize(300, 400);
+			signUpDialog.setLayout(new GridLayout(3, 1));
 
 			JPanel topPanel = new JPanel();
 			JPanel midPanel = new JPanel(new GridLayout(6, 2));
@@ -101,29 +102,46 @@ public class AuthenticationPanel extends JPanel {
 			submitBtn.addActionListener(new submitBtnListener());
 			botPanel.add(submitBtn);
 
-			d.add(topPanel);
-			d.add(midPanel);
-			d.add(botPanel);
-			d.setVisible(true);
+			signUpDialog.add(topPanel);
+			signUpDialog.add(midPanel);
+			signUpDialog.add(botPanel);
+			signUpDialog.setVisible(true);
 		}
 
 	}
 
 	private class submitBtnListener implements ActionListener {
 
+		private boolean isValidPhone(String phone) {
+			String phonePattern = "^\\d{2,3}-\\d{3,4}-\\d{4}$";
+			return Pattern.matches(phonePattern, phone);
+		}
+
+		private boolean isValidEmail(String email) {
+			String emailPattern = "^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\\.[a-zA-Z]{2,3}$";
+			return Pattern.matches(emailPattern, email);
+		}
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String id = idField.getText().strip();
 			String pw = String.valueOf(pwField.getPassword()).strip();
+			String name = nameField.getText().strip();
+			String phone = phoneField.getText().strip();
+			String email = emailField.getText().strip();
+			String address = addressField.getText().strip();
+
 			if (id.isEmpty()) {
-				noticeLabel.setText("id is null");
+				noticeLabel.setText("아이디를 입력해주세요");
 			} else if (pw.isEmpty()) {
-				noticeLabel.setText("pw is null");
+				noticeLabel.setText("비밀번호를 입력해주세요");
+			} else if (name.isEmpty()) {
+				noticeLabel.setText("이름을 입력해주세요");
+			} else if (!this.isValidPhone(phone)) {
+				noticeLabel.setText("잘못된 전화번호입니다");
+			} else if (!this.isValidEmail(email)) {
+				noticeLabel.setText("잘못된 이메일 주소입니다");
 			} else {
-				String name = nameField.getText().strip();
-				String phone = phoneField.getText().strip();
-				String email = emailField.getText().strip();
-				String address = addressField.getText().strip();
 
 				try (Connection conn = new ConnectionClass().getConnection();
 						PreparedStatement preStmt = conn.prepareStatement(SIGNUP_QUERY);) {
@@ -135,8 +153,14 @@ public class AuthenticationPanel extends JPanel {
 					preStmt.setString(6, address);
 					preStmt.executeUpdate();
 				} catch (SQLException sqle) {
+					int error = sqle.getErrorCode();
+					if (error == ConnectionClass.ER_DUP_ENTRY || error == ConnectionClass.ER_DUP_KEY)
+						noticeLabel.setText("중복된 아이디입니다");
+					
 					System.out.println(sqle);
 				}
+				
+				signUpDialog.dispose();
 			}
 		}
 
