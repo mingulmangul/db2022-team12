@@ -7,7 +7,7 @@ public class MainFrame extends JFrame {
 	public MainFrame() {
 		setTitle("프로그램");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(300, 300);
+		setSize(500, 500);
 
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new FlowLayout());
