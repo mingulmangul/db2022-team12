@@ -25,11 +25,11 @@ public class AuthenticationPanel extends JPanel {
 	private JLabel noticeLabel, idLabel, pwLabel, nameLabel, phoneLabel, emailLabel, addressLabel;
 
 	// 유저 정보 검색 쿼리
-	private static String SIGNIN_QUERY = "SELECT pw, name FROM member WHERE id = ?";
+	private final String SIGNIN_QUERY = "SELECT pw, name FROM member WHERE id = ?";
 
 	// 유저 정보 삽입 쿼리
 	// id, pw, name, phone, email, address
-	private static String SIGNUP_QUERY = "INSERT INTO member VALUES (?, ?, ?, ?, ?, ?)";
+	private final String SIGNUP_QUERY = "INSERT INTO member VALUES (?, ?, ?, ?, ?, ?)";
 
 	public AuthenticationPanel() {
 		this.setLayout(new GridLayout(2, 1));
