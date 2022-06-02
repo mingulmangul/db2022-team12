@@ -122,12 +122,12 @@ public class AuthenticationPanel extends JPanel {
 			signUpDialog.setSize(300, 400);
 			signUpDialog.setLayout(new GridLayout(3, 1));
 
-			JPanel topPanel = new JPanel();
-			JPanel midPanel = new JPanel(new GridLayout(6, 2));
-			JPanel botPanel = new JPanel();
+			JPanel noticePanel = new JPanel();
+			JPanel inputPanel = new JPanel(new GridLayout(6, 2));
+			JPanel btnPanel = new JPanel();
 
 			noticeLabel = new JLabel();
-			topPanel.add(noticeLabel);
+			noticePanel.add(noticeLabel);
 
 			idLabel = new JLabel("ID: ");
 			idField = new JTextField();
@@ -141,26 +141,26 @@ public class AuthenticationPanel extends JPanel {
 			emailField = new JTextField("example@example.com");
 			addressLabel = new JLabel("주소: ");
 			addressField = new JTextField("서울시 서대문구 이화여대길");
-			midPanel.add(idLabel);
-			midPanel.add(idField);
-			midPanel.add(pwLabel);
-			midPanel.add(pwField);
-			midPanel.add(nameLabel);
-			midPanel.add(nameField);
-			midPanel.add(phoneLabel);
-			midPanel.add(phoneField);
-			midPanel.add(emailLabel);
-			midPanel.add(emailField);
-			midPanel.add(addressLabel);
-			midPanel.add(addressField);
+			inputPanel.add(idLabel);
+			inputPanel.add(idField);
+			inputPanel.add(pwLabel);
+			inputPanel.add(pwField);
+			inputPanel.add(nameLabel);
+			inputPanel.add(nameField);
+			inputPanel.add(phoneLabel);
+			inputPanel.add(phoneField);
+			inputPanel.add(emailLabel);
+			inputPanel.add(emailField);
+			inputPanel.add(addressLabel);
+			inputPanel.add(addressField);
 
 			submitBtn = new JButton("가입하기");
 			submitBtn.addActionListener(new submitBtnListener());
-			botPanel.add(submitBtn);
+			btnPanel.add(submitBtn);
 
-			signUpDialog.add(topPanel);
-			signUpDialog.add(midPanel);
-			signUpDialog.add(botPanel);
+			signUpDialog.add(noticePanel);
+			signUpDialog.add(inputPanel);
+			signUpDialog.add(btnPanel);
 			signUpDialog.setVisible(true);
 		}
 
