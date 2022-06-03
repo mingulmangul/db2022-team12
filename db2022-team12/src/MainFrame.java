@@ -15,10 +15,10 @@ public class MainFrame extends JFrame {
 		contentPane.setLayout(new GridLayout(5, 1));
 
 		AuthenticationPanel authPanel = new AuthenticationPanel();
-		MusicalRegPanel musicalRegPanel = new MusicalRegPanel();
+		TicketPanel ticketPanel = new TicketPanel("킹키부츠");
 
 		contentPane.add(authPanel);
-		contentPane.add(musicalRegPanel);
+		contentPane.add(ticketPanel);
 
 		setVisible(true);
 	}
