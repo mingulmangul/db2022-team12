@@ -21,7 +21,7 @@ CREATE TABLE Theater(
     Address VARCHAR(100) NOT NULL,
     Phone CHAR(12) NOT NULL,
     Size INT NOT NULL,
-    PRIMARY KEY(Theater_name),
+    PRIMARY KEY(Name),
     INDEX Theater_name_idx(Name) 
 );
 
