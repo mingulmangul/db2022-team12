@@ -34,7 +34,7 @@ CREATE TABLE Musical(
     Price INT NOT NULL,
     Summary VARCHAR(100),
     PRIMARY KEY(ID),
-    FOREIGN KEY(Theater_name) REFERENCES Theater(Theater_name),
+    FOREIGN KEY(Theater_name) REFERENCES Theater(Name),
     INDEX Musical_title_idx(Title)
 );
 
@@ -47,7 +47,7 @@ CREATE TABLE Ticket(
     PRIMARY KEY(ID),
     FOREIGN KEY(Musical_id) REFERENCES Musical(ID),
     FOREIGN KEY(Member_id) REFERENCES Member(ID),
-    FOREIGN KEY(Theater_name) REFERENCES Theater(Theater_name),
+    FOREIGN KEY(Theater_name) REFERENCES Theater(Name),
     INDEX Musical_id_idx(Musical_id)
 );
 
