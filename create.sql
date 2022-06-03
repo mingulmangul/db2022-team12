@@ -12,7 +12,7 @@ CREATE TABLE Member(
     Member_name VARCHAR(20) NOT NULL,
     Birthday DATE NOT NULL,
     Phone char(13) NOT NULL,
-    Email VARCHAR(20) NOTgit NULL,
+    Email VARCHAR(20) NOT NULL,
     Member_address varchar(100),
     PRIMARY KEY(ID)
 );

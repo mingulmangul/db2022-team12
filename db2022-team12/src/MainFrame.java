@@ -5,7 +5,7 @@ import javax.swing.JFrame;
 public class MainFrame extends JFrame {
 
 	public MainFrame() {
-		setTitle("í”„ë¡œê·¸ëž¨");
+		setTitle("ÇÁ·Î±×·¥");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(500, 500);
 
