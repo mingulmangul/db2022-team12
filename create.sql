@@ -22,7 +22,7 @@ CREATE TABLE Theater(
     Phone CHAR(12) NOT NULL,
     Size INT NOT NULL,
     PRIMARY KEY(Theater_name),
-    INDEX Theater_name_idx(Theater_name) 
+    INDEX Theater_name_idx(Name) 
 );
 
 CREATE TABLE Musical(
