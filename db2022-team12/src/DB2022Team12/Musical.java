@@ -11,7 +11,8 @@ class Musical {
 	// 뮤지컬 날짜 정보를 저장하는 맵: <공연 날짜, 같은 날짜에 대한 공연 시각들을 저장하는 리스트>
 	private HashMap<String, Vector<String>> dateInfo;
 	
-	private String title, summary, price, score, remainSeat;
+	private String title, summary, price, score;
+	private int remainSeat;
 	private String theaterName, theaterAddress, theaterPhone, theaterSize;
 
 	// 뮤지컬 관련 정보를 모두 가져오는 쿼리 (뮤지컬 정보 + 평균 별점 정보 + 상영 극장 정보)
@@ -40,7 +41,7 @@ class Musical {
 			rs.next();
 			this.title = rs.getString("title");
 			this.price = rs.getString("price");
-			this.remainSeat = rs.getString("remain_seat");
+			this.remainSeat = rs.getInt("remain_seat");
 			this.summary = rs.getString("summary");
 			this.score = rs.getString("score");
 			this.theaterName = rs.getString("theater_name");
@@ -96,7 +97,7 @@ class Musical {
 		return score;
 	}
 
-	String getRemainSeat() {
+	int getRemainSeat() {
 		return remainSeat;
 	}
 

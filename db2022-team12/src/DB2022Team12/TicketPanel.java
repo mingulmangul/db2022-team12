@@ -51,9 +51,21 @@ class TicketPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			// 다이얼로그 제목
+			String dialogTitle = "티켓 예매 | " + musical.getTitle();
+			
+			// 미로그인 유저이거나 남은 좌석이 없는 경우, 예매 불가 알림
+			if (User.getId() == null) {
+				NotificationClass.createNotifDialog(dialogTitle, "로그인이 필요합니다");
+				return;
+			} else if (musical.getRemainSeat() == 0) {
+				NotificationClass.createNotifDialog(dialogTitle, "해당 공연은 매진되었습니다 😢");
+				return;
+			}
+			
 			// 티켓 예매 다이얼로그 생성
 			ticketDialog = new JDialog();
-			ticketDialog.setTitle("티켓 예매 | " + musical.getTitle());
+			ticketDialog.setTitle(dialogTitle);
 			ticketDialog.setSize(500, 500);
 			ticketDialog.setLayout(new GridLayout(3, 1));
 
@@ -64,8 +76,6 @@ class TicketPanel extends JPanel {
 
 			noticeLabel = new JLabel("예매 티켓의 정보를 입력해주세요");
 			noticePanel.add(noticeLabel);
-
-			// TODO: 남은 좌석 수가 0인 경우 예매 불가 알리기
 
 			musicalLabel1 = new JLabel("공연 제목");
 			musicalLabel2 = new JLabel(musical.getTitle());
@@ -86,7 +96,7 @@ class TicketPanel extends JPanel {
 			theaterLabel1 = new JLabel("극장");
 			theaterLabel2 = new JLabel(musical.getTheaterName());
 			remainLabel1 = new JLabel("남은 좌석 수");
-			remainLabel2 = new JLabel(musical.getRemainSeat());
+			remainLabel2 = new JLabel(Integer.toString(musical.getRemainSeat()));
 			priceLabel1 = new JLabel("예매가");
 			priceLabel2 = new JLabel(musical.getPrice());
 
@@ -159,6 +169,9 @@ class TicketPanel extends JPanel {
 			try (Connection conn = new ConnectionClass().getConnection();
 					PreparedStatement getStmt = conn.prepareStatement(GET_DATE_ID_QUERY);
 					PreparedStatement insertStmt = conn.prepareStatement(INSERT_TICKET_QUERY);) {
+				
+				// TODO: 남은 좌석 수 차감 쿼리 추가하기 + 트랜잭션으로 묶기
+				
 				// 날짜 정보 가져오기
 				getStmt.setString(1, musical.getTitle());
 				getStmt.setString(2, selectedDate);
