@@ -23,8 +23,6 @@ public class TicketPanel extends JPanel {
 
 	private String musical;
 
-	// 뮤지컬 정보를 가져오는 쿼리
-	private final String GET_MUSICAL_QUERY = "SELECT * FROM musical WHERE title = ?";
 
 	public TicketPanel(String musical) {
 		this.musical = musical;
@@ -38,6 +36,8 @@ public class TicketPanel extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// 예매하려는 뮤지컬 정보 가져오기
+//			getMusicalInfo();
+			new Musical(musical);
 
 			// 티켓 예매 다이얼로그 생성
 			ticketDialog = new JDialog();
