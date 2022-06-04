@@ -57,18 +57,22 @@ public class MusicalPanel extends JPanel{
 			  String summary = res.getString("Summary");
 
 			  musicalList.add(title + "  " + summary + " 보러가기 ");
+
 			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		return musicalList;
+
 	}
 	// title search
 	public Vector<String> getMusicals(String query, String searchkey){
 		Connection conn;
 		Vector<String> musicalList = new Vector<String>();
+
 		
 		try {
 			conn = new ConnectionClass().getConnection();
@@ -82,6 +86,7 @@ public class MusicalPanel extends JPanel{
 			  String summary = res.getString("Summary");
 
 			  musicalList.add(title + "  " + summary + " 보러가기 ");
+
 			}
 			
 		} catch (SQLException e) {
@@ -89,6 +94,7 @@ public class MusicalPanel extends JPanel{
 			e.printStackTrace();
 		}
 		return musicalList;
+
 	}
 	
 	public MusicalPanel() {
@@ -103,9 +109,11 @@ public class MusicalPanel extends JPanel{
 		//listPanel.setSize(1200, 250);
 		this.add(listPanel, BorderLayout.SOUTH);
 		
+
 		searchPanel.setLayout(new GridLayout(2,3));
 		
 		searchLabel = new JLabel("                                         뮤지컬 조회 : ");
+
 		searchPanel.add(searchLabel);
 		
 		searchTextField = new JTextField(20);
@@ -143,19 +151,15 @@ public class MusicalPanel extends JPanel{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String title = searchTextField.getText().strip();
+
 			// 사용자 입력 유효성 검증
 			if (title.isEmpty()) {
 				searchTextField.setText("뮤지컬 제목을 입력해주세요.");
 			} else {
 				
 				musicalList.setListData(getMusicals(SEARCH_MUSICAL_QUERY,title));
-				/*
-				try (Connection conn = new ConnectionClass().getConnection();
-						PreparedStatement preStmt = conn.prepareStatement(SEARCH_MUSICAL_QUERY);) {
-					musicalList.setListData(getMusicals(SEARCH_MUSICAL_QUERY,title));
-				} catch (SQLException sqle) {
-					System.out.println(sqle);
-				} */
+
+
 				
 			}
 		}
@@ -185,7 +189,7 @@ public class MusicalPanel extends JPanel{
 	MouseListener mouseListener = new MouseAdapter() {
 	    public void mouseClicked(MouseEvent e) {
 	        if (e.getClickCount() == 2) {
-	        	
+
 	        	//제목가져오기
 	        	String selectedMusical = musicalList.getSelectedValue();
 	        	String [] text = selectedMusical.split("-");
@@ -209,7 +213,6 @@ public class MusicalPanel extends JPanel{
     			topPanel.add(theaterLabel);
     			topPanel.add(summaryLabel);
     			topPanel.add(reviewLabel);
-
     			
     			buyBtn= new JButton("예매하기");
     			buyBtn.addActionListener(new buyBtnListener());
