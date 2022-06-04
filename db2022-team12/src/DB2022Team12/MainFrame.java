@@ -15,7 +15,7 @@ class MainFrame extends JFrame {
 		contentPane.setLayout(new GridLayout(5, 1));
 
 		DB2022Team12.AuthenticationPanel authPanel = new AuthenticationPanel();
-		DB2022Team12.TicketPanel ticketPanel = new TicketPanel(new Musical("아이다"));
+		DB2022Team12.TicketPanel ticketPanel = new TicketPanel(new Musical("킹키부츠"));
 
 		contentPane.add(authPanel);
 		contentPane.add(ticketPanel);

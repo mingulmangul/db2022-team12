@@ -21,9 +21,11 @@ class Musical {
 			+ "JOIN theater ON musical.theater_name = theater.name "
 			+ "WHERE musical.title = ?";
 	
+	// 뮤지컬 날짜 정보를 가져오는 쿼리
 	private final static String GET_MUSICAL_DATE_QUERY = "SELECT * "
 			+ "FROM musical NATURAL JOIN musical_date "
-			+ "WHERE title = ?";
+			+ "WHERE title = ?"
+			+ "ORDER BY date, time";
 	
 	public Musical(String musical) {
 		try (
@@ -67,9 +69,16 @@ class Musical {
 			System.out.println(sqle);
 		}
 	}
-
-	HashMap<String, Vector<String>> getDateInfo() {
-		return dateInfo;
+	
+	Vector<String> getDateVector() {
+		Vector<String> dateVector = new Vector<>();
+		for (String date: dateInfo.keySet())
+			dateVector.add(date);
+		return dateVector;
+	}
+	
+	Vector<String> getTimeVector(String date) {
+		return dateInfo.get(date);
 	}
 
 	String getTitle() {
