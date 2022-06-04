@@ -1,21 +1,21 @@
+package DB2022Team12;
 import java.awt.Container;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
 import javax.swing.JFrame;
 
-public class MainFrame extends JFrame {
+class MainFrame extends JFrame {
 
 	public MainFrame() {
-		setTitle("ÇÁ·Î±×·¥");
+		setTitle("í”„ë¡œê·¸ëž¨");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(500, 500);
 
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new GridLayout(5, 1));
 
-		AuthenticationPanel authPanel = new AuthenticationPanel();
-		TicketPanel ticketPanel = new TicketPanel("Å·Å°ºÎÃ÷");
+		DB2022Team12.AuthenticationPanel authPanel = new AuthenticationPanel();
+		DB2022Team12.TicketPanel ticketPanel = new TicketPanel("í‚¹í‚¤ë¶€ì¸ ");
 
 		contentPane.add(authPanel);
 		contentPane.add(ticketPanel);
