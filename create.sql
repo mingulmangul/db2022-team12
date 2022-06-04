@@ -48,7 +48,7 @@ CREATE TABLE Ticket(
     FOREIGN KEY(Musical_id) REFERENCES Musical(ID),
     FOREIGN KEY(Member_id) REFERENCES Member(ID),
     FOREIGN KEY(Theater_name) REFERENCES Theater(Name),
-    INDEX Musical_id_idx(Musical_id)
+    INDEX Ticket_member_idx(Member_id)
 );
 
 CREATE TABLE Review(
@@ -59,8 +59,8 @@ CREATE TABLE Review(
     Member_id VARCHAR(20) NOT NULL,
     PRIMARY KEY(ID),
     FOREIGN KEY(Musical_id) REFERENCES Musical(ID),
-    FOREIGN KEY(Member_id) REFERENCES Member(ID)
-    INDEX Musical_id_idx(Musical_id)
+    FOREIGN KEY(Member_id) REFERENCES Member(ID),
+    INDEX Review_musical_idx(Musical_id)
 );
 
 -- insert Member
@@ -94,44 +94,43 @@ INSERT INTO Musical values(10, '마타하리', '2022-06-15', '19:00:00', '샤롯
 
 -- insert Ticket
 -- INSERT INTO Ticket values(ID, Musical_id, Member_id, Theater_name, Order_date);
--- 티켓 아이디는 뮤지컬 아이디 + 순서 숫자
-INSERT INTO Ticket values(21, 2, 'ga2059', '충무아트센터', '2022-05-28');
-INSERT INTO Ticket values(31, 3, '19soo10', '드림아트센터', '2022-05-31');
-INSERT INTO Ticket values(51, 5, '19soo10', '예술의전당', '2022-06-02');
-INSERT INTO Ticket values(71, 7, '1684yoon', '블루스퀘어', '2022-06-02');
-INSERT INTO Ticket values(72, 7, 'liu1771', '블루스퀘어', '2022-06-04');
+INSERT INTO Ticket values(1, 2, 'ga2059', '충무아트센터', '2022-05-28');
+INSERT INTO Ticket values(2, 3, '19soo10', '드림아트센터', '2022-05-31');
+INSERT INTO Ticket values(3, 5, '19soo10', '예술의전당', '2022-06-02');
+INSERT INTO Ticket values(4, 7, '1684yoon', '블루스퀘어', '2022-06-02');
+INSERT INTO Ticket values(5, 7, 'liu1771', '블루스퀘어', '2022-06-04');
 
 -- insert Review
 -- INSERT INTO Review values(ID, Musical_id, Rate, Written_at, Member_id);
--- 리뷰 아이디는 뮤지컬 아이디 + 순서 숫자
 -- 킹키부츠=3.5 비더슈단트=3.5 데스노트=0 아이다=4 마타하리=3
-INSERT INTO Review values(21, 2, 4, '2022-05-21', 'ga2059');
-INSERT INTO Review values(22, 2, 3, '2022-05-26', 'min1905');
-INSERT INTO Review values(41, 4, 5, '2022-06-09', '19soo10');
-INSERT INTO Review values(42, 4, 2, '2022-06-12', 'min1905');
-INSERT INTO Review values(81, 8, 4, '2022-05-26', '1684yoon');
-INSERT INTO Review values(101, 10, 3, '2022-05-16', '1684yoon');
+INSERT INTO Review values(1, 2, 4, '2022-05-21', 'ga2059');
+INSERT INTO Review values(2, 2, 3, '2022-05-26', 'min1905');
+INSERT INTO Review values(3, 4, 5, '2022-06-09', '19soo10');
+INSERT INTO Review values(4, 4, 2, '2022-06-12', 'min1905');
+INSERT INTO Review values(5, 8, 4, '2022-05-26', '1684yoon');
+INSERT INTO Review values(6, 10, 3, '2022-05-16', '1684yoon');
 
 
 -- view
 -- 1. 뮤지컬 이름, 해당 뮤지컬의 평균 별점
-SELECT Musical.Title, avg(Review.Rate) as Rate
+CREATE VIEW avg_rate AS
+SELECT Musical.Title, avg(Review.Rate) as Avg_rate
 FROM Review, Musical
 WHERE Musical.ID = Review.Musical_id
 GROUP BY Musical.Title;
 
 -- 2. 가격대, 뮤지컬 이름 10만원 이하, ~15만원, 그 이상
 CREATE VIEW under_10 AS
-SELECT Title
+SELECT DISTINCT Title
 FROM Musical
 WHERE Price <= 100000;
 
 CREATE VIEW between10_15 AS
-SELECT Title
+SELECT DISTINCT Title
 FROM Musical
 WHERE Price between 100000 and 150000;
 
 CREATE VIEW over_15 AS
-SELECT Title
+SELECT DISTINCT Title
 FROM Musical
 WHERE Price > 150000;
