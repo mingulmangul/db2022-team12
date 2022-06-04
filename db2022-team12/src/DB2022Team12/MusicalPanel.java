@@ -64,6 +64,7 @@ public class MusicalPanel extends JPanel{
 			  String summary = res.getString("Summary");
 
 			  musicalList.add(title + "  " + summary + " 보러가기 ");
+
 			}
 			
 		} catch (SQLException e) {
@@ -74,11 +75,13 @@ public class MusicalPanel extends JPanel{
 			musicalList.add("검색하신 뮤지컬이 존재하지 않습니다.");
 		}
 		return musicalList;
+
 	}
 	// title search
 	public Vector<String> getMusicals(String query, String searchkey){
 		Connection conn;
 		Vector<String> musicalList = new Vector<String>();
+
 		
 		try {
 			conn = new ConnectionClass().getConnection();
@@ -92,6 +95,7 @@ public class MusicalPanel extends JPanel{
 			  String summary = res.getString("Summary");
 
 			  musicalList.add(title + "  " + summary + " 보러가기 ");
+
 			}
 			
 		} catch (SQLException e) {
@@ -103,6 +107,7 @@ public class MusicalPanel extends JPanel{
 			musicalList.add("검색하신 뮤지컬이 존재하지 않습니다.");
 		}
 		return musicalList;
+
 	}
 	
 	public MusicalPanel() {
@@ -120,6 +125,7 @@ public class MusicalPanel extends JPanel{
 		searchPanel.setLayout(new GridLayout(2,4));
 		
 		searchLabel = new JLabel("                                         뮤지컬 조회 : ");
+
 		searchPanel.add(searchLabel);
 		
 		searchTextField = new JTextField(20);
@@ -210,7 +216,7 @@ public class MusicalPanel extends JPanel{
 	MouseListener mouseListener = new MouseAdapter() {
 	    public void mouseClicked(MouseEvent e) {
 	        if (e.getClickCount() == 2) {
-	        	
+
 	        	//제목가져오기
 	        	String selectedMusical = resultList.getSelectedValue();
 	        	String [] text = selectedMusical.split(" ");
