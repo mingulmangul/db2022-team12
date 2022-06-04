@@ -17,7 +17,8 @@ import javax.swing.JRadioButton;
 
 class ReviewInsertionPanel extends JPanel {
 	
-	private JPanel reviewPanel, scorePanel, btnPanel;
+	private JPanel noticePanel, reviewPanel, scorePanel, btnPanel;
+	private JLabel noticeLabel;
 	private JRadioButton[] scoreBtn;
 	private JButton submitBtn;
 	private ButtonGroup btnGroup;
@@ -36,8 +37,14 @@ class ReviewInsertionPanel extends JPanel {
 	// 리뷰를 작성하려는 공연의 정보를 담은 Musical 객체를 전달 받음
 	public ReviewInsertionPanel(Musical musical) {
 		this.musical = musical;
+		this.setSize(300, 100);
+		this.setLayout(new GridLayout(2, 1));
+		
+		noticePanel = new JPanel();
 		reviewPanel = new JPanel();
-		reviewPanel.setSize(300, 100);
+
+		noticeLabel = new JLabel("리뷰 등록");
+		noticePanel.add(noticeLabel);
 		
 		scorePanel = new JPanel();
 		btnPanel = new JPanel();
@@ -57,6 +64,7 @@ class ReviewInsertionPanel extends JPanel {
 		
 		reviewPanel.add(scorePanel);
 		reviewPanel.add(btnPanel);
+		this.add(noticePanel);
 		this.add(reviewPanel);
 	}
 	
@@ -66,6 +74,15 @@ class ReviewInsertionPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			// 알림창 제목
+			String dialogTitle = "리뷰 등록 | " + musical.getTitle();
+			
+			// 미로그인 유저인 경우, 리뷰 등록 불가
+			if (User.getId() == null) {
+				NotificationClass.createNotifDialog(dialogTitle, "로그인이 필요합니다");
+				return;
+			}
+			
 			// 사용자가 입력한 리뷰 정보(사용자가 선택한 라디오 버튼 번호 + 1)
 			int rate = 0;
 			
@@ -76,7 +93,10 @@ class ReviewInsertionPanel extends JPanel {
 			
 			// 별점이 선택되지 않은 경우, 버튼이 동작하지 않음
 			if (rate == 0)
+			{
+				noticeLabel.setText("별점을 선택해주세요");
 				return;
+			}
 
 			try (
 				Connection conn = new ConnectionClass().getConnection();
@@ -88,26 +108,8 @@ class ReviewInsertionPanel extends JPanel {
 				pStmt.setString(4, DateClass.getCurrentDate());
 				pStmt.executeUpdate();
 				
-				// TODO: 알림창 생성 클래스 따로 만들기
 				// 리뷰 등록 성공 알림창 생성
-				JDialog sucDialog = new JDialog();
-				sucDialog.setTitle("리뷰 등록 | " + musical.getTitle());
-				sucDialog.setSize(200, 100);
-				sucDialog.setLayout(new GridLayout(2, 1));
-
-				JLabel sucLabel = new JLabel("리뷰가 등록되었습니다 :)");
-				sucDialog.add(sucLabel);
-				JButton confirmBtn = new JButton("확인");
-				// <확인> 버튼 누를 시 알림창 닫기
-				confirmBtn.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						sucDialog.dispose();
-					}
-				});
-				sucDialog.add(confirmBtn);
-				sucDialog.setVisible(true);
+				NotificationClass.createNotifDialog(dialogTitle, "리뷰가 등록되었습니다 :)");
 				
 			} catch (SQLException sqle) {
 				System.out.println(sqle);
