@@ -50,11 +50,11 @@ CREATE TABLE theater(
     공연 제목(title)에 인덱스 추가
 */
 CREATE TABLE musical(
-    title VARCHAR(20) PRIMARY KEY,
+    title CHAR(10) PRIMARY KEY,
     theater_name VARCHAR(20) NOT NULL,
     price INT NOT NULL,
     remain_seat INT NOT NULL,
-    summary VARCHAR(100),
+    summary CHAR(100),
     FOREIGN KEY (theater_name) REFERENCES theater(name),
     INDEX musical_title_idx(title)
 );
@@ -193,18 +193,18 @@ GROUP BY musical.title;
 -- 2. 가격대 별 뮤지컬 이름
 -- 티켓 예매가가 10만원 미만인 뮤지컬 목록
 CREATE VIEW under_10 AS
-SELECT DISTINCT title
+SELECT DISTINCT title, summary
 FROM musical
 WHERE price < 100000;
 
 -- 티켓 예매가가 10만원 ~ 15만원인 뮤지컬 목록
 CREATE VIEW between10_15 AS
-SELECT DISTINCT title
+SELECT DISTINCT title, summary
 FROM musical
 WHERE price BETWEEN 100000 AND 150000;
 
 -- 티켓 예매가가 15만원 초과인 뮤지컬 목록
 CREATE VIEW over_15 AS
-SELECT DISTINCT title
+SELECT DISTINCT title, summary
 FROM musical
 WHERE price > 150000;

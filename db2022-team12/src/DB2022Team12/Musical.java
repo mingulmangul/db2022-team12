@@ -50,4 +50,106 @@ class Musical {
 			System.out.println(sqle);
 		}
 	}
+
+	public ArrayList<DateInfo> getDateInfoList() {
+		return dateInfoList;
+	}
+
+	public void setDateInfoList(ArrayList<DateInfo> dateInfoList) {
+		this.dateInfoList = dateInfoList;
+	}
+
+	public String[] getId() {
+		return id;
+	}
+
+	public void setId(String[] id) {
+		this.id = id;
+	}
+
+	public String[] getDate() {
+		return date;
+	}
+
+	public void setDate(String[] date) {
+		this.date = date;
+	}
+
+	public String[] getTime() {
+		return time;
+	}
+
+	public void setTime(String[] time) {
+		this.time = time;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
+
+	public String getPrice() {
+		return price;
+	}
+
+	public void setPrice(String price) {
+		this.price = price;
+	}
+
+	public String getAvgRate() {
+		return avgRate;
+	}
+
+	public void setAvgRate(String avgRate) {
+		this.avgRate = avgRate;
+	}
+
+	public String getTheaterName() {
+		return theaterName;
+	}
+
+	public void setTheaterName(String theaterName) {
+		this.theaterName = theaterName;
+	}
+
+	public String getTheaterAddress() {
+		return theaterAddress;
+	}
+
+	public void setTheaterAddress(String theaterAddress) {
+		this.theaterAddress = theaterAddress;
+	}
+
+	public String getTheaterPhone() {
+		return theaterPhone;
+	}
+
+	public void setTheaterPhone(String theaterPhone) {
+		this.theaterPhone = theaterPhone;
+	}
+
+	public String getTheaterSize() {
+		return theaterSize;
+	}
+
+	public void setTheaterSize(String theaterSize) {
+		this.theaterSize = theaterSize;
+	}
+
+	public String getGET_MUSICAL_QUERY() {
+		return GET_MUSICAL_QUERY;
+	}
+	
+	
 }
