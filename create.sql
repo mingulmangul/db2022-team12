@@ -72,7 +72,7 @@ CREATE TABLE musical_date(
     title VARCHAR(20),
     date DATE,
     time TIME,
-    FOREIGN KEY (title) REFERENCES musical(title)
+    FOREIGN KEY (title) REFERENCES musical(title),
     UNIQUE (title, date, time)
 );
 
@@ -149,7 +149,7 @@ INSERT INTO musical VALUES
 
 -- insert Musical_date
 -- INSERT INTO Musical_date values(title, date, time);
-INSERT INTO musical_date VALUES
+INSERT INTO musical_date(title, date, time) VALUES
     ('킹키부츠', '2022-07-01', '14:00:00'),
     ('킹키부츠', '2022-07-02', '19:00:00'),
     ('비더슈탄트', '2022-06-30', '20:00:00'),
@@ -163,16 +163,16 @@ INSERT INTO musical_date VALUES
 
 -- insert Ticket
 -- INSERT INTO Ticket values(musical_title, musical_date, member_id, order_date);
-INSERT INTO ticket VALUES
-    ('킹키부츠', 1, 'ga2059', '충무아트센터', '2022-05-28'),
-    ('킹키부츠', 2, '19soo10', '드림아트센터', '2022-05-31'),
-    ('데스노트', 5, '19soo10', '예술의전당', '2022-06-02'),
-    ('아이다', 7, '1684yoon', '블루스퀘어', '2022-06-02'),
-    ('아이다', 7, 'liu1771', '블루스퀘어', '2022-06-04');
+INSERT INTO ticket(musical_title, musical_date, member_id, order_date) VALUES
+    ('킹키부츠', 1, 'ga2059', '2022-05-28'),
+    ('킹키부츠', 2, '19soo10', '2022-05-31'),
+    ('데스노트', 5, '19soo10', '2022-06-02'),
+    ('아이다', 7, '1684yoon', '2022-06-02'),
+    ('아이다', 7, 'liu1771', '2022-06-04');
 
 -- insert Review
 -- INSERT INTO Review values(musical_title, member_id, rate, written_at);
-INSERT INTO review VALUES
+INSERT INTO review(musical_title, member_id, rate, written_at) VALUES
     ('킹키부츠', 'ga2059', 4, '2022-07-02'),
     ('킹키부츠', 'min1905', 3, '2022-07-02'),
     ('비더슈탄트', '19soo10', 5, '2022-06-30'),
