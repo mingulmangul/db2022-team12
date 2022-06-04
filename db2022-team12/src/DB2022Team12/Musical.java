@@ -24,8 +24,7 @@ class Musical {
 	// 뮤지컬 날짜 정보를 가져오는 쿼리
 	private final static String GET_MUSICAL_DATE_QUERY = "SELECT * "
 			+ "FROM musical NATURAL JOIN musical_date "
-			+ "WHERE title = ?"
-			+ "ORDER BY date, time";
+			+ "WHERE title = ?";
 	
 	public Musical(String musical) {
 		try (
