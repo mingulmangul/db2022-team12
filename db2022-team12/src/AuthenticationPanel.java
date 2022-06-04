@@ -36,16 +36,16 @@ public class AuthenticationPanel extends JPanel {
 		private final String SIGNUP_QUERY = "INSERT INTO member VALUES (?, ?, ?, ?, ?, ?)";
 	
 	// 티켓 정보 검색 쿼리
-		private static String TICKETSEARCH_QUERY = "SELECT Musical_id, Musical_date, Musical_time, Seat_row, Seat_col, Theater_name, Order_date FROM Ticket WHERE Member_id = ?";
+		private static String TICKETSEARCH_QUERY = "SELECT ID, Member_id, Member_id, Theater_name, Order_date FROM Ticket WHERE Member_id = ?";
 	
 	// 티켓 정보 삭제 쿼리
 		//private static String DELETETICKET_QUERY = "DELETE FROM Ticket WHERE Member_id = ?";
 	
 	// 리뷰 정보 검색 쿼리
-		private static String REVIEWSEARCH_QUERY = "SELECT Musical_id, Rate, Written_at FROM Review WHERE Member_id = ?";
+		private static String REVIEWSEARCH_QUERY = "SELECT ID, Musical_id, Rate, Written_at FROM Review WHERE Member_id = ?";
 				
 	// 리뷰 정보 삭제 쿼리
-		private static String DELETEREVIEW_QUERY = "DELETE FROM Review WHERE Member_id = ?";
+		//private static String DELETEREVIEW_QUERY = "DELETE FROM Review WHERE Member_id = ?";
 	
 
 		public AuthenticationPanel() {
@@ -282,7 +282,7 @@ public class AuthenticationPanel extends JPanel {
 	// <예매 티켓 조회> 버튼에 대한 리스너
 	// 예매 티켓 정보 DB에서 검색, 티켓 정보를 보여주는 dialog 생성
 	private class checkTicketListener implements ActionListener {
-		private JLabel myInfoLabel, myTicketLabel1, myTicketLabel2, myTicketLabel3, myTicketLabel4, myTicketLabel5, myTicketLabel6;
+		private JLabel myInfoLabel, myTicketLabel1, myTicketLabel2, myTicketLabel3;
 		private JButton cancelTicketBtn, closeBtn;
 		private JPanel BtnPanel;
 			
@@ -304,13 +304,11 @@ public class AuthenticationPanel extends JPanel {
 					noticeLabel.setText("예매한 티켓이 없습니다.");
 				} else {
 					// 유저 정보 저장
+					// Musical_id, Member_id, Theater_name, Order_date
+					// musical_id, musical_name, theater, orderDate
 					UserTicket.musical_id = res.getInt("Musical_id");
-					UserTicket.Mdate = res.getString("Musical_date");
-					UserTicket.Mtime = res.getString("Musical_time");
-					UserTicket.row = res.getInt("Seat_row");
-					UserTicket.col = res.getInt("Seat_col");
 					UserTicket.theater = res.getString("Theater_name");
-					UserTicket.Odate = res.getString("Order_date"); 
+					UserTicket.orderDate = res.getString("Order_date"); 
 				}
 			} catch (SQLException sqle) {
 				System.out.println(sqle);
@@ -356,18 +354,12 @@ public class AuthenticationPanel extends JPanel {
 			checkTicketDialog.add(myInfoLabel);
 			
 			myTicketLabel1 = new JLabel("제목 : " + UserTicket.musical_name);
-			myTicketLabel2 = new JLabel("공연일자 : " + UserTicket.Mdate);
-			myTicketLabel3 = new JLabel("공연 시작 시간 : " + UserTicket.Mtime);
-			myTicketLabel4 = new JLabel("좌석 : " + UserTicket.row + "행 " + UserTicket.col + "열");
-			myTicketLabel5 = new JLabel("장소 : " + UserTicket.theater);
-			myTicketLabel6 = new JLabel("예매 일자 : " + UserTicket.Odate);
+			myTicketLabel2 = new JLabel("장소 : " + UserTicket.theater);
+			myTicketLabel3 = new JLabel("예매 일자 : " + UserTicket.orderDate);
 			
 			checkTicketDialog.add(myTicketLabel1);
 			checkTicketDialog.add(myTicketLabel2);
 			checkTicketDialog.add(myTicketLabel3);
-			checkTicketDialog.add(myTicketLabel4);
-			checkTicketDialog.add(myTicketLabel5);
-			checkTicketDialog.add(myTicketLabel6);
 			
 			BtnPanel = new JPanel(new GridLayout(1, 2, 1, 10));
 			cancelTicketBtn = new JButton("예매 취소");
@@ -392,11 +384,10 @@ public class AuthenticationPanel extends JPanel {
 		}
 	}
 	
-	
 	// <예매 취소> 버튼에 대한 리스너
 	// 예매한 티켓 정보와 예매 취소 동의 dialog 생성
 	private class cancelTicketBtnListener implements ActionListener {
-		private JLabel errorMsgLabel, deleTicketInfoLabel1, deleTicketInfoLabel2, deleTicketInfoLabel3, deleTicketInfoLabel4;
+		private JLabel errorMsgLabel, deleTicketInfoLabel1, deleTicketInfoLabel2, deleTicketInfoLabel3;
 		private JButton deleTBtn;
 		private JPanel reserveTicketPanel;
 		
@@ -408,6 +399,7 @@ public class AuthenticationPanel extends JPanel {
 				deleErrorDialog.setSize(300, 50);
 				
 				errorMsgLabel = new JLabel("취소할 티켓이 없습니다.");
+				UserTicket.musical_name = "---"; //확인해보기
 				deleErrorDialog.add(errorMsgLabel);
 				deleErrorDialog.setVisible(true);
 				
@@ -419,13 +411,12 @@ public class AuthenticationPanel extends JPanel {
 				reserveTicketPanel = new JPanel(new GridLayout(4, 1, 10, 1));
 				
 				deleTicketInfoLabel1 = new JLabel("제목 : " + UserTicket.musical_name);
-				deleTicketInfoLabel2 = new JLabel("공연일자 : " + UserTicket.Mdate);
-				deleTicketInfoLabel3 = new JLabel("공연 시작 시간 : " + UserTicket.Mtime);
-				deleTicketInfoLabel4 = new JLabel("좌석 : " + UserTicket.row + "행 " + UserTicket.col + "열");
+				deleTicketInfoLabel2 = new JLabel("장소 : " + UserTicket.theater);
+				deleTicketInfoLabel3 = new JLabel("공연 시작 시간 : " + UserTicket.orderDate);
+				
 				reserveTicketPanel.add(deleTicketInfoLabel1);
 				reserveTicketPanel.add(deleTicketInfoLabel2);
 				reserveTicketPanel.add(deleTicketInfoLabel3);
-				reserveTicketPanel.add(deleTicketInfoLabel4);
 				
 				deleTAgreeDialog.add(reserveTicketPanel);
 				
@@ -486,7 +477,7 @@ public class AuthenticationPanel extends JPanel {
 		// <작성 리뷰 관리> 버튼에 대한 리스너
 		// 작성 리뷰 정보와 전체 삭제 동의 dialog 생성
 		private class reviewBtnListener implements ActionListener {
-			private JLabel myreviewLabel;
+			private JLabel myreviewLabel, ReviewinfoLabel1, ReviewinfoLabel2, ReviewinfoLabel3, ReviewinfoLabel4;
 			private JButton deleRBtn;
 			
 			@Override
@@ -495,10 +486,82 @@ public class AuthenticationPanel extends JPanel {
 				myreviewDialog.setSize(300, 100);
 				myreviewDialog.setLayout(new GridLayout(2, 1, 10, 20));
 				
-				myreviewLabel = new JLabel(); //리뷰 정보 불러올 예정
+				try (Connection conn = new ConnectionClass().getConnection();
+						PreparedStatement preStmt = conn.prepareStatement(REVIEWSEARCH_QUERY)) {
+						
+					// 유저 티켓 검색을 위한 쿼리
+					preStmt.setString(1, User.ID);
+					ResultSet res = preStmt.executeQuery();
+						
+					// 해당 아이디의 리뷰가 존재하는지 확인
+					if (!res.next()) {
+						noticeLabel.setText("작성한 리뷰가 없습니다.");
+						UserReview.musical_name = "---"; //확인해보기
+					} else {
+						// 유저 리뷰 정보 저장
+						// ID, Musical_id, Rate, Written_at
+						// review_id. musical_id, musical_name, rate, written_at
+						UserReview.review_id = res.getInt("ID");
+						UserReview.musical_id = res.getInt("Musical_id");
+						UserReview.rate = res.getInt("Rate");
+						UserReview.written_at = res.getString("Written_at");
+					}
+				} catch (SQLException sqle) {
+					System.out.println(sqle);
+				}
+				
+				 switch(UserReview.musical_id){
+			        case 1 : 
+			        	UserReview.musical_name = "킹키부츠"; 
+			            break;
+			        case 2 : 
+			        	UserReview.musical_name = "킹키부츠"; 
+			            break;  
+			        case 3 : 
+			        	UserReview.musical_name = "비더슈탄트"; 
+			            break;
+			        case 4 : 
+			        	UserReview.musical_name = "비더슈탄트"; 
+			            break;
+			        case 5 : 
+			        	UserReview.musical_name = "데스노트"; 
+			            break;
+			        case 6 : 
+			        	UserReview.musical_name = "데스노트"; 
+			            break;
+			        case 7 : 
+			        	UserReview.musical_name = "아이다"; 
+			            break;
+			        case 8 : 
+			        	UserReview.musical_name = "아이다"; 
+			            break;
+			        case 9 : 
+			        	UserReview.musical_name = "마타하리"; 
+			            break;
+			        case 10 : 
+			        	UserReview.musical_name = "마타하리"; 
+			            break;
+			        default :    
+			        	UserReview.musical_name = "---";
+			    }
+				
+				myreviewLabel = new JLabel(User.NAME + "님의 REVIEW", SwingConstants.CENTER);
+				myreviewLabel.setFont(new Font("고딕", Font.BOLD, 20));
 				myreviewDialog.add(myreviewLabel);
 				
-				deleRBtn = new JButton("작성한 리뷰 전체 삭제");
+				// ID, Musical_id, Rate, Written_at
+				// review_id. musical_id, musical_name, rate, written_at
+				ReviewinfoLabel1 = new JLabel("리뷰ID : " + UserReview.review_id);
+				ReviewinfoLabel2 = new JLabel("뮤지컬명 : " + UserReview.musical_name);
+				ReviewinfoLabel3 = new JLabel("평점 : " + UserReview.rate);
+				ReviewinfoLabel4 = new JLabel("작성일자 : " + UserReview.written_at);
+				
+				checkTicketDialog.add(ReviewinfoLabel1);
+				checkTicketDialog.add(ReviewinfoLabel2);
+				checkTicketDialog.add(ReviewinfoLabel3);
+				checkTicketDialog.add(ReviewinfoLabel4);
+				
+				deleRBtn = new JButton("리뷰 삭제");
 				deleRBtn.addActionListener(new delRcheckListener());
 				myreviewDialog.add(deleRBtn);
 				
@@ -508,8 +571,8 @@ public class AuthenticationPanel extends JPanel {
 		}
 	
 	
-	// <작성한 리뷰 전체 삭제> 버튼에 대한 리스너
-		// 작성한 리뷰 DB에서 삭제, 삭제 완료 dialog 생성
+		// <리뷰 삭제> 버튼에 대한 리스너
+		// 선택한 리뷰를 DB에서 삭제, 삭제 완료 dialog 생성
 		private class delRcheckListener implements ActionListener {
 			private JLabel msgRLabel;
 			private JButton checkRBtn;
