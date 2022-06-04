@@ -12,11 +12,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
@@ -32,13 +34,18 @@ public class MusicalPanel extends JPanel{
 	private final String PRICE_VIEW_1 = "SELECT * FROM under_10";
 	private final String PRICE_VIEW_2 = "SELECT * FROM between10_15";
 	private final String PRICE_VIEW_3 = "SELECT * FROM over_15";
-	
+	//가격 별 검색
+	private final String PRICE1_MUSICAL_QUERY = "SELECT Title, Summary FROM under_10 WHERE Title = ?";
+	private final String PRICE2_MUSICAL_QUERY = "SELECT Title, Summary FROM between10_15 WHERE Title = ?";
+	private final String PRICE3_MUSICAL_QUERY = "SELECT Title, Summary FROM over_15 WHERE Title = ?";
+
 	private JPanel searchPanel, listPanel;
-	private JLabel searchLabel, resultLabel;
+	private JLabel searchLabel, resultLabel, fakeLabel;
 	private JLabel titleLabel, dateLabel, timeLabel, theaterLabel, summaryLabel, reviewLabel;
-	private JButton searchBtn, buyBtn, under10Btn, bw1015Btn, over15Btn;
+	private JButton searchBtn, buyBtn; 
+	private JRadioButton under10Btn, bw1015Btn, over15Btn, allBtn;
 	private JTextField searchTextField;
-	private JList<String> musicalList, dateList, timeList;
+	private JList<String> resultList;
 	
 	private JDialog infoDialog, buyDialog;
 	
@@ -62,6 +69,9 @@ public class MusicalPanel extends JPanel{
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		if(musicalList.isEmpty()) {
+			musicalList.add("검색하신 뮤지컬이 존재하지 않습니다.");
 		}
 		return musicalList;
 	}
@@ -88,6 +98,10 @@ public class MusicalPanel extends JPanel{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		if(musicalList.isEmpty()) {
+			musicalList.add("검색하신 뮤지컬이 존재하지 않습니다.");
+		}
 		return musicalList;
 	}
 	
@@ -103,7 +117,7 @@ public class MusicalPanel extends JPanel{
 		//listPanel.setSize(1200, 250);
 		this.add(listPanel, BorderLayout.SOUTH);
 		
-		searchPanel.setLayout(new GridLayout(2,3));
+		searchPanel.setLayout(new GridLayout(2,4));
 		
 		searchLabel = new JLabel("                                         뮤지컬 조회 : ");
 		searchPanel.add(searchLabel);
@@ -115,23 +129,37 @@ public class MusicalPanel extends JPanel{
 		searchPanel.add(searchBtn);
 		searchBtn.addActionListener(new searchBtnListner());
 		
-		under10Btn = new JButton("~10만원");
+		fakeLabel = new JLabel("                ");
+		searchPanel.add(fakeLabel);
+		
+		ButtonGroup group = new ButtonGroup();
+		
+		allBtn = new JRadioButton("전체");
+		searchPanel.add(allBtn);
+		allBtn.addActionListener(new priceBtnListner(LOAD_MUSICAL_QUERY));
+		group.add(allBtn);
+		
+		under10Btn = new JRadioButton("~10만원");
 		searchPanel.add(under10Btn);
 		under10Btn.addActionListener(new priceBtnListner(PRICE_VIEW_1));
+		group.add(under10Btn);
 		
-		bw1015Btn = new JButton("10만원~15만원");
+		bw1015Btn = new JRadioButton("10만원~15만원");
 		searchPanel.add(bw1015Btn);
-		under10Btn.addActionListener(new priceBtnListner(PRICE_VIEW_2));
+		bw1015Btn.addActionListener(new priceBtnListner(PRICE_VIEW_2));
+		group.add(bw1015Btn);
 		
-		over15Btn = new JButton("15만원~");
+		over15Btn = new JRadioButton("15만원~");
 		searchPanel.add(over15Btn);
-		under10Btn.addActionListener(new priceBtnListner(PRICE_VIEW_3));
+		over15Btn.addActionListener(new priceBtnListner(PRICE_VIEW_3));
+		group.add(over15Btn);
 		
-		musicalList = new JList<String>(getMusicals(LOAD_MUSICAL_QUERY));
+		
+		resultList = new JList<String>(getMusicals(LOAD_MUSICAL_QUERY));
 		// musicalList = new JList<String>(getMusicals(LOAD_MUSICAL_QUERY));
-		musicalList.addMouseListener(mouseListener);
-		listPanel.add(musicalList);
-		listPanel.add(new JScrollPane(musicalList));
+		resultList.addMouseListener(mouseListener);
+		listPanel.add(resultList);
+		listPanel.add(new JScrollPane(resultList));
 		
 		setVisible(true);
 	}
@@ -143,19 +171,23 @@ public class MusicalPanel extends JPanel{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String title = searchTextField.getText().strip();
+			searchTextField.setText("");
+			
 			// 사용자 입력 유효성 검증
 			if (title.isEmpty()) {
 				searchTextField.setText("뮤지컬 제목을 입력해주세요.");
-			} else {
-				
-				musicalList.setListData(getMusicals(SEARCH_MUSICAL_QUERY,title));
-				/*
-				try (Connection conn = new ConnectionClass().getConnection();
-						PreparedStatement preStmt = conn.prepareStatement(SEARCH_MUSICAL_QUERY);) {
-					musicalList.setListData(getMusicals(SEARCH_MUSICAL_QUERY,title));
-				} catch (SQLException sqle) {
-					System.out.println(sqle);
-				} */
+			} 
+			else if(under10Btn.isSelected()){
+				resultList.setListData(getMusicals(PRICE1_MUSICAL_QUERY,title));
+			}
+			else if(bw1015Btn.isSelected()){
+				resultList.setListData(getMusicals(PRICE2_MUSICAL_QUERY,title));
+			} 
+			else if(over15Btn.isSelected()){
+				resultList.setListData(getMusicals(PRICE3_MUSICAL_QUERY,title));
+			} 
+			else {
+				resultList.setListData(getMusicals(SEARCH_MUSICAL_QUERY,title));
 				
 			}
 		}
@@ -170,14 +202,7 @@ public class MusicalPanel extends JPanel{
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			musicalList.setListData(getMusicals(view));
-			/*
-			try (Connection conn = new ConnectionClass().getConnection();
-					PreparedStatement preStmt = conn.prepareStatement(view);) {
-				musicalList.setListData(getMusicals(view));
-			} catch (SQLException sqle) {
-				System.out.println(sqle);
-			}*/
+			resultList.setListData(getMusicals(view));
 		}
 	}
 	
@@ -187,9 +212,11 @@ public class MusicalPanel extends JPanel{
 	        if (e.getClickCount() == 2) {
 	        	
 	        	//제목가져오기
-	        	String selectedMusical = musicalList.getSelectedValue();
-	        	String [] text = selectedMusical.split("-");
+	        	String selectedMusical = resultList.getSelectedValue();
+	        	String [] text = selectedMusical.split(" ");
 	        	String selectedtitle = text[0].strip();
+	        	
+	        	System.out.print(selectedtitle);
 	        	
     			infoDialog = new JDialog();
     			infoDialog.setSize(500, 400);
@@ -209,12 +236,12 @@ public class MusicalPanel extends JPanel{
     			topPanel.add(theaterLabel);
     			topPanel.add(summaryLabel);
     			topPanel.add(reviewLabel);
-
     			
-    			buyBtn= new JButton("예매하기");
-    			buyBtn.addActionListener(new buyBtnListener());
-    			botPanel.add(buyBtn);
-    			
+    			//buyBtn= new JButton("예매하기");
+    			//buyBtn.addActionListener(new buyBtnListener());
+    			//botPanel.add(buyBtn);
+    			TicketPanel ticketPanel = new TicketPanel(musical.getTitle());
+    			midPanel.add(ticketPanel);
 
     			infoDialog.add(topPanel);
     			infoDialog.add(midPanel);
@@ -222,18 +249,7 @@ public class MusicalPanel extends JPanel{
     			infoDialog.setVisible(true);
 	        }
 	    }
+	    
 	};
 	
-	// <예매하> 버튼 리스너
-	// 사용자로부터 받은 입력으로 쿼리 생성 후 DB에 삽입
-	private class buyBtnListener implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			buyDialog = new JDialog();
-			buyDialog.setSize(500, 400);
-			
-			
-			infoDialog.dispose();
-		}
-	}
 }
