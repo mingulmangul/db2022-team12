@@ -1,5 +1,6 @@
+package DB2022Team12;
 
-public class MainClass {
+public class DB2022Team12MainClass {
 
 	public static void main(String[] args) {
 		

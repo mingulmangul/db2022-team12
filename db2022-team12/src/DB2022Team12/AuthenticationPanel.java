@@ -1,3 +1,4 @@
+package DB2022Team12;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,8 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-// 로그인 및 회원가입
-public class AuthenticationPanel extends JPanel {
+// 로그인 & 회원가입 패널
+class AuthenticationPanel extends JPanel {
 
 	private JDialog signUpDialog;
 	private JPanel authPanel, noticePanel, signInTextFieldPanel;
@@ -31,6 +32,7 @@ public class AuthenticationPanel extends JPanel {
 	// id, pw, name, phone, email, address
 	private final String SIGNUP_QUERY = "INSERT INTO member VALUES (?, ?, ?, ?, ?, ?)";
 
+	// 로그인 & 회원가입 패널 레이아웃 설정
 	public AuthenticationPanel() {
 		this.setLayout(new GridLayout(2, 1));
 		
@@ -90,8 +92,8 @@ public class AuthenticationPanel extends JPanel {
 					if (!res.next()) {
 						noticeLabel.setText("존재하지 않는 아이디입니다");
 					} else {
-						// 유저 정보 저장
 						String user_pw = res.getString("pw");
+						// 비밀번호 비교
 						if (!pw.equals(user_pw)) {
 							noticeLabel.setText("잘못된 비밀번호입니다");
 						} else {
@@ -99,7 +101,7 @@ public class AuthenticationPanel extends JPanel {
 							User.ID = id;
 							User.NAME = res.getString("name");
 
-							// 로그인 및 회원가입 패널 숨기기
+							// 로그인 & 회원가입 패널 숨기기
 							authPanel.setVisible(false);
 							noticeLabel.setText(User.NAME + "님 안녕하세요 :)");
 						}
@@ -118,6 +120,7 @@ public class AuthenticationPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			// 회원가입 Dialog 레이아웃 설정
 			signUpDialog = new JDialog();
 			signUpDialog.setSize(300, 400);
 			signUpDialog.setLayout(new GridLayout(3, 1));
@@ -184,6 +187,7 @@ public class AuthenticationPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			// 사용자 입력 가져오기
 			String id = idField.getText().strip();
 			String pw = String.valueOf(pwField.getPassword()).strip();
 			String name = nameField.getText().strip();

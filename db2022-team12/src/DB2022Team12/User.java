@@ -1,5 +1,6 @@
+package DB2022Team12;
 
-public class User {
+class User {
 	public static String ID;
 	public static String NAME;
 }

@@ -1,3 +1,4 @@
+package DB2022Team12;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 
-public class TicketPanel extends JPanel {
+class TicketPanel extends JPanel {
 
 	private JDialog ticketDialog;
 	private JButton ticketDialogBtn, bookBtn;

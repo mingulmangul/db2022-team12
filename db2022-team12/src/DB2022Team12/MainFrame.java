@@ -1,10 +1,10 @@
+package DB2022Team12;
 import java.awt.Container;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
 import javax.swing.JFrame;
 
-public class MainFrame extends JFrame {
+class MainFrame extends JFrame {
 
 	public MainFrame() {
 		setTitle("프로그램");
@@ -14,8 +14,8 @@ public class MainFrame extends JFrame {
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new GridLayout(5, 1));
 
-		AuthenticationPanel authPanel = new AuthenticationPanel();
-		TicketPanel ticketPanel = new TicketPanel("킹키부츠");
+		DB2022Team12.AuthenticationPanel authPanel = new AuthenticationPanel();
+		DB2022Team12.TicketPanel ticketPanel = new TicketPanel("킹키부츠");
 
 		contentPane.add(authPanel);
 		contentPane.add(ticketPanel);

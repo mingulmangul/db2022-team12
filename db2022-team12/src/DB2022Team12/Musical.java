@@ -1,10 +1,11 @@
+package DB2022Team12;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class Musical {
+class Musical {
 	
 	private class DateInfo {
 		String id, date, time;
