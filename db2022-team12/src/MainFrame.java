@@ -1,5 +1,7 @@
 import java.awt.Container;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
+
 import javax.swing.JFrame;
 
 public class MainFrame extends JFrame {
@@ -10,11 +12,13 @@ public class MainFrame extends JFrame {
 		setSize(500, 500);
 
 		Container contentPane = getContentPane();
-		contentPane.setLayout(new FlowLayout());
+		contentPane.setLayout(new GridLayout(5, 1));
 
 		AuthenticationPanel authPanel = new AuthenticationPanel();
+		TicketPanel ticketPanel = new TicketPanel("Å·Å°ºÎÃ÷");
 
 		contentPane.add(authPanel);
+		contentPane.add(ticketPanel);
 
 		setVisible(true);
 	}
