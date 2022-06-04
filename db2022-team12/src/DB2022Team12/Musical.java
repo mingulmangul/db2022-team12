@@ -67,4 +67,44 @@ class Musical {
 			System.out.println(sqle);
 		}
 	}
+
+	HashMap<String, Vector<String>> getDateInfo() {
+		return dateInfo;
+	}
+
+	String getTitle() {
+		return title;
+	}
+
+	String getSummary() {
+		return summary;
+	}
+
+	String getPrice() {
+		return price;
+	}
+
+	String getScore() {
+		return score;
+	}
+
+	String getRemainSeat() {
+		return remainSeat;
+	}
+
+	String getTheaterName() {
+		return theaterName;
+	}
+
+	String getTheaterAddress() {
+		return theaterAddress;
+	}
+
+	String getTheaterPhone() {
+		return theaterPhone;
+	}
+
+	String getTheaterSize() {
+		return theaterSize;
+	}
 }

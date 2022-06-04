@@ -22,10 +22,12 @@ class TicketPanel extends JPanel {
 					theaterLabel2, priceLabel1, priceLabel2;
 	private JComboBox<String> dateSelector, timeSelector;
 
-	private String musical;
+	// 예매하려는 공연의 정보를 담은 Musical 객체
+	private Musical musical;
 
-
-	public TicketPanel(String musical) {
+	// 티켓 구매 패널 레이아웃 설정
+	// 예매하려는 공연의 정보를 담은 Musical 객체를 전달 받음 
+	public TicketPanel(Musical musical) {
 		this.musical = musical;
 		ticketDialogBtn = new JButton("티켓 구매");
 		ticketDialogBtn.addActionListener(new TicketDialogCreater());
@@ -36,10 +38,6 @@ class TicketPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// 예매하려는 뮤지컬 정보 가져오기
-//			getMusicalInfo();
-			new Musical(musical);
-
 			// 티켓 예매 다이얼로그 생성
 			ticketDialog = new JDialog();
 			ticketDialog.setTitle("뮤지컬 등록");
@@ -55,14 +53,14 @@ class TicketPanel extends JPanel {
 			noticePanel.add(noticeLabel);
 
 			musicalLabel1 = new JLabel("공연 제목");
-			musicalLabel2 = new JLabel(musical);
+			musicalLabel2 = new JLabel(musical.getTitle());
 			dateTimeLabel = new JLabel("날짜 및 시간");
 			dateSelector = new JComboBox<String>();
 			timeSelector = new JComboBox<String>();
 			theaterLabel1 = new JLabel("극장");
-			theaterLabel2 = new JLabel("충무로아트센터");
+			theaterLabel2 = new JLabel(musical.getTheaterName());
 			priceLabel1 = new JLabel("예매가");
-			priceLabel2 = new JLabel("100,000원");
+			priceLabel2 = new JLabel(musical.getPrice());
 			inputPanel.add(musicalLabel1);
 			inputPanel.add(musicalLabel2);
 			inputPanel.add(dateTimeLabel);
