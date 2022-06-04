@@ -1,3 +1,4 @@
+package DB2022Team12;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 
-public class TicketPanel extends JPanel {
+class TicketPanel extends JPanel {
 
 	private JDialog ticketDialog;
 	private JButton ticketDialogBtn, bookBtn;
@@ -23,12 +24,10 @@ public class TicketPanel extends JPanel {
 
 	private String musical;
 
-	// ¹ÂÁöÄÃ Á¤º¸¸¦ °¡Á®¿À´Â Äõ¸®
-	private final String GET_MUSICAL_QUERY = "SELECT * FROM musical WHERE title = ?";
 
 	public TicketPanel(String musical) {
 		this.musical = musical;
-		ticketDialogBtn = new JButton("Æ¼ÄÏ ±¸¸Å");
+		ticketDialogBtn = new JButton("í‹°ì¼“ êµ¬ë§¤");
 		ticketDialogBtn.addActionListener(new TicketDialogCreater());
 		this.add(ticketDialogBtn);
 	}
@@ -37,11 +36,13 @@ public class TicketPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// ¿¹¸ÅÇÏ·Á´Â ¹ÂÁöÄÃ Á¤º¸ °¡Á®¿À±â
+			// ì˜ˆë§¤í•˜ë ¤ëŠ” ë®¤ì§€ì»¬ ì •ë³´ ê°€ì ¸ì˜¤ê¸°
+//			getMusicalInfo();
+			new Musical(musical);
 
-			// Æ¼ÄÏ ¿¹¸Å ´ÙÀÌ¾ó·Î±× »ı¼º
+			// í‹°ì¼“ ì˜ˆë§¤ ë‹¤ì´ì–¼ë¡œê·¸ ìƒì„±
 			ticketDialog = new JDialog();
-			ticketDialog.setTitle("¹ÂÁöÄÃ µî·Ï");
+			ticketDialog.setTitle("ë®¤ì§€ì»¬ ë“±ë¡");
 			ticketDialog.setSize(300, 300);
 			ticketDialog.setLayout(new GridLayout(3, 1));
 
@@ -50,18 +51,18 @@ public class TicketPanel extends JPanel {
 			JPanel btnPanel = new JPanel();
 			JPanel dateTimePanel = new JPanel();
 
-			noticeLabel = new JLabel("¿¹¸Å Æ¼ÄÏÀÇ Á¤º¸¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä");
+			noticeLabel = new JLabel("ì˜ˆë§¤ í‹°ì¼“ì˜ ì •ë³´ë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”");
 			noticePanel.add(noticeLabel);
 
-			musicalLabel1 = new JLabel("°ø¿¬ Á¦¸ñ");
+			musicalLabel1 = new JLabel("ê³µì—° ì œëª©");
 			musicalLabel2 = new JLabel(musical);
-			dateTimeLabel = new JLabel("³¯Â¥ ¹× ½Ã°£");
+			dateTimeLabel = new JLabel("ë‚ ì§œ ë° ì‹œê°„");
 			dateSelector = new JComboBox<String>();
 			timeSelector = new JComboBox<String>();
-			theaterLabel1 = new JLabel("±ØÀå");
-			theaterLabel2 = new JLabel("Ãæ¹«·Î¾ÆÆ®¼¾ÅÍ");
-			priceLabel1 = new JLabel("¿¹¸Å°¡");
-			priceLabel2 = new JLabel("100,000¿ø");
+			theaterLabel1 = new JLabel("ê·¹ì¥");
+			theaterLabel2 = new JLabel("ì¶©ë¬´ë¡œì•„íŠ¸ì„¼í„°");
+			priceLabel1 = new JLabel("ì˜ˆë§¤ê°€");
+			priceLabel2 = new JLabel("100,000ì›");
 			inputPanel.add(musicalLabel1);
 			inputPanel.add(musicalLabel2);
 			inputPanel.add(dateTimeLabel);
@@ -73,7 +74,7 @@ public class TicketPanel extends JPanel {
 			inputPanel.add(priceLabel1);
 			inputPanel.add(priceLabel2);
 			
-			bookBtn = new JButton("¿¹¸ÅÇÏ±â");
+			bookBtn = new JButton("ì˜ˆë§¤í•˜ê¸°");
 			bookBtn.addActionListener(null);
 			btnPanel.add(bookBtn);
 			
