@@ -20,9 +20,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import DB2022Team12.checkTicketListener.TerrorC;
 import DB2022Team12.checkTicketListener.cancelTicketBtnListener.delTcheckListener;
 import DB2022Team12.checkTicketListener.cancelTicketBtnListener.deleSDlgListener;
 import DB2022Team12.checkTicketListener.cancelTicketBtnListener.deleTItem;
+import DB2022Team12.checkTicketListener.cancelTicketBtnListener.delTcheckListener.deleEDlgListener;
 
 
 //<작성 리뷰 관리> 버튼에 대한 리스너
@@ -64,6 +66,7 @@ class reviewBtnListener implements ActionListener {
 	        do {
 	            if (Rresults) {
 	                while (res.next()) {
+	                	Rerror++;
 	                	UserReview review = new UserReview();
 	                	review.setID(res.getInt("id"));
 	                	review.setTitle(res.getString("musical_title"));
@@ -71,13 +74,11 @@ class reviewBtnListener implements ActionListener {
 	                	review.setTime(res.getString("written_at"));
 	                	Review.add(review);
 	                }
-	            }else {
-                	Rerror = 100;
-                }
+	            }
 	            Rresults = stmt.getMoreResults();
 	        } while (Rresults);
 	        
-	        if(Rerror == 0) {
+	        if(Rerror != 0) {
 	        	
 		        String Rstr = "";
 		        for(int i = 0; i < Review.size(); i++) {
@@ -123,6 +124,11 @@ class reviewBtnListener implements ActionListener {
 		}
 	}
 	
+	// 체크박스를 하나도 체크하지 않을 경우를 확인하기 위한 클래스
+	class RerrorC {
+		static int num = 0;
+	}
+	
 	// 작성 리뷰 관리 dialog에서 <리뷰 삭제> 버튼에 대한 리스너
 	// 작성한 정보와 리뷰 삭제 동의 dialog 생성
 	class selectRListener implements ActionListener {
@@ -146,6 +152,8 @@ class reviewBtnListener implements ActionListener {
 			selectRDialog.add(explainRLabel);
 				
 			reserveRPanel = new JPanel();
+			
+			RerrorC.num = 0;
 				
 			for (int i = 0; i < myReviewNum; i++){
 				ck[i] = new JCheckBox("NO." + (i+1) + " --- 리뷰 id : " + Review.get(i).getID() + ",  공연 제목 : " + Review.get(i).getTitle() + ",  평점 : " + Review.get(i).getRate() + ",  리뷰 작성 날짜 : " + Review.get(i).getTime(),false);
@@ -189,52 +197,85 @@ class reviewBtnListener implements ActionListener {
 					}else {
 						deleRId[i] = 0;
 					}
+					RerrorC.num = 0;
+					for (int j = 0; j < myReviewNum; j++){
+						RerrorC.num += deleRId[j];
+					}
 				}
 			}
 			
 		}	
 		
-		// <리뷰 삭제 동의> 버튼에서 체크박스를 선택한 경우에 대한 리스너
+		// <리뷰 삭제 동의> 버튼에 대한 리스너
 		// 선택된 리뷰 정보를 DB에서 삭제, 리뷰 삭제 완료 dialog 생성
 		class delRcheckListener implements ActionListener {
-			private JLabel msgRLabel;
-			private JButton checkRBtn;
+			private JLabel XRLabel, msgRLabel;
+			private JButton XRBtn, checkRBtn;
 			private JDialog delRcheckDialog;
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				delRcheckDialog = new JDialog();
-				delRcheckDialog.setSize(250, 100);
-				delRcheckDialog.setLayout(new GridLayout(2, 1, 10, 10));
 				
-				for (int i = 0; i < myReviewNum; i++){
-					if(deleRId[i] != 0) {
-						try (	Connection conn = new ConnectionClass().getConnection();
-								Statement preStmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
-							ResultSet res = preStmt.executeQuery("SELECT * FROM db2022_Review WHERE id = '" + deleRId[i] + "'");
-							
-							// 해당 리뷰 id의 리뷰가 존재하는지 확인
-							if (res.next()) {
-								preStmt.executeUpdate("DELETE FROM db2022_Review WHERE id = '" + deleRId[i] + "'");
-								msgRLabel = new JLabel("리뷰 삭제 완료", SwingConstants.CENTER);
-							} else {
-								msgRLabel = new JLabel("ERROR", SwingConstants.CENTER);
-							}	
-						}catch (SQLException sqle) {
-							System.out.println(sqle);
+				if(RerrorC.num == 0) {
+					delRcheckDialog = new JDialog();
+					delRcheckDialog.setSize(120, 100);
+					delRcheckDialog.setLayout(new GridLayout(2, 1, 10, 10));
+					
+					XRLabel = new JLabel("하나 이상의 체크박스를 선택하세요.");
+					delRcheckDialog.add(XRLabel);
+					
+					XRBtn = new JButton("OK");
+					XRBtn.addActionListener(new deleBDlgListener());
+					delRcheckDialog.add(XRBtn);
+					
+					delRcheckDialog.setVisible(true);
+					
+					selectRDialog.dispose();
+					
+				}else {
+					delRcheckDialog = new JDialog();
+					delRcheckDialog.setSize(250, 100);
+					delRcheckDialog.setLayout(new GridLayout(2, 1, 10, 10));
+					
+					for (int i = 0; i < myReviewNum; i++){
+						if(deleRId[i] != 0) {
+							try (	Connection conn = new ConnectionClass().getConnection();
+									Statement preStmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
+								ResultSet res = preStmt.executeQuery("SELECT * FROM db2022_Review WHERE id = '" + deleRId[i] + "'");
+								
+								// 해당 리뷰 id의 리뷰가 존재하는지 확인
+								if (res.next()) {
+									preStmt.executeUpdate("DELETE FROM db2022_Review WHERE id = '" + deleRId[i] + "'");
+									msgRLabel = new JLabel("리뷰 삭제 완료", SwingConstants.CENTER);
+								} else {
+									msgRLabel = new JLabel("ERROR", SwingConstants.CENTER);
+								}	
+							}catch (SQLException sqle) {
+								System.out.println(sqle);
+							}
 						}
 					}
+					
+					delRcheckDialog.add(msgRLabel);
+					
+					checkRBtn = new JButton("OK");
+					checkRBtn.addActionListener(new deleODlgListener());
+					delRcheckDialog.add(checkRBtn);
+					
+					delRcheckDialog.setVisible(true);
+					
+					selectRDialog.dispose();
 				}
-				
-				delRcheckDialog.add(msgRLabel);
-				
-				checkRBtn = new JButton("OK");
-				checkRBtn.addActionListener(new deleODlgListener());
-				delRcheckDialog.add(checkRBtn);
-				
-				delRcheckDialog.setVisible(true);
-				
-				selectRDialog.dispose();
+			}
+			
+			// 체크박스 선택이 없음을 알리는 dialog에서 <OK> 버튼에 대한 리스너
+			// 체크박스 선택이 없음을 알리는 dialog 닫기
+			class deleBDlgListener implements ActionListener {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					delRcheckDialog.dispose();
+				}
 			}
 			
 			// 리뷰 삭제 완료 dialog에서 <OK> 버튼에 대한 리스너
