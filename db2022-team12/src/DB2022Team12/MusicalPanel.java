@@ -26,15 +26,15 @@ import javax.swing.JTextField;
 
 public class MusicalPanel extends JPanel{
 	
-	//¹ÂÁöÄÃ °Ë»ö Äõ¸®
+	//ë®¤ì§€ì»¬ ê²€ìƒ‰ ì¿¼ë¦¬
 	private final String SEARCH_MUSICAL_QUERY = "SELECT Title, Summary FROM Musical WHERE Title = ?";
-	//¹ÂÁöÄÃ Á¤º¸ ºÒ·¯¿À±â Äõ¸®
+	//ë®¤ì§€ì»¬ ì •ë³´ ë¶ˆëŸ¬ì˜¤ê¸° ì¿¼ë¦¬
 	private final String LOAD_MUSICAL_QUERY = "SELECT Title, Summary FROM Musical";
-	//°¡°İ ºä
+	//ê°€ê²© ë·°
 	private final String PRICE_VIEW_1 = "SELECT * FROM under_10";
 	private final String PRICE_VIEW_2 = "SELECT * FROM between10_15";
 	private final String PRICE_VIEW_3 = "SELECT * FROM over_15";
-	//°¡°İ º° °Ë»ö
+	//ê°€ê²© ë³„ ê²€ìƒ‰
 	private final String PRICE1_MUSICAL_QUERY = "SELECT Title, Summary FROM under_10 WHERE Title = ?";
 	private final String PRICE2_MUSICAL_QUERY = "SELECT Title, Summary FROM between10_15 WHERE Title = ?";
 	private final String PRICE3_MUSICAL_QUERY = "SELECT Title, Summary FROM over_15 WHERE Title = ?";
@@ -63,7 +63,7 @@ public class MusicalPanel extends JPanel{
 			  String title = res.getString("Title");
 			  String summary = res.getString("Summary");
 
-			  musicalList.add(title + "  " + summary + " º¸·¯°¡±â ");
+			  musicalList.add(title + "  " + summary + " ë³´ëŸ¬ê°€ê¸° ");
 
 			}
 			
@@ -72,7 +72,7 @@ public class MusicalPanel extends JPanel{
 			e.printStackTrace();
 		}
 		if(musicalList.isEmpty()) {
-			musicalList.add("°Ë»öÇÏ½Å ¹ÂÁöÄÃÀÌ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.");
+			musicalList.add("ê²€ìƒ‰í•˜ì‹  ë®¤ì§€ì»¬ì´ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
 		}
 		return musicalList;
 
@@ -94,7 +94,7 @@ public class MusicalPanel extends JPanel{
 			  String title = res.getString("Title");
 			  String summary = res.getString("Summary");
 
-			  musicalList.add(title + "  " + summary + " º¸·¯°¡±â ");
+			  musicalList.add(title + "  " + summary + " ë³´ëŸ¬ê°€ê¸° ");
 
 			}
 			
@@ -104,7 +104,7 @@ public class MusicalPanel extends JPanel{
 		}
 		
 		if(musicalList.isEmpty()) {
-			musicalList.add("°Ë»öÇÏ½Å ¹ÂÁöÄÃÀÌ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.");
+			musicalList.add("ê²€ìƒ‰í•˜ì‹  ë®¤ì§€ì»¬ì´ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
 		}
 		return musicalList;
 
@@ -112,19 +112,19 @@ public class MusicalPanel extends JPanel{
 	
 	public MusicalPanel() {
 		
-		this.setLayout(new BorderLayout(10,10));
+		this.setLayout(new GridLayout(2,1));
 		
 		searchPanel = new JPanel();
-		//searchPanel.setSize(1200, 50);
-		this.add(searchPanel, BorderLayout.NORTH);
+		//searchPanel.setSize(1100, 100);
+		this.add(searchPanel);
 		
 		listPanel = new JPanel();
-		//listPanel.setSize(1200, 250);
-		this.add(listPanel, BorderLayout.SOUTH);
+		//listPanel.setSize(1100, 250);
+		this.add(listPanel);
 		
 		searchPanel.setLayout(new GridLayout(2,4));
 		
-		searchLabel = new JLabel("                                         ¹ÂÁöÄÃ Á¶È¸ : ");
+		searchLabel = new JLabel("                                         ë®¤ì§€ì»¬ ì¡°íšŒ : ");
 
 		searchPanel.add(searchLabel);
 		
@@ -140,22 +140,22 @@ public class MusicalPanel extends JPanel{
 		
 		ButtonGroup group = new ButtonGroup();
 		
-		allBtn = new JRadioButton("ÀüÃ¼");
+		allBtn = new JRadioButton("ì „ì²´");
 		searchPanel.add(allBtn);
 		allBtn.addActionListener(new priceBtnListner(LOAD_MUSICAL_QUERY));
 		group.add(allBtn);
 		
-		under10Btn = new JRadioButton("~10¸¸¿ø");
+		under10Btn = new JRadioButton("~10ë§Œì›");
 		searchPanel.add(under10Btn);
 		under10Btn.addActionListener(new priceBtnListner(PRICE_VIEW_1));
 		group.add(under10Btn);
 		
-		bw1015Btn = new JRadioButton("10¸¸¿ø~15¸¸¿ø");
+		bw1015Btn = new JRadioButton("10ë§Œì›~15ë§Œì›");
 		searchPanel.add(bw1015Btn);
 		bw1015Btn.addActionListener(new priceBtnListner(PRICE_VIEW_2));
 		group.add(bw1015Btn);
 		
-		over15Btn = new JRadioButton("15¸¸¿ø~");
+		over15Btn = new JRadioButton("15ë§Œì›~");
 		searchPanel.add(over15Btn);
 		over15Btn.addActionListener(new priceBtnListner(PRICE_VIEW_3));
 		group.add(over15Btn);
@@ -171,17 +171,17 @@ public class MusicalPanel extends JPanel{
 	}
 	
 
-	// <°Ë»ö> ¹öÆ°¿¡ ´ëÇÑ ¸®½º³Ê
-	// DB¿¡ »ç¿ëÀÚ·ÎºÎÅÍ ¹ŞÀº ÀÔ·Â°ú ÀÏÄ¡ÇÏ´Â µ¥ÀÌÅÍ°¡ Á¸ÀçÇÏ´ÂÁö È®ÀÎ ÈÄ °¡Á®
+	// <ê²€ìƒ‰> ë²„íŠ¼ì— ëŒ€í•œ ë¦¬ìŠ¤ë„ˆ
+	// DBì— ì‚¬ìš©ìë¡œë¶€í„° ë°›ì€ ì…ë ¥ê³¼ ì¼ì¹˜í•˜ëŠ” ë°ì´í„°ê°€ ì¡´ì¬í•˜ëŠ”ì§€ í™•ì¸ í›„ ê°€ì ¸
 	private class searchBtnListner implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String title = searchTextField.getText().strip();
 			searchTextField.setText("");
 			
-			// »ç¿ëÀÚ ÀÔ·Â À¯È¿¼º °ËÁõ
+			// ì‚¬ìš©ì ì…ë ¥ ìœ íš¨ì„± ê²€ì¦
 			if (title.isEmpty()) {
-				searchTextField.setText("¹ÂÁöÄÃ Á¦¸ñÀ» ÀÔ·ÂÇØÁÖ¼¼¿ä.");
+				searchTextField.setText("ë®¤ì§€ì»¬ ì œëª©ì„ ì…ë ¥í•´ì£¼ì„¸ìš”.");
 			} 
 			else if(under10Btn.isSelected()){
 				resultList.setListData(getMusicals(PRICE1_MUSICAL_QUERY,title));
@@ -199,7 +199,7 @@ public class MusicalPanel extends JPanel{
 		}
 	}
 	
-	//°¡°İ ¹öÆ°
+	//ê°€ê²© ë²„íŠ¼
 	private class priceBtnListner implements ActionListener {
 		String view;
 		
@@ -217,7 +217,7 @@ public class MusicalPanel extends JPanel{
 	    public void mouseClicked(MouseEvent e) {
 	        if (e.getClickCount() == 2) {
 
-	        	//Á¦¸ñ°¡Á®¿À±â
+	        	//ì œëª©ê°€ì ¸ì˜¤ê¸°
 	        	String selectedMusical = resultList.getSelectedValue();
 	        	String [] text = selectedMusical.split(" ");
 	        	String selectedtitle = text[0].strip();
@@ -234,19 +234,21 @@ public class MusicalPanel extends JPanel{
     			
     			Musical musical = new Musical(selectedtitle);
 
-    			titleLabel = new JLabel("  Á¦¸ñ  " + musical.getTitle());
-    			theaterLabel = new JLabel("  ±ØÀå  " + musical.getTheaterName());
-    			summaryLabel = new JLabel("  ÁÙ°Å¸®  "  + musical.getSummary());
-    			reviewLabel = new JLabel("  Æò±Õº°Á¡  " + musical.getAvgRate());
+
+    			titleLabel = new JLabel("  ì œëª©  " + musical.getTitle());
+    			theaterLabel = new JLabel("  ê·¹ì¥  " + musical.getTheaterName());
+    			summaryLabel = new JLabel("  ì¤„ê±°ë¦¬  "  + musical.getSummary());
+    			reviewLabel = new JLabel("  í‰ê· ë³„ì   " + musical.getAvgRate());
+            
     			topPanel.add(titleLabel);			
     			topPanel.add(theaterLabel);
     			topPanel.add(summaryLabel);
-    			topPanel.add(reviewLabel);
+    			//topPanel.add(reviewLabel);
     			
-    			//buyBtn= new JButton("¿¹¸ÅÇÏ±â");
+    			//buyBtn= new JButton("ì˜ˆë§¤í•˜ê¸°");
     			//buyBtn.addActionListener(new buyBtnListener());
     			//botPanel.add(buyBtn);
-    			TicketPanel ticketPanel = new TicketPanel(musical.getTitle());
+    			TicketPanel ticketPanel = new TicketPanel(musical);
     			midPanel.add(ticketPanel);
 
     			infoDialog.add(topPanel);

@@ -10,7 +10,7 @@ class ConnectionClass {
 	private String baseUrl = "jdbc:mysql://localhost:3306/";
 	private String dbName = "DB2022Team12";
 	private String username = "root";
-	private String password = "1234";
+	private String password = "soominkim4250";
 
 	// SQLException error code
 	public static int ER_DUP_KEY = 1022;
