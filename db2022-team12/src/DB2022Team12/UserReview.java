@@ -1,9 +1,12 @@
 package DB2022Team12;
 
 class UserReview {
+	// 사용자 리뷰 정보 저장
 	int ID;
 	String title;
 	int rate;
+	
+	// getter & setter
 	
 	String time;
 	int getID() {
