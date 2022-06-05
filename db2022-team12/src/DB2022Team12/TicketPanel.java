@@ -1,5 +1,6 @@
 package DB2022Team12;
 
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -75,13 +76,13 @@ class TicketPanel extends JPanel {
 			JPanel btnPanel = new JPanel();
 			JPanel dateTimePanel = new JPanel();
 
-			noticeLabel = new JLabel("예매 티켓의 정보를 입력해주세요");
+			noticeLabel = new JLabel();
 			noticePanel.add(noticeLabel);
 
-			musicalLabel1 = new JLabel("공연 제목");
+			musicalLabel1 = new JLabel("뮤지컬");
 			musicalLabel2 = new JLabel(musical.getTitle());
 
-			dateTimeLabel = new JLabel("날짜 및 시간");
+			dateTimeLabel = new JLabel("날짜/시간 선택");
 
 			// 날짜 정보 목록 불러오기
 			Vector<String> dateList = musical.getDateVector();
@@ -97,7 +98,7 @@ class TicketPanel extends JPanel {
 
 			theaterLabel1 = new JLabel("극장");
 			theaterLabel2 = new JLabel(musical.getTheaterName());
-			remainLabel1 = new JLabel("남은 좌석 수");
+			remainLabel1 = new JLabel("잔여 좌석");
 			remainLabel2 = new JLabel();
 			priceLabel1 = new JLabel("예매가");
 			priceLabel2 = new JLabel(musical.getPrice());
@@ -194,13 +195,13 @@ class TicketPanel extends JPanel {
 			// 사용자가 회차 정보를 선택하지 않은 경우, 버튼 동작 X
 			if (selectedDate == null || selectedTime == null || selectedDate.equals(EMPTY_ITEM)
 					|| selectedTime.equals(EMPTY_ITEM)) {
-				NotificationClass.createNotifDialog(dialogTitle, "날짜와 시간을 선택해주세요");
+				noticeLabel.setText("날짜와 시간을 선택해주세요");
 				return;
 			}
 
 			// 남은 좌석 수가 0이면 예매 불가
 			if (musical.getRemainSeat(selectedDate, selectedTime) == 0) {
-				NotificationClass.createNotifDialog(dialogTitle, "해당 공연은 매진되었습니다 😢");
+				NotificationClass.createNotifDialog(dialogTitle, "해당 공연은 매진되었습니다");
 				return;
 			}
 
@@ -247,7 +248,7 @@ class TicketPanel extends JPanel {
 				conn.setAutoCommit(true);
 
 				// 예매 성공 알림창 생성 및 티켓 예매 다이얼로그 닫기
-				NotificationClass.createNotifDialog(dialogTitle, "예매가 완료되었습니다 🥰");
+				NotificationClass.createNotifDialog(dialogTitle, "예매가 완료되었습니다");
 				ticketDialog.dispose();
 
 			} catch (SQLException sqle) {
@@ -261,7 +262,7 @@ class TicketPanel extends JPanel {
 					}
 				}
 				System.out.println(sqle);
-				NotificationClass.createNotifDialog(dialogTitle, "예매에 실패했습니다 😢");
+				NotificationClass.createNotifDialog(dialogTitle, "예매에 실패했습니다");
 			} finally {
 				// DB 연결 닫기
 				try {
