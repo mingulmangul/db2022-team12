@@ -30,9 +30,9 @@ class checkTicketListener implements ActionListener {
 	private JPanel BtnPanel;
 	private JDialog checkTicketDialog;
 	
-	List<UserTicket> Ticket;
-	int myTicketNum = 0;
-	int[] deleId;
+	List<UserTicket> Ticket; // 유저의 티켓 정보를 저장할 UserTicket 객체 리스트
+	int myTicketNum = 0; // 유저의 티켓 개수
+	int[] deleTId; // 삭제할 티켓 id 배열
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -55,7 +55,7 @@ class checkTicketListener implements ActionListener {
 
 	        boolean Tresults = stmt.execute(TICKETSEARCH_QUERY);
 	        ResultSet res = stmt.getResultSet();
-	        int error = 0;
+	        int Terror = 0;
 
 	        do {
 	            if (Tresults) {
@@ -67,16 +67,16 @@ class checkTicketListener implements ActionListener {
 	                	Ticket.add(ticket);
 	                }
 	            }else {
-	            	error = 100;
+	            	Terror = 100;
 	            }
 	            Tresults = stmt.getMoreResults();
 	        } while (Tresults);
 
-			if(error == 0) {
+			if(Terror == 0) {
 				
 		        String Tstr = "";
 		        for(int i = 0; i < Ticket.size(); i++) {
-		        	Tstr += "NO." + (i+1) + " --- 티켓 id : " + Ticket.get(i).getID() + ",  공연 제목 : " + Ticket.get(i).getTitle() + ",  리뷰 작성 날짜 : " + Ticket.get(i).getOrderDate() + "<br />";
+		        	Tstr += "NO." + (i+1) + " --- 티켓 id : " + Ticket.get(i).getID() + ",  공연 제목 : " + Ticket.get(i).getTitle() + ",  티켓 예매 날짜 : " + Ticket.get(i).getOrderDate() + "<br />";
 		        	myTicketNum++;
 		        }
 				myTicketLabel = new JLabel("<html><body style='text-align:center;'>" + Tstr + "</body></html>");
@@ -118,53 +118,53 @@ class checkTicketListener implements ActionListener {
 		}
 	}
 	
-	// <예매 취소> 버튼에 대한 리스너
+	// 예매 티켓 조회 dialog에서 <예매 취소> 버튼에 대한 리스너
 	// 예매한 티켓 정보와 예매 취소 동의 dialog 생성
 	class cancelTicketBtnListener implements ActionListener {
 		private JButton deleTBtn, closeTBtn;
-		private JPanel reserveTicketPanel, selectTPanel;
+		private JPanel reserveTPanel, selectTPanel;
 		private JDialog deleTAgreeDialog;
-		private JLabel explainLabel;
+		private JLabel explainTLabel;
 		JCheckBox[] chk = new JCheckBox[myTicketNum];
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
-				checkTicketDialog.dispose();
+			checkTicketDialog.dispose();
 			
-				deleTAgreeDialog = new JDialog();
-				deleTAgreeDialog.setSize(200, 150);
-				deleTAgreeDialog.setTitle("예매 취소");
-				deleTAgreeDialog.setLayout(new GridLayout(3, 1, 10, 5));
+			deleTAgreeDialog = new JDialog();
+			deleTAgreeDialog.setSize(200, 150);
+			deleTAgreeDialog.setTitle("예매 취소 티켓 선택");
+			deleTAgreeDialog.setLayout(new GridLayout(3, 1, 10, 5));
 				
-				explainLabel = new JLabel("예매를 취소할 티켓을 선택하세요.");
-				deleTAgreeDialog.add(explainLabel);
+			explainTLabel = new JLabel("예매를 취소할 티켓을 선택하세요.");
+			deleTAgreeDialog.add(explainTLabel);
 				
-				reserveTicketPanel = new JPanel();
+			reserveTPanel = new JPanel();
 				
-				for (int i = 0; i < myTicketNum; i++){
-					chk[i] = new JCheckBox("NO." + (i+1) + " --- 티켓 id : " + Ticket.get(i).getID() + ",  공연 제목 : " + Ticket.get(i).getTitle() + ",  리뷰 작성 날짜 : " + Ticket.get(i).getOrderDate(),false);
-					chk[i].addItemListener(new deleTItem());
-					reserveTicketPanel.add(chk[i]);
-				}				
-				deleTAgreeDialog.add(reserveTicketPanel);
+			for (int i = 0; i < myTicketNum; i++){
+				chk[i] = new JCheckBox("NO." + (i+1) + " --- 티켓 id : " + Ticket.get(i).getID() + ",  공연 제목 : " + Ticket.get(i).getTitle() + ",  티켓 예매 날짜 : " + Ticket.get(i).getOrderDate(),false);
+				chk[i].addItemListener(new deleTItem());
+				reserveTPanel.add(chk[i]);
+			}				
+			deleTAgreeDialog.add(reserveTPanel);
 				
-				selectTPanel = new JPanel(new GridLayout(1, 2, 1, 5));
-				deleTBtn = new JButton("예매 취소 동의");
-				deleTBtn.addActionListener(new delTcheckListener());
+			selectTPanel = new JPanel(new GridLayout(1, 2, 1, 5));
+			deleTBtn = new JButton("예매 취소 동의");
+			deleTBtn.addActionListener(new delTcheckListener());
+			selectTPanel.add(deleTBtn);
+			
+			closeTBtn = new JButton("CLOSE");
+			closeTBtn.addActionListener(new deleSDlgListener());
+			selectTPanel.add(closeTBtn);
 				
-				selectTPanel.add(deleTBtn);
-				closeTBtn = new JButton("CLOSE");
-				closeTBtn.addActionListener(new deleSDlgListener());
-				selectTPanel.add(closeTBtn);
+			deleTAgreeDialog.add(selectTPanel);
 				
-				deleTAgreeDialog.add(selectTPanel);
-				
-				deleTAgreeDialog.setVisible(true);
+			deleTAgreeDialog.setVisible(true);
 		}
 		
-		// 예매 취소 dialog에서 <CLOSE> 버튼에 대한 리스너
-		// 예매 취소 dialog 닫기
+		// 예매 취소 티켓 선택 dialog에서 <CLOSE> 버튼에 대한 리스너
+		// 예매 취소 티켓 선택 dialog 닫기
 		class deleSDlgListener implements ActionListener {
 
 			@Override
@@ -173,16 +173,16 @@ class checkTicketListener implements ActionListener {
 			}
 		}
 		
-		// 예매 취소 티켓 체크박스에 대한 리스너
+		// 예매 취소 티켓 선택 체크박스에 대한 리스너
 		class deleTItem implements ItemListener {
 			public void itemStateChanged(ItemEvent e) {
-				deleId = new int[myTicketNum];
+				deleTId = new int[myTicketNum];
 				
 				for (int i = 0; i < myTicketNum; i++){
 					if(chk[i].isSelected()) {
-						deleId[i] = Ticket.get(i).getID();
+						deleTId[i] = Ticket.get(i).getID();
 					}else {
-						deleId[i] = 0;
+						deleTId[i] = 0;
 					}
 				}
 			}
@@ -190,7 +190,7 @@ class checkTicketListener implements ActionListener {
 		}	
 		
 		// <예매 취소 동의> 버튼에서 체크박스를 선택한 경우에 대한 리스너
-		// 예매 티켓 정보 DB에서 삭제, 예매 취소 완료 dialog 생성
+		// 선택된 예매 티켓 정보를 DB에서 삭제, 예매 취소 완료 dialog 생성
 		class delTcheckListener implements ActionListener {
 			private JLabel msgTLabel;
 			private JButton checkTBtn;	
@@ -203,14 +203,14 @@ class checkTicketListener implements ActionListener {
 				delTcheckDialog.setLayout(new GridLayout(2, 1, 10, 10));
 				
 				for (int i = 0; i < myTicketNum; i++){
-					if(deleId[i] != 0) {
+					if(deleTId[i] != 0) {
 						try (	Connection conn = new ConnectionClass().getConnection();
 								Statement preStmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
-							ResultSet res = preStmt.executeQuery("SELECT * FROM db2022_ticket WHERE id = '" + deleId[i] + "'");
+							ResultSet res = preStmt.executeQuery("SELECT * FROM db2022_ticket WHERE id = '" + deleTId[i] + "'");
 							
 							// 해당 티켓 id의 티켓이 존재하는지 확인
 							if (res.next()) {
-								preStmt.executeUpdate("DELETE FROM db2022_ticket WHERE id = '" + deleId[i] + "'");
+								preStmt.executeUpdate("DELETE FROM db2022_ticket WHERE id = '" + deleTId[i] + "'");
 								msgTLabel = new JLabel("예매 취소 완료", SwingConstants.CENTER);
 							} else {
 								msgTLabel = new JLabel("ERROR", SwingConstants.CENTER);
@@ -228,7 +228,6 @@ class checkTicketListener implements ActionListener {
 				
 				delTcheckDialog.setVisible(true);
 				
-				//예매 취소 dialog 닫기
 				deleTAgreeDialog.dispose();
 				
 			}
