@@ -23,18 +23,18 @@ class ReviewInsertionPanel extends JPanel {
 	private JButton submitBtn;
 	private ButtonGroup btnGroup;
 
-	// ë¦¬ë·°ë¥¼ ì‘ì„±í•˜ë ¤ëŠ” ê³µì—°ì˜ ì •ë³´ë¥¼ ë‹´ì€ Musical ê°ì²´
+	// ¸®ºä¸¦ ÀÛ¼ºÇÏ·Á´Â °ø¿¬ÀÇ Á¤º¸¸¦ ´ãÀº Musical °´Ã¼
 	private Musical musical;
 	
-	// ë³„ì (0~5)
-	private final static String[] scoreList = {"â˜…", "â˜…â˜…", "â˜…â˜…â˜…", "â˜…â˜…â˜…â˜…", "â˜…â˜…â˜…â˜…â˜…"};
+	// º°Á¡(0~5)
+	private final static String[] scoreList = {"¡Ú", "¡Ú¡Ú", "¡Ú¡Ú¡Ú", "¡Ú¡Ú¡Ú¡Ú", "¡Ú¡Ú¡Ú¡Ú¡Ú"};
 	
-	// ì‚¬ìš©ìê°€ ì‘ì„±í•œ ë¦¬ë·°ë¥¼ DBì— ì‚½ì…í•˜ëŠ” ì¿¼ë¦¬
+	// »ç¿ëÀÚ°¡ ÀÛ¼ºÇÑ ¸®ºä¸¦ DB¿¡ »ğÀÔÇÏ´Â Äõ¸®
 	private final static String INSERT_REVIEW_QUERY = "INSERT INTO review(musical_title, member_id, rate, written_at) "
 			+ "VALUES (?, ?, ?, ?)";
 	
-	// ë¦¬ë·° ì‘ì„± íŒ¨ë„ ë ˆì´ì•„ì›ƒ ì„¤ì •
-	// ë¦¬ë·°ë¥¼ ì‘ì„±í•˜ë ¤ëŠ” ê³µì—°ì˜ ì •ë³´ë¥¼ ë‹´ì€ Musical ê°ì²´ë¥¼ ì „ë‹¬ ë°›ìŒ
+	// ¸®ºä ÀÛ¼º ÆĞ³Î ·¹ÀÌ¾Æ¿ô ¼³Á¤
+	// ¸®ºä¸¦ ÀÛ¼ºÇÏ·Á´Â °ø¿¬ÀÇ Á¤º¸¸¦ ´ãÀº Musical °´Ã¼¸¦ Àü´Ş ¹ŞÀ½
 	public ReviewInsertionPanel(Musical musical) {
 		this.musical = musical;
 		this.setSize(300, 100);
@@ -43,13 +43,13 @@ class ReviewInsertionPanel extends JPanel {
 		noticePanel = new JPanel();
 		reviewPanel = new JPanel();
 
-		noticeLabel = new JLabel("ë¦¬ë·° ë“±ë¡");
+		noticeLabel = new JLabel("¸®ºä µî·Ï");
 		noticePanel.add(noticeLabel);
 		
 		scorePanel = new JPanel();
 		btnPanel = new JPanel();
 
-		// ë³„ì (0~5ì )ì„ ë‚˜íƒ€ë‚´ëŠ” ë¼ë””ì˜¤ ë²„íŠ¼ ìƒì„±
+		// º°Á¡(0~5Á¡)À» ³ªÅ¸³»´Â ¶óµğ¿À ¹öÆ° »ı¼º
 		scoreBtn = new JRadioButton[5];
 		btnGroup = new ButtonGroup();
 		for (int i=0; i<5; i++) {
@@ -58,7 +58,7 @@ class ReviewInsertionPanel extends JPanel {
 			scorePanel.add(scoreBtn[i]);
 		}
 		
-		submitBtn = new JButton("ë“±ë¡í•˜ê¸°");
+		submitBtn = new JButton("µî·ÏÇÏ±â");
 		submitBtn.addActionListener(new submitBtnListener());
 		btnPanel.add(submitBtn);
 		
@@ -68,22 +68,22 @@ class ReviewInsertionPanel extends JPanel {
 		this.add(reviewPanel);
 	}
 	
-	// <ë“±ë¡í•˜ê¸°> ë²„íŠ¼ì— ëŒ€í•œ ë¦¬ìŠ¤ë„ˆ
-	// ì‚¬ìš©ìë¡œë¶€í„° ì…ë ¥ ë°›ì€ ë¦¬ë·°(ë³„ì )ë¥¼ DBì— ì €ì¥
+	// <µî·ÏÇÏ±â> ¹öÆ°¿¡ ´ëÇÑ ¸®½º³Ê
+	// »ç¿ëÀÚ·ÎºÎÅÍ ÀÔ·Â ¹ŞÀº ¸®ºä(º°Á¡)¸¦ DB¿¡ ÀúÀå
 	private class submitBtnListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// ì•Œë¦¼ì°½ ì œëª©
-			String dialogTitle = "ë¦¬ë·° ë“±ë¡ | " + musical.getTitle();
+			// ¾Ë¸²Ã¢ Á¦¸ñ
+			String dialogTitle = "¸®ºä µî·Ï | " + musical.getTitle();
 			
-			// ë¯¸ë¡œê·¸ì¸ ìœ ì €ì¸ ê²½ìš°, ë¦¬ë·° ë“±ë¡ ë¶ˆê°€
+			// ¹Ì·Î±×ÀÎ À¯ÀúÀÎ °æ¿ì, ¸®ºä µî·Ï ºÒ°¡
 			if (User.getId() == null) {
-				NotificationClass.createNotifDialog(dialogTitle, "ë¡œê·¸ì¸ì´ í•„ìš”í•©ë‹ˆë‹¤");
+				NotificationClass.createNotifDialog(dialogTitle, "·Î±×ÀÎÀÌ ÇÊ¿äÇÕ´Ï´Ù");
 				return;
 			}
 			
-			// ì‚¬ìš©ìê°€ ì…ë ¥í•œ ë¦¬ë·° ì •ë³´(ì‚¬ìš©ìê°€ ì„ íƒí•œ ë¼ë””ì˜¤ ë²„íŠ¼ ë²ˆí˜¸ + 1)
+			// »ç¿ëÀÚ°¡ ÀÔ·ÂÇÑ ¸®ºä Á¤º¸(»ç¿ëÀÚ°¡ ¼±ÅÃÇÑ ¶óµğ¿À ¹öÆ° ¹øÈ£ + 1)
 			int rate = 0;
 			
 			for (int i=0; i<5; i++) {
@@ -91,10 +91,10 @@ class ReviewInsertionPanel extends JPanel {
 					rate = i + 1;
 			}
 			
-			// ë³„ì ì´ ì„ íƒë˜ì§€ ì•Šì€ ê²½ìš°, ë²„íŠ¼ì´ ë™ì‘í•˜ì§€ ì•ŠìŒ
+			// º°Á¡ÀÌ ¼±ÅÃµÇÁö ¾ÊÀº °æ¿ì, ¹öÆ°ÀÌ µ¿ÀÛÇÏÁö ¾ÊÀ½
 			if (rate == 0)
 			{
-				noticeLabel.setText("ë³„ì ì„ ì„ íƒí•´ì£¼ì„¸ìš”");
+				noticeLabel.setText("º°Á¡À» ¼±ÅÃÇØÁÖ¼¼¿ä");
 				return;
 			}
 
@@ -108,8 +108,8 @@ class ReviewInsertionPanel extends JPanel {
 				pStmt.setString(4, DateClass.getCurrentDate());
 				pStmt.executeUpdate();
 				
-				// ë¦¬ë·° ë“±ë¡ ì„±ê³µ ì•Œë¦¼ì°½ ìƒì„±
-				NotificationClass.createNotifDialog(dialogTitle, "ë¦¬ë·°ê°€ ë“±ë¡ë˜ì—ˆìŠµë‹ˆë‹¤ :)");
+				// ¸®ºä µî·Ï ¼º°ø ¾Ë¸²Ã¢ »ı¼º
+				NotificationClass.createNotifDialog(dialogTitle, "¸®ºä°¡ µî·ÏµÇ¾ú½À´Ï´Ù :)");
 				
 			} catch (SQLException sqle) {
 				System.out.println(sqle);

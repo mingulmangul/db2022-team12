@@ -186,7 +186,7 @@ class TicketPanel extends JPanel {
 				insertStmt.setString(3, User.getId());
 				insertStmt.setString(4, DateClass.getCurrentDate());
 				insertStmt.executeUpdate();
-
+				
 				// 예매 성공 알림창 생성
 				JDialog sucDialog = new JDialog();
 				sucDialog.setTitle("티켓 예매 | " + musical.getTitle());

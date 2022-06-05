@@ -8,21 +8,21 @@ import java.util.Vector;
 
 class Musical {
 	
-	// ë®¤ì§€ì»¬ ë‚ ì§œ ì •ë³´ë¥¼ ì €ì¥í•˜ëŠ” ë§µ: <ê³µì—° ë‚ ì§œ, ê°™ì€ ë‚ ì§œì— ëŒ€í•œ ê³µì—° ì‹œê°ë“¤ì„ ì €ì¥í•˜ëŠ” ë¦¬ìŠ¤íŠ¸>
+	// ¹ÂÁöÄÃ ³¯Â¥ Á¤º¸¸¦ ÀúÀåÇÏ´Â ¸Ê: <°ø¿¬ ³¯Â¥, °°Àº ³¯Â¥¿¡ ´ëÇÑ °ø¿¬ ½Ã°¢µéÀ» ÀúÀåÇÏ´Â ¸®½ºÆ®>
 	private HashMap<String, Vector<String>> dateInfo;
 	
 	private String title, summary, price, score;
 	private int remainSeat;
 	private String theaterName, theaterAddress, theaterPhone, theaterSize;
 
-	// ë®¤ì§€ì»¬ ê´€ë ¨ ì •ë³´ë¥¼ ëª¨ë‘ ê°€ì ¸ì˜¤ëŠ” ì¿¼ë¦¬ (ë®¤ì§€ì»¬ ì •ë³´ + í‰ê·  ë³„ì  ì •ë³´ + ìƒì˜ ê·¹ì¥ ì •ë³´)
-	// ë®¤ì§€ì»¬ í…Œì´ë¸”ê³¼ í‰ê·  ë³„ì  ë·°ë¥¼ NATURAL LEFT JOIN í•œ í›„, ì´ë¥¼ ê·¹ì¥ í…Œì´ë¸”ê³¼ JOIN 
+	// ¹ÂÁöÄÃ °ü·Ã Á¤º¸¸¦ ¸ğµÎ °¡Á®¿À´Â Äõ¸® (¹ÂÁöÄÃ Á¤º¸ + Æò±Õ º°Á¡ Á¤º¸ + »ó¿µ ±ØÀå Á¤º¸)
+	// ¹ÂÁöÄÃ Å×ÀÌºí°ú Æò±Õ º°Á¡ ºä¸¦ NATURAL LEFT JOIN ÇÑ ÈÄ, ÀÌ¸¦ ±ØÀå Å×ÀÌºí°ú JOIN 
 	private final static String GET_MUSICAL_QUERY = "SELECT * "
 			+ "FROM (musical NATURAL LEFT JOIN avg_rate) "
 			+ "JOIN theater ON musical.theater_name = theater.name "
 			+ "WHERE musical.title = ?";
 	
-	// ë®¤ì§€ì»¬ ë‚ ì§œ ì •ë³´ë¥¼ ê°€ì ¸ì˜¤ëŠ” ì¿¼ë¦¬
+	// ¹ÂÁöÄÃ ³¯Â¥ Á¤º¸¸¦ °¡Á®¿À´Â Äõ¸®
 	private final static String GET_MUSICAL_DATE_QUERY = "SELECT * "
 			+ "FROM musical NATURAL JOIN musical_date "
 			+ "WHERE title = ?";
@@ -33,11 +33,11 @@ class Musical {
 			PreparedStatement musicalStmt = conn.prepareStatement(GET_MUSICAL_QUERY);
 			PreparedStatement dateStmt = conn.prepareStatement(GET_MUSICAL_DATE_QUERY);
 		) {
-			// ë®¤ì§€ì»¬ ì •ë³´ ê°€ì ¸ì˜¤ê¸°
+			// ¹ÂÁöÄÃ Á¤º¸ °¡Á®¿À±â
 			musicalStmt.setString(1, musical);
 			ResultSet rs = musicalStmt.executeQuery();
 			
-			// ë®¤ì§€ì»¬ ì •ë³´ ì €ì¥
+			// ¹ÂÁöÄÃ Á¤º¸ ÀúÀå
 			rs.next();
 			this.title = rs.getString("title");
 			this.price = rs.getString("price");
@@ -49,18 +49,18 @@ class Musical {
 			this.theaterPhone = rs.getString("phone");
 			this.theaterSize = rs.getString("size");
 
-			// ë®¤ì§€ì»¬ ë‚ ì§œ ì •ë³´ ê°€ì ¸ì˜¤ê¸°
+			// ¹ÂÁöÄÃ ³¯Â¥ Á¤º¸ °¡Á®¿À±â
 			dateStmt.setString(1, musical);
 			rs = dateStmt.executeQuery();
 			
-			// ë®¤ì§€ì»¬ ë‚ ì§œ ì •ë³´ ì €ì¥
+			// ¹ÂÁöÄÃ ³¯Â¥ Á¤º¸ ÀúÀå
 			dateInfo = new HashMap<>();
 			String date, time;
 			while (rs.next()) {
 				date = rs.getString("date");
 				time = rs.getString("time");
 				
-				// <key: date, value: timeì„ ì €ì¥í•˜ëŠ” Vector> í˜•ì‹ìœ¼ë¡œ ì €ì¥
+				// <key: date, value: timeÀ» ÀúÀåÇÏ´Â Vector> Çü½ÄÀ¸·Î ÀúÀå
 				Vector<String> v = dateInfo.getOrDefault(date, new Vector<String>());
 				v.add(time);
 				dateInfo.put(date, v);

@@ -15,24 +15,24 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-// ë¡œê·¸ì¸ & íšŒì›ê°€ì… íŒ¨ë„
+// ·Î±×ÀÎ & È¸¿ø°¡ÀÔ ÆĞ³Î
 class AuthenticationPanel extends JPanel {
 
 	private JDialog signUpDialog;
 	private JPanel authPanel, noticePanel, signInTextFieldPanel;
-	private JButton signInBtn, signUpBtn, submitBtn;
+	private JButton signInBtn, signUpBtn, submitBtn, MypageBtn;
 	private JTextField idField, nameField, phoneField, emailField, addressField;
 	private JPasswordField pwField;
 	private JLabel noticeLabel, idLabel, pwLabel, nameLabel, phoneLabel, emailLabel, addressLabel;
 
-	// ìœ ì € ì •ë³´ ê²€ìƒ‰ ì¿¼ë¦¬
+	// À¯Àú Á¤º¸ °Ë»ö Äõ¸®
 	private final String SIGNIN_QUERY = "SELECT pw, name FROM member WHERE id = ?";
 
-	// ìœ ì € ì •ë³´ ì‚½ì… ì¿¼ë¦¬
+	// À¯Àú Á¤º¸ »ğÀÔ Äõ¸®
 	// id, pw, name, phone, email, address
 	private final String SIGNUP_QUERY = "INSERT INTO member VALUES (?, ?, ?, ?, ?, ?)";
 
-	// ë¡œê·¸ì¸ & íšŒì›ê°€ì… íŒ¨ë„ ë ˆì´ì•„ì›ƒ ì„¤ì •
+	// ·Î±×ÀÎ & È¸¿ø°¡ÀÔ ÆĞ³Î ·¹ÀÌ¾Æ¿ô ¼³Á¤
 	public AuthenticationPanel() {
 		this.setLayout(new GridLayout(2, 1));
 		
@@ -54,9 +54,9 @@ class AuthenticationPanel extends JPanel {
 		signInTextFieldPanel.add(pwLabel);
 		signInTextFieldPanel.add(pwField);
 
-		signInBtn = new JButton("ë¡œê·¸ì¸");
+		signInBtn = new JButton("·Î±×ÀÎ");
 		signInBtn.addActionListener(new signInBtnListener());
-		signUpBtn = new JButton("íšŒì›ê°€ì…");
+		signUpBtn = new JButton("È¸¿ø°¡ÀÔ");
 		signUpBtn.addActionListener(new signUpBtnListener());
 
 		authPanel.add(signInTextFieldPanel);
@@ -65,8 +65,8 @@ class AuthenticationPanel extends JPanel {
 		this.add(authPanel);
 	}
 
-	// <ë¡œê·¸ì¸> ë²„íŠ¼ì— ëŒ€í•œ ë¦¬ìŠ¤ë„ˆ
-	// DBì— ì‚¬ìš©ìë¡œë¶€í„° ë°›ì€ ì…ë ¥ê³¼ ì¼ì¹˜í•˜ëŠ” ë°ì´í„°ê°€ ì¡´ì¬í•˜ëŠ”ì§€ í™•ì¸ í›„ ë¡œê·¸ì¸
+	// <·Î±×ÀÎ> ¹öÆ°¿¡ ´ëÇÑ ¸®½º³Ê
+	// DB¿¡ »ç¿ëÀÚ·ÎºÎÅÍ ¹ŞÀº ÀÔ·Â°ú ÀÏÄ¡ÇÏ´Â µ¥ÀÌÅÍ°¡ Á¸ÀçÇÏ´ÂÁö È®ÀÎ ÈÄ ·Î±×ÀÎ
 	private class signInBtnListener implements ActionListener {
 
 		@Override
@@ -74,36 +74,40 @@ class AuthenticationPanel extends JPanel {
 			String id = idField.getText().strip();
 			String pw = String.valueOf(pwField.getPassword()).strip();
 
-			// ì‚¬ìš©ì ì…ë ¥ ìœ íš¨ì„± ê²€ì¦
+			// »ç¿ëÀÚ ÀÔ·Â À¯È¿¼º °ËÁõ
 			if (id.isEmpty()) {
-				noticeLabel.setText("ì•„ì´ë””ë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”");
+				noticeLabel.setText("¾ÆÀÌµğ¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä");
 			} else if (pw.isEmpty()) {
-				noticeLabel.setText("ë¹„ë°€ë²ˆí˜¸ë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”");
+				noticeLabel.setText("ºñ¹Ğ¹øÈ£¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä");
 			} else {
 
-				// ëª¨ë“  í•„ë“œê°€ ìœ íš¨í•˜ë‹¤ë©´ ë°ì´í„°ë² ì´ìŠ¤ ì—°ê²°
+				// ¸ğµç ÇÊµå°¡ À¯È¿ÇÏ´Ù¸é µ¥ÀÌÅÍº£ÀÌ½º ¿¬°á
 				try (Connection conn = new ConnectionClass().getConnection();
 						PreparedStatement preStmt = conn.prepareStatement(SIGNIN_QUERY);) {
-					// ìœ ì € ì •ë³´ ê²€ìƒ‰ì„ ìœ„í•œ ì¿¼ë¦¬
+					// À¯Àú Á¤º¸ °Ë»öÀ» À§ÇÑ Äõ¸®
 					preStmt.setString(1, id);
 					ResultSet res = preStmt.executeQuery();
 
-					// í•´ë‹¹ ì•„ì´ë””ì˜ ìœ ì €ê°€ ì¡´ì¬í•˜ëŠ”ì§€ í™•ì¸
+					// ÇØ´ç ¾ÆÀÌµğÀÇ À¯Àú°¡ Á¸ÀçÇÏ´ÂÁö È®ÀÎ
 					if (!res.next()) {
-						noticeLabel.setText("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ì•„ì´ë””ì…ë‹ˆë‹¤");
+						noticeLabel.setText("Á¸ÀçÇÏÁö ¾Ê´Â ¾ÆÀÌµğÀÔ´Ï´Ù");
 					} else {
 						String user_pw = res.getString("pw");
-						// ë¹„ë°€ë²ˆí˜¸ ë¹„êµ
+						// ºñ¹Ğ¹øÈ£ ºñ±³
 						if (!pw.equals(user_pw)) {
-							noticeLabel.setText("ì˜ëª»ëœ ë¹„ë°€ë²ˆí˜¸ì…ë‹ˆë‹¤");
+							noticeLabel.setText("Àß¸øµÈ ºñ¹Ğ¹øÈ£ÀÔ´Ï´Ù");
 						} else {
-							// ë¡œê·¸ì¸ ì„±ê³µ
+							// ·Î±×ÀÎ ¼º°ø
 							User.setId(id);
 							User.setName(res.getString("name"));
 
-							// ë¡œê·¸ì¸ & íšŒì›ê°€ì… íŒ¨ë„ ìˆ¨ê¸°ê¸°
+							// ·Î±×ÀÎ & È¸¿ø°¡ÀÔ ÆĞ³Î ¼û±â±â
 							authPanel.setVisible(false);
-							noticeLabel.setText(User.getName() + "ë‹˜ ì•ˆë…•í•˜ì„¸ìš” :)");
+							noticeLabel.setText(User.getName() + "´Ô ¾È³çÇÏ¼¼¿ä :)");
+							
+							MypageBtn = new JButton("¸¶ÀÌÆäÀÌÁö");
+							MypageBtn.addActionListener(new MypageBtnListener());
+							noticePanel.add(MypageBtn);
 						}
 					}
 				} catch (SQLException sqle) {
@@ -114,13 +118,13 @@ class AuthenticationPanel extends JPanel {
 
 	}
 
-	// <íšŒì›ê°€ì…> ë²„íŠ¼ì— ëŒ€í•œ ë¦¬ìŠ¤ë„ˆ
-	// íšŒì›ê°€ì… Dialog ì°½ ìƒì„±
+	// <È¸¿ø°¡ÀÔ> ¹öÆ°¿¡ ´ëÇÑ ¸®½º³Ê
+	// È¸¿ø°¡ÀÔ Dialog Ã¢ »ı¼º
 	private class signUpBtnListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// íšŒì›ê°€ì… Dialog ë ˆì´ì•„ì›ƒ ì„¤ì •
+			// È¸¿ø°¡ÀÔ Dialog ·¹ÀÌ¾Æ¿ô ¼³Á¤
 			signUpDialog = new JDialog();
 			signUpDialog.setSize(300, 400);
 			signUpDialog.setLayout(new GridLayout(3, 1));
@@ -136,14 +140,14 @@ class AuthenticationPanel extends JPanel {
 			idField = new JTextField();
 			pwLabel = new JLabel("Password: ");
 			pwField = new JPasswordField();
-			nameLabel = new JLabel("ì´ë¦„: ");
-			nameField = new JTextField("í™ê¸¸ë™");
-			phoneLabel = new JLabel("ì „í™”ë²ˆí˜¸: ");
+			nameLabel = new JLabel("ÀÌ¸§: ");
+			nameField = new JTextField("È«±æµ¿");
+			phoneLabel = new JLabel("ÀüÈ­¹øÈ£: ");
 			phoneField = new JTextField("010-0000-0000");
-			emailLabel = new JLabel("ì´ë©”ì¼: ");
+			emailLabel = new JLabel("ÀÌ¸ŞÀÏ: ");
 			emailField = new JTextField("example@example.com");
-			addressLabel = new JLabel("ì£¼ì†Œ: ");
-			addressField = new JTextField("ì„œìš¸ì‹œ ì„œëŒ€ë¬¸êµ¬ ì´í™”ì—¬ëŒ€ê¸¸");
+			addressLabel = new JLabel("ÁÖ¼Ò: ");
+			addressField = new JTextField("¼­¿ï½Ã ¼­´ë¹®±¸ ÀÌÈ­¿©´ë±æ");
 			inputPanel.add(idLabel);
 			inputPanel.add(idField);
 			inputPanel.add(pwLabel);
@@ -157,7 +161,7 @@ class AuthenticationPanel extends JPanel {
 			inputPanel.add(addressLabel);
 			inputPanel.add(addressField);
 
-			submitBtn = new JButton("ê°€ì…í•˜ê¸°");
+			submitBtn = new JButton("°¡ÀÔÇÏ±â");
 			submitBtn.addActionListener(new submitBtnListener());
 			btnPanel.add(submitBtn);
 
@@ -169,17 +173,17 @@ class AuthenticationPanel extends JPanel {
 
 	}
 
-	// <ê°€ì…í•˜ê¸°> ë²„íŠ¼ ë¦¬ìŠ¤ë„ˆ
-	// ì‚¬ìš©ìë¡œë¶€í„° ë°›ì€ ì…ë ¥ìœ¼ë¡œ ì¿¼ë¦¬ ìƒì„± í›„ DBì— ì‚½ì…
+	// <°¡ÀÔÇÏ±â> ¹öÆ° ¸®½º³Ê
+	// »ç¿ëÀÚ·ÎºÎÅÍ ¹ŞÀº ÀÔ·ÂÀ¸·Î Äõ¸® »ı¼º ÈÄ DB¿¡ »ğÀÔ
 	private class submitBtnListener implements ActionListener {
 
-		// ìœ íš¨í•œ ì „í™”ë²ˆí˜¸ì¸ì§€ ê²€ì¦
+		// À¯È¿ÇÑ ÀüÈ­¹øÈ£ÀÎÁö °ËÁõ
 		private boolean isValidPhone(String phone) {
 			String phonePattern = "^\\d{2,3}-\\d{3,4}-\\d{4}$";
 			return Pattern.matches(phonePattern, phone);
 		}
 
-		// ìœ íš¨í•œ ì´ë©”ì¼ ì£¼ì†Œì¸ì§€ ê²€ì¦
+		// À¯È¿ÇÑ ÀÌ¸ŞÀÏ ÁÖ¼ÒÀÎÁö °ËÁõ
 		private boolean isValidEmail(String email) {
 			String emailPattern = "^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\\.[a-zA-Z]{2,3}$";
 			return Pattern.matches(emailPattern, email);
@@ -187,7 +191,7 @@ class AuthenticationPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// ì‚¬ìš©ì ì…ë ¥ ê°€ì ¸ì˜¤ê¸°
+			// »ç¿ëÀÚ ÀÔ·Â °¡Á®¿À±â
 			String id = idField.getText().strip();
 			String pw = String.valueOf(pwField.getPassword()).strip();
 			String name = nameField.getText().strip();
@@ -195,23 +199,23 @@ class AuthenticationPanel extends JPanel {
 			String email = emailField.getText().strip();
 			String address = addressField.getText().strip();
 
-			// ì‚¬ìš©ìê°€ ì…ë ¥í•œ ê° í•„ë“œì˜ ë‚´ìš©ì— ëŒ€í•œ ìœ íš¨ì„± ê²€ì¦
+			// »ç¿ëÀÚ°¡ ÀÔ·ÂÇÑ °¢ ÇÊµåÀÇ ³»¿ë¿¡ ´ëÇÑ À¯È¿¼º °ËÁõ
 			if (id.isEmpty()) {
-				noticeLabel.setText("ì•„ì´ë””ë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”");
+				noticeLabel.setText("¾ÆÀÌµğ¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä");
 			} else if (pw.isEmpty()) {
-				noticeLabel.setText("ë¹„ë°€ë²ˆí˜¸ë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”");
+				noticeLabel.setText("ºñ¹Ğ¹øÈ£¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä");
 			} else if (name.isEmpty()) {
-				noticeLabel.setText("ì´ë¦„ì„ ì…ë ¥í•´ì£¼ì„¸ìš”");
+				noticeLabel.setText("ÀÌ¸§À» ÀÔ·ÂÇØÁÖ¼¼¿ä");
 			} else if (!this.isValidPhone(phone)) {
-				noticeLabel.setText("ì˜ëª»ëœ ì „í™”ë²ˆí˜¸ì…ë‹ˆë‹¤");
+				noticeLabel.setText("Àß¸øµÈ ÀüÈ­¹øÈ£ÀÔ´Ï´Ù");
 			} else if (!this.isValidEmail(email)) {
-				noticeLabel.setText("ì˜ëª»ëœ ì´ë©”ì¼ ì£¼ì†Œì…ë‹ˆë‹¤");
+				noticeLabel.setText("Àß¸øµÈ ÀÌ¸ŞÀÏ ÁÖ¼ÒÀÔ´Ï´Ù");
 			} else {
 
-				// ëª¨ë“  í•„ë“œê°€ ìœ íš¨í•˜ë‹¤ë©´ ë°ì´í„°ë² ì´ìŠ¤ ì—°ê²°
+				// ¸ğµç ÇÊµå°¡ À¯È¿ÇÏ´Ù¸é µ¥ÀÌÅÍº£ÀÌ½º ¿¬°á
 				try (Connection conn = new ConnectionClass().getConnection();
 						PreparedStatement preStmt = conn.prepareStatement(SIGNUP_QUERY);) {
-					// Member INSERTë¥¼ ìœ„í•œ ì¿¼ë¦¬ ìƒì„± ë° ì»¤ë°‹
+					// Member INSERT¸¦ À§ÇÑ Äõ¸® »ı¼º ¹× Ä¿¹Ô
 					preStmt.setString(1, id);
 					preStmt.setString(2, pw);
 					preStmt.setString(3, name);
@@ -221,14 +225,14 @@ class AuthenticationPanel extends JPanel {
 					preStmt.executeUpdate();
 				} catch (SQLException sqle) {
 					int error = sqle.getErrorCode();
-					// ID(Primary Key) ì¤‘ë³µ ì—ëŸ¬ ì²˜ë¦¬
+					// ID(Primary Key) Áßº¹ ¿¡·¯ Ã³¸®
 					if (error == ConnectionClass.ER_DUP_ENTRY || error == ConnectionClass.ER_DUP_KEY)
-						noticeLabel.setText("ì¤‘ë³µëœ ì•„ì´ë””ì…ë‹ˆë‹¤");
+						noticeLabel.setText("Áßº¹µÈ ¾ÆÀÌµğÀÔ´Ï´Ù");
 
 					System.out.println(sqle);
 				}
 
-				// íšŒì›ê°€ì… dialog ë‹«ê¸°
+				// È¸¿ø°¡ÀÔ dialog ´İ±â
 				signUpDialog.dispose();
 			}
 		}

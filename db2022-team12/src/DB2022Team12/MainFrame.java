@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 class MainFrame extends JFrame {
 
 	public MainFrame() {
-		setTitle("ÌîÑÎ°úÍ∑∏Îû®");
+		setTitle("«¡∑Œ±◊∑•");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(500, 500);
 
@@ -16,7 +16,7 @@ class MainFrame extends JFrame {
 
 		AuthenticationPanel authPanel = new AuthenticationPanel();
 		
-		Musical musical = new Musical("ÏïÑÏù¥Îã§");
+		Musical musical = new Musical("æ∆¿Ã¥Ÿ");
 		TicketPanel ticketPanel = new TicketPanel(musical);
 		ReviewInsertionPanel reviewInsertionPanel = new ReviewInsertionPanel(musical);
 
