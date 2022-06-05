@@ -43,7 +43,7 @@ class reviewBtnListener implements ActionListener {
 		try (Connection conn = new ConnectionClass().getConnection();
 				Statement stmt = conn.createStatement();) {
 				
-			String REVIEWSEARCH_QUERY = "SELECT * FROM review WHERE member_id = '" + User.getId() + "'";
+			String REVIEWSEARCH_QUERY = "SELECT * FROM db2022_review WHERE member_id = '" + User.getId() + "'";
 			
 			boolean Rresults = stmt.execute(REVIEWSEARCH_QUERY);
 			
@@ -108,11 +108,11 @@ class reviewBtnListener implements ActionListener {
 			
 			try (	Connection conn = new ConnectionClass().getConnection();
 					Statement preStmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
-				ResultSet res = preStmt.executeQuery("SELECT * FROM Review WHERE Member_id = '" + User.getId() + "'");
+				ResultSet res = preStmt.executeQuery("SELECT * FROM db2022_Review WHERE Member_id = '" + User.getId() + "'");
 				
 				// 해당 아이디의 티켓이 존재하는지 확인
 				if (res.next()) {
-					preStmt.executeUpdate("DELETE FROM Review WHERE Member_id = '" + User.getId() + "'");
+					preStmt.executeUpdate("DELETE FROM db2022_Review WHERE Member_id = '" + User.getId() + "'");
 					msgRLabel = new JLabel("작성한 리뷰가 모두 삭제되었습니다.", SwingConstants.CENTER);
 					
 				} else {

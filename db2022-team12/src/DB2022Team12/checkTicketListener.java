@@ -51,7 +51,7 @@ class checkTicketListener implements ActionListener {
 		try (Connection conn = new ConnectionClass().getConnection();
 				Statement stmt = conn.createStatement();) {
 			
-			String TICKETSEARCH_QUERY = "SELECT id, musical_title, order_date FROM ticket WHERE member_id = '" + User.getId() + "'";
+			String TICKETSEARCH_QUERY = "SELECT id, musical_title, order_date FROM db2022_ticket WHERE member_id = '" + User.getId() + "'";
 
 	        boolean Tresults = stmt.execute(TICKETSEARCH_QUERY);
 	        ResultSet res = stmt.getResultSet();
@@ -206,11 +206,11 @@ class checkTicketListener implements ActionListener {
 					if(deleId[i] != 0) {
 						try (	Connection conn = new ConnectionClass().getConnection();
 								Statement preStmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
-							ResultSet res = preStmt.executeQuery("SELECT * FROM ticket WHERE id = '" + deleId[i] + "'");
+							ResultSet res = preStmt.executeQuery("SELECT * FROM db2022_ticket WHERE id = '" + deleId[i] + "'");
 							
 							// 해당 티켓 id의 티켓이 존재하는지 확인
 							if (res.next()) {
-								preStmt.executeUpdate("DELETE FROM ticket WHERE id = '" + deleId[i] + "'");
+								preStmt.executeUpdate("DELETE FROM db2022_ticket WHERE id = '" + deleId[i] + "'");
 								msgTLabel = new JLabel("예매 취소 완료", SwingConstants.CENTER);
 							} else {
 								msgTLabel = new JLabel("ERROR", SwingConstants.CENTER);
