@@ -29,7 +29,7 @@ class MypageBtnListener implements ActionListener{
 		emptyPanel = new JPanel();
 		signInDialog.add(emptyPanel);
 		
-		personalPanel = new JPanel(new GridLayout(2, 1, 10, 10));
+		personalPanel = new JPanel();
 		MypagePanel = new JPanel(new GridLayout(2, 1, 10, 8));
 		
 		infoLabel = new JLabel(User.getName() + "님", SwingConstants.CENTER);

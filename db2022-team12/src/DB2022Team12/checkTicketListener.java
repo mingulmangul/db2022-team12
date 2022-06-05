@@ -1,5 +1,7 @@
 package DB2022Team12;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -37,13 +39,13 @@ class checkTicketListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		checkTicketDialog = new JDialog();
-		checkTicketDialog.setSize(200, 300);
+		checkTicketDialog.setSize(450, 250);
 		checkTicketDialog.setTitle("예매 티켓 조회");
-		checkTicketDialog.setLayout(new GridLayout(3, 1, 10, 1));
+		checkTicketDialog.setLayout(new BorderLayout());
 		
 		myInfoLabel = new JLabel(User.getName() + "님의 TICKET", SwingConstants.CENTER);
 		myInfoLabel.setFont(new Font("고딕", Font.BOLD, 20));
-		checkTicketDialog.add(myInfoLabel);
+		checkTicketDialog.add(myInfoLabel, BorderLayout.NORTH);
 		
 		Ticket = new ArrayList<UserTicket>();
 		myTicketNum = 0;
@@ -78,9 +80,9 @@ class checkTicketListener implements ActionListener {
 		        	Tstr += "NO." + (i+1) + " --- 티켓 id : " + Ticket.get(i).getID() + ",  공연 제목 : " + Ticket.get(i).getTitle() + ",  티켓 예매 날짜 : " + Ticket.get(i).getOrderDate() + "<br />";
 		        	myTicketNum++;
 		        }
-				myTicketLabel = new JLabel("<html><body style='text-align:center;'>" + Tstr + "</body></html>");
+				myTicketLabel = new JLabel("<html><body style='text-align:center;'>" + Tstr + "</body></html>", SwingConstants.CENTER);
 	
-				BtnPanel = new JPanel(new GridLayout(1, 2, 1, 10));
+				BtnPanel = new JPanel(new GridLayout(1, 2, 1, 1));
 				cancelTicketBtn = new JButton("예매 취소");
 				cancelTicketBtn.addActionListener(new cancelTicketBtnListener());
 				closeBtn = new JButton("CLOSE");
@@ -88,7 +90,7 @@ class checkTicketListener implements ActionListener {
 				BtnPanel.add(cancelTicketBtn);
 				BtnPanel.add(closeBtn);
 			}else {
-				myTicketLabel = new JLabel("예매한 티켓이 없습니다.");
+				myTicketLabel = new JLabel("예매한 티켓이 없습니다.", SwingConstants.CENTER);
 
 				BtnPanel = new JPanel();
 				closeBtn = new JButton("CLOSE");
@@ -96,8 +98,8 @@ class checkTicketListener implements ActionListener {
 				BtnPanel.add(closeBtn);
 			}
 			
-			checkTicketDialog.add(myTicketLabel);
-			checkTicketDialog.add(BtnPanel);
+			checkTicketDialog.add(myTicketLabel, BorderLayout.CENTER);
+			checkTicketDialog.add(BtnPanel, BorderLayout.SOUTH);
 	
 		} catch (SQLException sqle) {
 			System.out.println(sqle);
@@ -137,12 +139,13 @@ class checkTicketListener implements ActionListener {
 			checkTicketDialog.dispose();
 			
 			deleTAgreeDialog = new JDialog();
-			deleTAgreeDialog.setSize(200, 150);
+			deleTAgreeDialog.setSize(450, 250);
 			deleTAgreeDialog.setTitle("예매 취소 티켓 선택");
-			deleTAgreeDialog.setLayout(new GridLayout(3, 1, 10, 5));
+			deleTAgreeDialog.setLayout(new BorderLayout());
 				
-			explainTLabel = new JLabel("예매를 취소할 티켓을 선택하세요.");
-			deleTAgreeDialog.add(explainTLabel);
+			explainTLabel = new JLabel("예매를 취소할 티켓을 선택하세요.", SwingConstants.CENTER);
+			explainTLabel.setFont(new Font("고딕", Font.BOLD, 15));
+			deleTAgreeDialog.add(explainTLabel, BorderLayout.NORTH);
 				
 			reserveTPanel = new JPanel();
 			
@@ -153,9 +156,9 @@ class checkTicketListener implements ActionListener {
 				chk[i].addItemListener(new deleTItem());
 				reserveTPanel.add(chk[i]);
 			}				
-			deleTAgreeDialog.add(reserveTPanel);
+			deleTAgreeDialog.add(reserveTPanel, BorderLayout.CENTER);
 				
-			selectTPanel = new JPanel(new GridLayout(1, 2, 1, 5));
+			selectTPanel = new JPanel(new GridLayout(1, 2, 1, 1));
 			deleTBtn = new JButton("예매 취소 동의");
 			deleTBtn.addActionListener(new delTcheckListener());
 		
@@ -166,7 +169,7 @@ class checkTicketListener implements ActionListener {
 			closeTBtn.addActionListener(new deleSDlgListener());
 			selectTPanel.add(closeTBtn);
 				
-			deleTAgreeDialog.add(selectTPanel);
+			deleTAgreeDialog.add(selectTPanel, BorderLayout.SOUTH);
 				
 			deleTAgreeDialog.setVisible(true);
 		}		
@@ -213,15 +216,15 @@ class checkTicketListener implements ActionListener {
 
 				if(TerrorC.num == 0) {
 					delTcheckDialog = new JDialog();
-					delTcheckDialog.setSize(120, 100);
-					delTcheckDialog.setLayout(new GridLayout(2, 1, 10, 10));
+					delTcheckDialog.setSize(250, 120);
+					delTcheckDialog.setLayout(new BorderLayout());
 					
-					XTLabel = new JLabel("하나 이상의 체크박스를 선택하세요.");
-					delTcheckDialog.add(XTLabel);
+					XTLabel = new JLabel("하나 이상의 체크박스를 선택하세요.", SwingConstants.CENTER);
+					delTcheckDialog.add(XTLabel, BorderLayout.CENTER);
 					
 					XTBtn = new JButton("OK");
 					XTBtn.addActionListener(new deleEDlgListener());
-					delTcheckDialog.add(XTBtn);
+					delTcheckDialog.add(XTBtn, BorderLayout.SOUTH);
 					
 					delTcheckDialog.setVisible(true);
 					
@@ -230,7 +233,7 @@ class checkTicketListener implements ActionListener {
 				}else {
 					delTcheckDialog = new JDialog();
 					delTcheckDialog.setSize(120, 100);
-					delTcheckDialog.setLayout(new GridLayout(2, 1, 10, 10));
+					delTcheckDialog.setLayout(new BorderLayout());
 					
 					for (int i = 0; i < myTicketNum; i++){
 						if(deleTId[i] != 0) {
@@ -250,11 +253,11 @@ class checkTicketListener implements ActionListener {
 							}
 						}
 					}
-					delTcheckDialog.add(msgTLabel);
+					delTcheckDialog.add(msgTLabel, BorderLayout.CENTER);
 						
 					checkTBtn = new JButton("OK");
 					checkTBtn.addActionListener(new deleTDlgListener());
-					delTcheckDialog.add(checkTBtn);
+					delTcheckDialog.add(checkTBtn, BorderLayout.SOUTH);
 					
 					delTcheckDialog.setVisible(true);
 					

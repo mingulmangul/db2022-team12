@@ -1,5 +1,6 @@
 package DB2022Team12;
 
+import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -18,6 +19,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.SwingConstants;
 
 import DB2022Team12.checkTicketListener.TerrorC;
@@ -43,13 +45,13 @@ class reviewBtnListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		myreviewDialog = new JDialog();
-		myreviewDialog.setSize(400, 250);
+		myreviewDialog.setSize(600, 300);
 		myreviewDialog.setTitle("작성 리뷰 관리");
-		myreviewDialog.setLayout(new GridLayout(3, 1, 10, 20));
+		myreviewDialog.setLayout(new BorderLayout());
 		
 		myreviewLabel = new JLabel(User.getName() + "님의 REVIEW", SwingConstants.CENTER);
 		myreviewLabel.setFont(new Font("고딕", Font.BOLD, 20));
-		myreviewDialog.add(myreviewLabel);
+		myreviewDialog.add(myreviewLabel, BorderLayout.NORTH);
 		
 		Review = new ArrayList<UserReview>();
 		myReviewNum = 0;
@@ -85,9 +87,9 @@ class reviewBtnListener implements ActionListener {
 		        	Rstr += "NO." + (i+1) + " --- 리뷰 id : " + Review.get(i).getID() + ",  공연 제목 : " + Review.get(i).getTitle() + ",  평점 : " + Review.get(i).getRate() + ",  리뷰 작성 날짜 : " + Review.get(i).getTime() + "<br />";
 		        	myReviewNum++;
 		        }
-		        ReviewinfoLabel = new JLabel("<html><body style='text-align:center;'>" + Rstr +"</body></html>");
+		        ReviewinfoLabel = new JLabel("<html><body style='text-align:center;'>" + Rstr +"</body></html>", SwingConstants.CENTER);
 				
-				BtnRPanel = new JPanel(new GridLayout(1, 2, 1, 10));
+				BtnRPanel = new JPanel(new GridLayout(1, 2, 1, 1));
 				deleRBtn = new JButton("리뷰 삭제");
 				deleRBtn.addActionListener(new selectRListener());
 				closeRBtn = new JButton("CLOSE");
@@ -96,7 +98,7 @@ class reviewBtnListener implements ActionListener {
 				BtnRPanel.add(closeRBtn);
 	        	
 	        }else {
-	        	ReviewinfoLabel = new JLabel("작성한 리뷰가 없습니다.");
+	        	ReviewinfoLabel = new JLabel("작성한 리뷰가 없습니다.", SwingConstants.CENTER);
 	        	
 	        	BtnRPanel = new JPanel();
 				closeRBtn = new JButton("CLOSE");
@@ -104,8 +106,8 @@ class reviewBtnListener implements ActionListener {
 				BtnRPanel.add(closeRBtn);
 	        }
 	        
-			myreviewDialog.add(ReviewinfoLabel);
-			myreviewDialog.add(BtnRPanel);
+			myreviewDialog.add(ReviewinfoLabel, BorderLayout.CENTER);
+			myreviewDialog.add(BtnRPanel, BorderLayout.SOUTH);
 			
 		} catch (SQLException sqle) {
 			System.out.println(sqle);
@@ -144,14 +146,15 @@ class reviewBtnListener implements ActionListener {
 			myreviewDialog.dispose();
 			
 			selectRDialog = new JDialog();
-			selectRDialog.setSize(200, 150);
+			selectRDialog.setSize(600, 500);
 			selectRDialog.setTitle("삭제 리뷰 선택");
-			selectRDialog.setLayout(new GridLayout(3, 1, 10, 5));
+			selectRDialog.setLayout(new BorderLayout());
 				
-			explainRLabel = new JLabel("삭제할 리뷰를 선택하세요.");
-			selectRDialog.add(explainRLabel);
+			explainRLabel = new JLabel("삭제할 리뷰를 선택하세요.", SwingConstants.CENTER);
+			explainRLabel.setFont(new Font("고딕", Font.BOLD, 15));
+			selectRDialog.add(explainRLabel, BorderLayout.NORTH);
 				
-			reserveRPanel = new JPanel();
+			reserveRPanel = new JPanel();			
 			
 			RerrorC.num = 0;
 				
@@ -159,10 +162,10 @@ class reviewBtnListener implements ActionListener {
 				ck[i] = new JCheckBox("NO." + (i+1) + " --- 리뷰 id : " + Review.get(i).getID() + ",  공연 제목 : " + Review.get(i).getTitle() + ",  평점 : " + Review.get(i).getRate() + ",  리뷰 작성 날짜 : " + Review.get(i).getTime(),false);
 				ck[i].addItemListener(new deleRItem());
 				reserveRPanel.add(ck[i]);
-			}				
-			selectRDialog.add(reserveRPanel);
+			}		
+			selectRDialog.add(reserveRPanel, BorderLayout.CENTER);
 				
-			selectRPanel = new JPanel(new GridLayout(1, 2, 1, 5));
+			selectRPanel = new JPanel(new GridLayout(1, 2, 1, 1));
 			deleRBtn = new JButton("리뷰 삭제 동의");
 			deleRBtn.addActionListener(new delRcheckListener());
 			selectRPanel.add(deleRBtn);
@@ -171,7 +174,7 @@ class reviewBtnListener implements ActionListener {
 			closeRBtn.addActionListener(new deleCDlgListener());
 			selectRPanel.add(closeRBtn);
 				
-			selectRDialog.add(selectRPanel);
+			selectRDialog.add(selectRPanel, BorderLayout.SOUTH);
 				
 			selectRDialog.setVisible(true);
 		}
@@ -218,15 +221,15 @@ class reviewBtnListener implements ActionListener {
 				
 				if(RerrorC.num == 0) {
 					delRcheckDialog = new JDialog();
-					delRcheckDialog.setSize(120, 100);
-					delRcheckDialog.setLayout(new GridLayout(2, 1, 10, 10));
+					delRcheckDialog.setSize(250, 120);
+					delRcheckDialog.setLayout(new BorderLayout());
 					
-					XRLabel = new JLabel("하나 이상의 체크박스를 선택하세요.");
-					delRcheckDialog.add(XRLabel);
+					XRLabel = new JLabel("하나 이상의 체크박스를 선택하세요.", SwingConstants.CENTER);
+					delRcheckDialog.add(XRLabel, BorderLayout.CENTER);
 					
 					XRBtn = new JButton("OK");
 					XRBtn.addActionListener(new deleBDlgListener());
-					delRcheckDialog.add(XRBtn);
+					delRcheckDialog.add(XRBtn, BorderLayout.SOUTH);
 					
 					delRcheckDialog.setVisible(true);
 					
@@ -234,8 +237,8 @@ class reviewBtnListener implements ActionListener {
 					
 				}else {
 					delRcheckDialog = new JDialog();
-					delRcheckDialog.setSize(250, 100);
-					delRcheckDialog.setLayout(new GridLayout(2, 1, 10, 10));
+					delRcheckDialog.setSize(120, 100);
+					delRcheckDialog.setLayout(new BorderLayout());
 					
 					for (int i = 0; i < myReviewNum; i++){
 						if(deleRId[i] != 0) {
@@ -256,11 +259,11 @@ class reviewBtnListener implements ActionListener {
 						}
 					}
 					
-					delRcheckDialog.add(msgRLabel);
+					delRcheckDialog.add(msgRLabel, BorderLayout.CENTER);
 					
 					checkRBtn = new JButton("OK");
 					checkRBtn.addActionListener(new deleODlgListener());
-					delRcheckDialog.add(checkRBtn);
+					delRcheckDialog.add(checkRBtn, BorderLayout.SOUTH);
 					
 					delRcheckDialog.setVisible(true);
 					
