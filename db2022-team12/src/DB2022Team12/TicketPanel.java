@@ -23,18 +23,23 @@ class TicketPanel extends JPanel {
 			remainLabel2, priceLabel1, priceLabel2;
 	private JComboBox<String> dateSelector, timeSelector;
 
+	// 다이얼로그 제목
+	private String dialogTitle;
+
 	// 예매하려는 공연의 정보를 담은 Musical 객체
 	private Musical musical;
 
 	// JComboBox의 default 값으로 사용할 빈 선택지
 	private final static String EMPTY_ITEM = "======";
 
-	// 선택한 날짜와 시간에 대한 뮤지컬 날짜 정보의 식별자를 가져오는 쿼리
+	// 선택한 날짜와 시간에 대한 뮤지컬 회차 정보의 식별자를 가져오는 쿼리
 	private final static String GET_DATE_ID_QUERY = "SELECT id FROM musical_date WHERE title = ? AND date = ? AND time = ?";
 
 	// 예매한 티켓 정보를 DB에 삽입하는 쿼리
-	private final static String INSERT_TICKET_QUERY = "INSERT INTO ticket(musical_title, musical_date, member_id, order_date) "
-			+ "VALUES (?, ?, ?, ?)";
+	private final static String INSERT_TICKET_QUERY = "INSERT INTO ticket(musical_title, musical_date, member_id, order_date) VALUES (?, ?, ?, ?)";
+
+	// 티켓 예매 성공 시 해당 공연의 남은 좌석 수를 갱신하는 쿼리
+	private final static String UPDATE_REMAIN_SEAT_QUERY = "UPDATE musical_schedule SET remain_seat = remain_seat - 1 WHERE id = ?";
 
 	// 티켓 구매 패널 레이아웃 설정
 	// 예매하려는 공연의 정보를 담은 Musical 객체를 전달 받음
@@ -51,9 +56,8 @@ class TicketPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// 다이얼로그 제목
-			String dialogTitle = "티켓 예매 | " + musical.getTitle();
-			
+			dialogTitle = "티켓 예매 | " + musical.getTitle();
+
 			// 미로그인 유저이거나 남은 좌석이 없는 경우, 예매 불가 알림
 			if (User.getId() == null) {
 				NotificationClass.createNotifDialog(dialogTitle, "로그인이 필요합니다");
@@ -62,7 +66,7 @@ class TicketPanel extends JPanel {
 				NotificationClass.createNotifDialog(dialogTitle, "해당 공연은 매진되었습니다 😢");
 				return;
 			}
-			
+
 			// 티켓 예매 다이얼로그 생성
 			ticketDialog = new JDialog();
 			ticketDialog.setTitle(dialogTitle);
@@ -166,12 +170,19 @@ class TicketPanel extends JPanel {
 			// 날짜 정보 id
 			int musicalDate;
 
-			try (Connection conn = new ConnectionClass().getConnection();
-					PreparedStatement getStmt = conn.prepareStatement(GET_DATE_ID_QUERY);
-					PreparedStatement insertStmt = conn.prepareStatement(INSERT_TICKET_QUERY);) {
-				
-				// TODO: 남은 좌석 수 차감 쿼리 추가하기 + 트랜잭션으로 묶기
-				
+			Connection conn = null;
+			PreparedStatement getStmt = null, insertStmt = null, updateStmt = null;
+
+			try {
+				// DB 연결 및 Statement 객체 생성
+				conn = new ConnectionClass().getConnection();
+				getStmt = conn.prepareStatement(GET_DATE_ID_QUERY);
+				insertStmt = conn.prepareStatement(INSERT_TICKET_QUERY);
+				updateStmt = conn.prepareStatement(UPDATE_REMAIN_SEAT_QUERY);
+
+				// 트랜잭션 단위 : 날짜 정보 가져오기 + 예매 티켓 정보 삽입 + 남은 좌석 수 차감
+				conn.setAutoCommit(false);
+
 				// 날짜 정보 가져오기
 				getStmt.setString(1, musical.getTitle());
 				getStmt.setString(2, selectedDate);
@@ -186,33 +197,46 @@ class TicketPanel extends JPanel {
 				insertStmt.setString(3, User.getId());
 				insertStmt.setString(4, DateClass.getCurrentDate());
 				insertStmt.executeUpdate();
-				
-				// 예매 성공 알림창 생성
-				JDialog sucDialog = new JDialog();
-				sucDialog.setTitle("티켓 예매 | " + musical.getTitle());
-				sucDialog.setSize(200, 100);
-				sucDialog.setLayout(new GridLayout(2, 1));
-				;
 
-				JLabel sucLabel = new JLabel("예매가 완료되었습니다 :)");
-				sucDialog.add(sucLabel);
-				JButton confirmBtn = new JButton("확인");
-				// <확인> 버튼 누를 시 티켓 예매 창 모두 닫기
-				confirmBtn.addActionListener(new ActionListener() {
+				// 해당 회차의 남은 좌석 수 차감하기
+				updateStmt.setInt(1, musicalDate);
+				updateStmt.executeUpdate();
 
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						sucDialog.dispose();
-						ticketDialog.dispose();
-					}
-				});
-				sucDialog.add(confirmBtn);
-				sucDialog.setVisible(true);
+				// 예매 성공 시 트랜잭션 커밋
+				conn.commit();
+				conn.setAutoCommit(true);
+
+				// 예매 성공 알림창 생성 및 티켓 예매 다이얼로그 닫기
+				NotificationClass.createNotifDialog(dialogTitle, "예매가 완료되었습니다 🥰");
+				ticketDialog.dispose();
 
 			} catch (SQLException sqle) {
+				// 예매 실패 시 트랜잭션 롤백
+				if (conn != null) {
+					try {
+						conn.rollback();
+						System.out.println("Rollback : 티켓 예매");
+					} catch (SQLException rbError) {
+						System.out.println(rbError);
+					}
+				}
 				System.out.println(sqle);
+				NotificationClass.createNotifDialog(dialogTitle, "예매에 실패했습니다 😢");
+			} finally {
+				// DB 연결 닫기
+				try {
+					if (conn != null)
+						conn.close();
+					if (getStmt != null)
+						getStmt.close();
+					if (insertStmt != null)
+						insertStmt.close();
+					if (updateStmt != null)
+						updateStmt.close();
+				} catch (SQLException closeError) {
+					System.out.println(closeError);
+				}
 			}
-
 		}
 
 	}
