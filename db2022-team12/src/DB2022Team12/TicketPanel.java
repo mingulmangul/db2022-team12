@@ -58,12 +58,9 @@ class TicketPanel extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			dialogTitle = "티켓 예매 | " + musical.getTitle();
 
-			// 미로그인 유저이거나 남은 좌석이 없는 경우, 예매 불가 알림
+			// 미로그인 유저인 경우, 예매 불가 알림
 			if (User.getId() == null) {
 				NotificationClass.createNotifDialog(dialogTitle, "로그인이 필요합니다");
-				return;
-			} else if (musical.getRemainSeat() == 0) {
-				NotificationClass.createNotifDialog(dialogTitle, "해당 공연은 매진되었습니다 😢");
 				return;
 			}
 
@@ -91,16 +88,17 @@ class TicketPanel extends JPanel {
 			// dateSelector를 빈 선택지로 초기화하기 위해 목록 맨 앞에 삽입
 			dateList.insertElementAt(EMPTY_ITEM, 0);
 			dateSelector = new JComboBox<String>(dateList);
-			dateSelector.addActionListener(new timeSelectorCreator());
+			dateSelector.addActionListener(new dateSelectorListener());
 
 			// timeSelector는 빈 선택지로 초기화
 			String[] emptyList = { EMPTY_ITEM };
 			timeSelector = new JComboBox<String>(emptyList);
+			timeSelector.addActionListener(new timeSelectorListener());
 
 			theaterLabel1 = new JLabel("극장");
 			theaterLabel2 = new JLabel(musical.getTheaterName());
 			remainLabel1 = new JLabel("남은 좌석 수");
-			remainLabel2 = new JLabel(Integer.toString(musical.getRemainSeat()));
+			remainLabel2 = new JLabel();
 			priceLabel1 = new JLabel("예매가");
 			priceLabel2 = new JLabel(musical.getPrice());
 
@@ -133,7 +131,7 @@ class TicketPanel extends JPanel {
 
 	// dateSelector에 대한 리스너
 	// 날짜를 선택할 때마다 timeSelector의 리스트를 변경
-	private class timeSelectorCreator implements ActionListener {
+	private class dateSelectorListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -157,6 +155,29 @@ class TicketPanel extends JPanel {
 
 	}
 
+	// timeSelector에 대한 리스너
+	// 날짜와 시각을 선택할 때마다 remainLabel2의 내용 변경
+	private class timeSelectorListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// 사용자가 선택한 날짜와 시각
+			String selectedDate = (String) dateSelector.getSelectedItem();
+			String selectedTime = (String) timeSelector.getSelectedItem();
+
+			// 해당 회차에 대한 남은 좌석 수 표시
+			if (selectedDate == null || selectedTime == null || selectedDate.equals(EMPTY_ITEM)
+					|| selectedTime.equals(EMPTY_ITEM)) {
+				// 사용자가 빈 선택지를 선택했다면, 텍스트 비우기
+				remainLabel2.setText("");
+			} else {
+				int remainSeat = musical.getRemainSeat(selectedDate, selectedTime);
+				remainLabel2.setText(Integer.toString(remainSeat));
+			}
+		}
+
+	}
+
 	// <예매하기> 버튼에 대한 리스너
 	// DB에 예매한 티켓 정보를 삽입
 	private class bookBtnListener implements ActionListener {
@@ -166,6 +187,12 @@ class TicketPanel extends JPanel {
 			// 사용자가 선택한 날짜 및 시각
 			String selectedDate = (String) dateSelector.getSelectedItem();
 			String selectedTime = (String) timeSelector.getSelectedItem();
+
+			// 남은 좌석 수가 0이면 예매 불가
+			if (musical.getRemainSeat() == 0) {
+				NotificationClass.createNotifDialog(dialogTitle, "해당 공연은 매진되었습니다 😢");
+				return;
+			}
 
 			// 날짜 정보 id
 			int musicalDate;
