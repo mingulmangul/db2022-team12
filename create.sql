@@ -232,26 +232,26 @@ INSERT INTO db2022_review(musical_title, member_id, rate, written_at) VALUES
 */
 -- 1. 각 뮤지컬의 평균 별점
 CREATE VIEW db2022_avg_rate AS
-SELECT musical.title, avg(review.rate) as score
-FROM musical, review
-WHERE musical.title = review.musical_title
-GROUP BY musical.title;
+SELECT db2022_musical.title, avg(db2022_review.rate) as score
+FROM db2022_musical, db2022_review
+WHERE db2022_musical.title = db2022_review.musical_title
+GROUP BY db2022_musical.title;
 
 -- 2. 가격대 별 뮤지컬 이름
 -- 티켓 예매가가 10만원 미만인 뮤지컬 목록
 CREATE VIEW db2022_under_10 AS
 SELECT DISTINCT title, summary
-FROM musical
+FROM db2022_musical
 WHERE price < 100000;
 
 -- 티켓 예매가가 10만원 ~ 15만원인 뮤지컬 목록
 CREATE VIEW db2022_between10_15 AS
 SELECT DISTINCT title, summary
-FROM musical
+FROM db2022_musical
 WHERE price BETWEEN 100000 AND 150000;
 
 -- 티켓 예매가가 15만원 초과인 뮤지컬 목록
 CREATE VIEW db2022_over_15 AS
 SELECT DISTINCT title, summary
-FROM musical
+FROM db2022_musical
 WHERE price > 150000;
