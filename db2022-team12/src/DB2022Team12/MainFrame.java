@@ -16,10 +16,19 @@ class MainFrame extends JFrame {
 
 		DB2022Team12.AuthenticationPanel authPanel = new AuthenticationPanel();
 		DB2022Team12.TicketPanel ticketPanel = new TicketPanel(new Musical("아이다"));
+<<<<<<< Updated upstream
 
 		contentPane.add(authPanel);
 		contentPane.add(ticketPanel);
 
+=======
+		DB2022Team12.MusicalPanel musicalPanel = new MusicalPanel();
+		
+		//contentPane.add(authPanel);
+		//contentPane.add(ticketPanel);
+		contentPane.add(musicalPanel);
+		setSize(1100, 350);
+>>>>>>> Stashed changes
 		setVisible(true);
 	}
 }
