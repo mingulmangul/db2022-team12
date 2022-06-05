@@ -77,7 +77,6 @@ class Musical {
 			}
 
 			// 로그인 유저라면, 해당 유저의 리뷰 정보 가져오기
-			System.out.println("로그인 유저 ID: " + User.getId());
 			if (User.getId() != null) {
 				reviewStmt.setString(1, musical);
 				reviewStmt.setString(2, User.getId());
