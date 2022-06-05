@@ -30,10 +30,10 @@ class TicketPanel extends JPanel {
 	private final static String EMPTY_ITEM = "======";
 
 	// 선택한 날짜와 시간에 대한 뮤지컬 날짜 정보의 식별자를 가져오는 쿼리
-	private final static String GET_DATE_ID_QUERY = "SELECT id FROM musical_date WHERE title = ? AND date = ? AND time = ?";
+	private final static String GET_DATE_ID_QUERY = "SELECT id FROM db2022_musical_date WHERE title = ? AND date = ? AND time = ?";
 
 	// 예매한 티켓 정보를 DB에 삽입하는 쿼리
-	private final static String INSERT_TICKET_QUERY = "INSERT INTO ticket(musical_title, musical_date, member_id, order_date) "
+	private final static String INSERT_TICKET_QUERY = "INSERT INTO db2022_ticket(musical_title, musical_date, member_id, order_date) "
 			+ "VALUES (?, ?, ?, ?)";
 
 	// 티켓 구매 패널 레이아웃 설정

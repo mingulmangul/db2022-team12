@@ -17,7 +17,7 @@ class MainFrame extends JFrame {
 
 		AuthenticationPanel authPanel = new AuthenticationPanel();
 
-		Musical musical = new Musical("아이다");
+		Musical musical = new Musical("최후진술");
 		TicketPanel ticketPanel = new TicketPanel(musical);
 		ReviewInsertionPanel reviewInsertionPanel = new ReviewInsertionPanel(musical);
 
