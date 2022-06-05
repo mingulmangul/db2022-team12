@@ -28,10 +28,10 @@ class ReviewInsertionPanel extends JPanel {
 	private final static String[] scoreList = { "★", "★★", "★★★", "★★★★", "★★★★★" };
 
 	// 사용자가 작성한 리뷰를 DB에 삽입하는 쿼리
-	private final static String INSERT_REVIEW_QUERY = "INSERT INTO review(musical_title, member_id, rate, written_at) VALUES (?, ?, ?, ?)";
+	private final static String INSERT_REVIEW_QUERY = "INSERT INTO db2022_review(musical_title, member_id, rate, written_at) VALUES (?, ?, ?, ?)";
 
 	// 이전에 작성했던 리뷰를 갱신하는 쿼리
-	private final static String UPDATE_REVIEW_QUERY = "UPDATE review SET rate = ? WHERE musical_title = ? AND member_id = ?";
+	private final static String UPDATE_REVIEW_QUERY = "UPDATE db2022_review SET rate = ? WHERE musical_title = ? AND member_id = ?";
 
 	// 리뷰 작성 패널 레이아웃 설정
 	// 리뷰를 작성하려는 공연의 정보를 담은 Musical 객체를 전달 받음

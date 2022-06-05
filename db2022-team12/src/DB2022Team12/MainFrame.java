@@ -17,15 +17,15 @@ class MainFrame extends JFrame {
 
 		AuthenticationPanel authPanel = new AuthenticationPanel();
 
-		Musical musical = new Musical("아이다");
+		Musical musical = new Musical("최후진술");
 		TicketPanel ticketPanel = new TicketPanel(musical);
 		ReviewInsertionPanel reviewInsertionPanel = new ReviewInsertionPanel(musical);
-    MusicalPanel musical = new MusicalPanel();
+		// MusicalPanel musical = new MusicalPanel();
 
 		contentPane.add(authPanel);
 		contentPane.add(ticketPanel);
 		contentPane.add(reviewInsertionPanel);
-    
+
 		setVisible(true);
 	}
 }

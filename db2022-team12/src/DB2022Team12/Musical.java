@@ -30,13 +30,13 @@ class Musical {
 
 	// 뮤지컬 관련 정보를 모두 가져오는 쿼리 (뮤지컬 정보 + 평균 별점 정보 + 상영 극장 정보)
 	// 뮤지컬 테이블과 평균 별점 뷰를 NATURAL LEFT JOIN 한 후, 이를 극장 테이블과 JOIN
-	private final static String GET_MUSICAL_QUERY = "SELECT * FROM (musical NATURAL LEFT JOIN avg_rate) JOIN theater ON musical.theater_name = theater.name WHERE musical.title = ?";
+	private final static String GET_MUSICAL_QUERY = "SELECT * FROM (db2022_musical NATURAL LEFT JOIN db2022_avg_rate) JOIN db2022_theater ON db2022_musical.theater_name = db2022_theater.name WHERE db2022_musical.title = ?";
 
 	// 뮤지컬 회차 정보를 가져오는 쿼리
-	private final static String GET_MUSICAL_SCHEDULE_QUERY = "SELECT * FROM musical NATURAL JOIN musical_schedule WHERE title = ? ORDER BY date, time";
+	private final static String GET_MUSICAL_SCHEDULE_QUERY = "SELECT * FROM db2022_musical NATURAL JOIN db2022_musical_schedule WHERE title = ? ORDER BY date, time";
 
 	// 로그인한 유저의 리뷰를 가져오는 쿼리
-	private final static String GET_REVIEW_QUERY = "SELECT rate FROM review WHERE musical_title = ? AND member_id = ?";
+	private final static String GET_REVIEW_QUERY = "SELECT rate FROM db2022_review WHERE musical_title = ? AND member_id = ?";
 
 	public Musical(String musical) {
 		try (Connection conn = new ConnectionClass().getConnection();

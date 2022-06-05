@@ -15,7 +15,7 @@ USE DB2022Team12;
     phone: 유저 전화번호
     email: 유저 이메일 주소
 */
-CREATE TABLE member(
+CREATE TABLE db2022_member(
     id VARCHAR(20) PRIMARY KEY,
     pw VARCHAR(20) NOT NULL,
     name VARCHAR(20) NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE member(
     size: 극장 규모 (좌석 수)
     극장 이름(name)으로 인덱스 추가
 */
-CREATE TABLE theater(
+CREATE TABLE db2022_theater(
     name VARCHAR(20) PRIMARY KEY,
     address VARCHAR(100) NOT NULL,
     phone CHAR(12) NOT NULL,
@@ -43,78 +43,78 @@ CREATE TABLE theater(
 /*
     공연 정보 테이블
     title: 공연 제목 (PK)
-    theater_name: 상영 극장 (theater 테이블 참조)
+    theater_name: 상영 극장 (db2022_theater 테이블 참조)
     price: 티켓 예매가
     summary: 공연 줄거리
     공연 제목(title)에 인덱스 추가
 */
-CREATE TABLE musical(
+CREATE TABLE db2022_musical(
     title CHAR(10) PRIMARY KEY,
     theater_name VARCHAR(20) NOT NULL,
     price INT NOT NULL,
     summary CHAR(100),
-    FOREIGN KEY (theater_name) REFERENCES theater(name),
+    FOREIGN KEY (theater_name) REFERENCES db2022_theater(name),
     INDEX musical_title_idx(title)
 );
 
 /*
     공연 회차 정보 테이블
     id: 공연 회차 정보 식별자 (PK)
-    title: 공연 제목 (musical 테이블 참조)
+    title: 공연 제목 (db2022_musical 테이블 참조)
     date: 공연 날짜
     time: 공연 시각
     remain_seat: 해당 회차의 남은 좌석 수
     (title, date, time)은 중복될 수 없음 (세 컬럼 중 하나라도 달라야 함)
 */
-CREATE TABLE musical_schedule(
+CREATE TABLE db2022_musical_schedule(
     id INT AUTO_INCREMENT PRIMARY KEY,
     title CHAR(10) NOT NULL,
     date DATE NOT NULL,
     time TIME NOT NULL,
     remain_seat INT NOT NULL,
-    FOREIGN KEY (title) REFERENCES musical(title),
+    FOREIGN KEY (title) REFERENCES db2022_musical(title),
     UNIQUE (title, date, time)
 );
 
 /*
     예매 티켓 정보 테이블
     id: 예매 티켓 식별자 (PK)
-    musical_title: 공연 제목 (musical 테이블 참조)
+    musical_title: 공연 제목 (db2022_musical 테이블 참조)
     musical_schedule: 공연 날짜 (musical_schedule 테이블 참조)
     member_id: 예매한 유저 (member 테이블 참조)
     order_date: 티켓 예매 날짜
     예매한 유저(member_id)에 인덱스 추가
 */
-CREATE TABLE ticket(
+CREATE TABLE db2022_ticket(
     id INT AUTO_INCREMENT PRIMARY KEY,
     musical_title CHAR(10) NOT NULL,
     musical_schedule INT NOT NULL,
     member_id VARCHAR(20) NOT NULL,
     order_date DATE NOT NULL,
-    FOREIGN KEY (musical_title) REFERENCES musical(title),
-    FOREIGN KEY (musical_schedule) REFERENCES musical_schedule(id),
-    FOREIGN KEY (member_id) REFERENCES member(id),
+    FOREIGN KEY (musical_title) REFERENCES db2022_musical(title),
+    FOREIGN KEY (musical_schedule) REFERENCES db2022_musical_schedule(id),
+    FOREIGN KEY (member_id) REFERENCES db2022_member(id),
     INDEX ticket_member_idx(member_id)
 );
 
 /*
     리뷰 정보 테이블
     id: 리뷰 식별자 (PK)
-    musical_title: 공연 제목 (musical 테이블 참조)
-    member_id: 리뷰 작성 유저 (member 테이블 참조)
+    musical_title: 공연 제목 (db2022_musical 테이블 참조)
+    member_id: 리뷰 작성 유저 (db2022_member 테이블 참조)
     rate: 평점
     written_at: 리뷰 작성 날짜
     (musical_title, member_id)는 중복될 수 없음 (=> 유저는 하나의 공연에 하나의 리뷰만 남길 수 있음)
     리뷰 작성 유저(member_id)에 인덱스 추가
 */
-CREATE TABLE review(
+CREATE TABLE db2022_review(
     id INT AUTO_INCREMENT PRIMARY KEY,
     musical_title CHAR(10) NOT NULL,
     member_id VARCHAR(20) NOT NULL,
     rate TINYINT NOT NULL,
     written_at DATE NOT NULL,
-    FOREIGN KEY (musical_title) REFERENCES musical(title),
-    FOREIGN KEY (member_id) REFERENCES member(id),
+    FOREIGN KEY (musical_title) REFERENCES db2022_musical(title),
+    FOREIGN KEY (member_id) REFERENCES db2022_member(id),
     UNIQUE (musical_title, member_id),
     INDEX review_member_idx(member_id)
 );
@@ -122,25 +122,25 @@ CREATE TABLE review(
 /*
     tuple 삽입하기
 */
--- insert Member
--- INSERT INTO Member values(id, pw, name, phone, email, address);
-INSERT INTO member VALUES
+-- insert db2022_member
+-- INSERT INTO db2022_member values(id, pw, name, phone, email, address);
+INSERT INTO db2022_member VALUES
     ('ga2059', '710hyeon', '권가현', '010-8975-3244', 'ga2059@naver.com', NULL),
     ('min1905', 'ah710', '권민아', '010-6556-8536', 'min1905@naver.com','서울특별시 서대문구 이화여대길 52'),
     ('19soo10', 'min710', '김수민', '010-8451-2994', '19soo10@gmail.com',NULL);
 
--- insert Theater
--- INSERT INTO Theater values(Name, Address, Phone, Size);
-INSERT INTO theater VALUES
+-- insert db2022_theater
+-- INSERT INTO db2022_theater values(Name, Address, Phone, Size);
+INSERT INTO db2022_theater VALUES
     ('충무아트센터', '서울 중구 퇴계로 387', '02-2230-6600', 1250),
     ('드림아트센터', '서울특별시 종로구 동숭길 123 드림아트센터', '02-3481-8843', 210),
     ('블루스퀘어', '서울 용산구 이태원로 294', '02-1544-1591', 1766),
     ('샤롯데씨어터', '서울 송파구 올림픽로 240', '02-1644-0078', 1241),
     ('예스24스테이지', '서울 종로구 대학로12길 21', '02-742-9637', 301);
 
--- insert Musical
--- INSERT INTO Musical values(Title, Theater_name, Price, Summary);
-INSERT INTO musical VALUES
+-- insert db2022_musical
+-- INSERT INTO db2022_musical values(Title, Theater_name, Price, Summary);
+INSERT INTO db2022_musical VALUES
     ('킹키부츠', '충무아트센터', 160000, '폐업 위기에 처한 구두 공장을 물려 받게 된 찰리는 생각도 스타일도 전혀 다른 아름답고 유쾌한 남자 롤라를 만나 새로운 영감을 얻고 도전을 시작한다.'),
     ('비더슈탄트', '드림아트센터', 66000, '1938년 독일, 엘리트 스포츠 학교에 입학한 펜싱부 소년들의 권력에 대한 저항과 우정을 그리며, 생각없이 시대에 순응하며 사는 위험을 경고하며, 반항의 진정한 가치를 돌아본다.'),
     ('데스노트', '충무아트센터', 150000, '법과 정의에 대해 고민하던 천재 고등학생 야가미 라이토는 어느날 우연히 데스노트를 줍게 된다. 노트의 원래 주인인 사신들이 지켜보는 가운데 라이토는 세상의 신이 되고자한다.'),
@@ -152,9 +152,9 @@ INSERT INTO musical VALUES
     ('은하철도의밤', '드림아트센터', 66000, '앞을 못 보는 조반니는 학업과 아르바이트를 병행하며 고된 삶을 이어간다. 7년 만에 돌아온 은하수 축제의 날, 캄파넬라가 함께 축제에 가자고 제안하고, 조반니는 거절한다.'),
     ('맨오브라만차', '충무아트센터', 150000, '라만차에 살고 있는 알론조는 기사 이야기를 너무 많이 읽은 탓에 자신이 돈키호테라는 기사라고 착각하고 시종인 산초와 모험을 찾아 떠난다.');
 
--- insert musical_schedule
--- INSERT INTO musical_schedule values(title, date, time, remain_seat);
-INSERT INTO musical_schedule(title, date, time, remain_seat) VALUES
+-- insert db2022_musical_schedule
+-- INSERT INTO db2022_musical_schedule values(title, date, time, remain_seat);
+INSERT INTO db2022_musical_schedule(title, date, time, remain_seat) VALUES
     ('킹키부츠', '2022-08-01', '20:00:00', 649),
     ('킹키부츠', '2022-08-02', '20:00:00', 723),
     ('비더슈탄트', '2022-07-31', '14:00:00', 140),
@@ -189,16 +189,16 @@ INSERT INTO musical_schedule(title, date, time, remain_seat) VALUES
     ('맨오브라만차', '2022-07-10', '14:00:00', 18),
     ('맨오브라만차', '2022-07-10', '19:00:00', 11);
 
--- insert Ticket
--- INSERT INTO Ticket values(musical_title, musical_schedule, member_id, order_date);
-INSERT INTO ticket(musical_title, musical_schedule, member_id, order_date) VALUES
+-- insert db2022_ticket
+-- INSERT INTO db2022_ticket values(musical_title, musical_schedule, member_id, order_date);
+INSERT INTO db2022_ticket(musical_title, musical_schedule, member_id, order_date) VALUES
     ('킹키부츠', 1, 'ga2059', '2022-05-28'),
     ('킹키부츠', 2, '19soo10', '2022-05-31'),
     ('데스노트', 5, '19soo10', '2022-06-02');
 
--- insert Review
--- INSERT INTO Review values(musical_title, member_id, rate, written_at);
-INSERT INTO review(musical_title, member_id, rate, written_at) VALUES
+-- insert db2022_review
+-- INSERT INTO db2022_review values(musical_title, member_id, rate, written_at);
+INSERT INTO db2022_review(musical_title, member_id, rate, written_at) VALUES
     ('킹키부츠', 'ga2059', 4, '2022-07-02'),
     ('킹키부츠', 'min1905', 3, '2022-07-02'),
     ('킹키부츠', '19soo10', 3, '2022-07-02'),
@@ -231,7 +231,7 @@ INSERT INTO review(musical_title, member_id, rate, written_at) VALUES
     view 생성하기
 */
 -- 1. 각 뮤지컬의 평균 별점
-CREATE VIEW avg_rate AS
+CREATE VIEW db2022_avg_rate AS
 SELECT musical.title, avg(review.rate) as score
 FROM musical, review
 WHERE musical.title = review.musical_title
@@ -239,19 +239,19 @@ GROUP BY musical.title;
 
 -- 2. 가격대 별 뮤지컬 이름
 -- 티켓 예매가가 10만원 미만인 뮤지컬 목록
-CREATE VIEW under_10 AS
+CREATE VIEW db2022_under_10 AS
 SELECT DISTINCT title, summary
 FROM musical
 WHERE price < 100000;
 
 -- 티켓 예매가가 10만원 ~ 15만원인 뮤지컬 목록
-CREATE VIEW between10_15 AS
+CREATE VIEW db2022_between10_15 AS
 SELECT DISTINCT title, summary
 FROM musical
 WHERE price BETWEEN 100000 AND 150000;
 
 -- 티켓 예매가가 15만원 초과인 뮤지컬 목록
-CREATE VIEW over_15 AS
+CREATE VIEW db2022_over_15 AS
 SELECT DISTINCT title, summary
 FROM musical
 WHERE price > 150000;

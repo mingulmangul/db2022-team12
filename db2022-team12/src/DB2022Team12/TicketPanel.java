@@ -1,6 +1,5 @@
 package DB2022Team12;
 
-import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,13 +33,13 @@ class TicketPanel extends JPanel {
 	private final static String EMPTY_ITEM = "======";
 
 	// 선택한 날짜와 시간에 대한 뮤지컬 회차 정보를 가져오는 쿼리
-	private final static String GET_SCHEDULE_QUERY = "SELECT id, remain_seat FROM musical_schedule WHERE title = ? AND date = ? AND time = ?";
+	private final static String GET_SCHEDULE_QUERY = "SELECT id, remain_seat FROM db2022_musical_schedule WHERE title = ? AND date = ? AND time = ?";
 
 	// 예매한 티켓 정보를 DB에 삽입하는 쿼리
-	private final static String INSERT_TICKET_QUERY = "INSERT INTO ticket(musical_title, musical_schedule, member_id, order_date) VALUES (?, ?, ?, ?)";
+	private final static String INSERT_TICKET_QUERY = "INSERT INTO db2022_ticket(musical_title, musical_schedule, member_id, order_date) VALUES (?, ?, ?, ?)";
 
 	// 티켓 예매 성공 시 해당 공연의 남은 좌석 수를 갱신하는 쿼리
-	private final static String UPDATE_REMAIN_SEAT_QUERY = "UPDATE musical_schedule SET remain_seat = remain_seat - 1 WHERE id = ?";
+	private final static String UPDATE_REMAIN_SEAT_QUERY = "UPDATE db2022_musical_schedule SET remain_seat = remain_seat - 1 WHERE id = ?";
 
 	// 티켓 구매 패널 레이아웃 설정
 	// 예매하려는 공연의 정보를 담은 Musical 객체를 전달 받음

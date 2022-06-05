@@ -27,11 +27,11 @@ class AuthenticationPanel extends JPanel {
 	private JLabel noticeLabel, idLabel, pwLabel, nameLabel, phoneLabel, emailLabel, addressLabel;
 
 	// 유저 정보 검색 쿼리
-	private final String SIGNIN_QUERY = "SELECT pw, name FROM member WHERE id = ?";
+	private final String SIGNIN_QUERY = "SELECT pw, name FROM db2022_member WHERE id = ?";
 
 	// 유저 정보 삽입 쿼리
 	// id, pw, name, phone, email, address
-	private final String SIGNUP_QUERY = "INSERT INTO member VALUES (?, ?, ?, ?, ?, ?)";
+	private final String SIGNUP_QUERY = "INSERT INTO db2022_member VALUES (?, ?, ?, ?, ?, ?)";
 
 	// 로그인 & 회원가입 패널 레이아웃 설정
 	public AuthenticationPanel() {
