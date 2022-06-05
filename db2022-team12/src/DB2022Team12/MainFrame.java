@@ -20,6 +20,7 @@ class MainFrame extends JFrame {
 		Musical musical = new Musical("최후진술");
 		TicketPanel ticketPanel = new TicketPanel(musical);
 		ReviewInsertionPanel reviewInsertionPanel = new ReviewInsertionPanel(musical);
+		// MusicalPanel musical = new MusicalPanel();
 
 		contentPane.add(authPanel);
 		contentPane.add(ticketPanel);

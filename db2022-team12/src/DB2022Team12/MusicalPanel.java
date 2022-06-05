@@ -112,15 +112,15 @@ public class MusicalPanel extends JPanel{
 	
 	public MusicalPanel() {
 		
-		this.setLayout(new BorderLayout(10,10));
+		this.setLayout(new GridLayout(2,1));
 		
 		searchPanel = new JPanel();
-		//searchPanel.setSize(1200, 50);
-		this.add(searchPanel, BorderLayout.NORTH);
+		//searchPanel.setSize(1100, 100);
+		this.add(searchPanel);
 		
 		listPanel = new JPanel();
-		//listPanel.setSize(1200, 250);
-		this.add(listPanel, BorderLayout.SOUTH);
+		//listPanel.setSize(1100, 250);
+		this.add(listPanel);
 		
 		searchPanel.setLayout(new GridLayout(2,4));
 		
@@ -234,19 +234,21 @@ public class MusicalPanel extends JPanel{
     			
     			Musical musical = new Musical(selectedtitle);
 
+
     			titleLabel = new JLabel("  제목  " + musical.getTitle());
     			theaterLabel = new JLabel("  극장  " + musical.getTheaterName());
     			summaryLabel = new JLabel("  줄거리  "  + musical.getSummary());
     			reviewLabel = new JLabel("  평균별점  " + musical.getAvgRate());
+            
     			topPanel.add(titleLabel);			
     			topPanel.add(theaterLabel);
     			topPanel.add(summaryLabel);
-    			topPanel.add(reviewLabel);
+    			//topPanel.add(reviewLabel);
     			
     			//buyBtn= new JButton("예매하기");
     			//buyBtn.addActionListener(new buyBtnListener());
     			//botPanel.add(buyBtn);
-    			TicketPanel ticketPanel = new TicketPanel(musical.getTitle());
+    			TicketPanel ticketPanel = new TicketPanel(musical);
     			midPanel.add(ticketPanel);
 
     			infoDialog.add(topPanel);

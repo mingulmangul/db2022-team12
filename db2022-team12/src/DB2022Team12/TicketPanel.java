@@ -23,18 +23,23 @@ class TicketPanel extends JPanel {
 			remainLabel2, priceLabel1, priceLabel2;
 	private JComboBox<String> dateSelector, timeSelector;
 
+	// 다이얼로그 제목
+	private String dialogTitle;
+
 	// 예매하려는 공연의 정보를 담은 Musical 객체
 	private Musical musical;
 
 	// JComboBox의 default 값으로 사용할 빈 선택지
 	private final static String EMPTY_ITEM = "======";
 
-	// 선택한 날짜와 시간에 대한 뮤지컬 날짜 정보의 식별자를 가져오는 쿼리
-	private final static String GET_DATE_ID_QUERY = "SELECT id FROM db2022_musical_date WHERE title = ? AND date = ? AND time = ?";
+	// 선택한 날짜와 시간에 대한 뮤지컬 회차 정보를 가져오는 쿼리
+	private final static String GET_SCHEDULE_QUERY = "SELECT id, remain_seat FROM db2022_musical_schedule WHERE title = ? AND date = ? AND time = ?";
 
 	// 예매한 티켓 정보를 DB에 삽입하는 쿼리
-	private final static String INSERT_TICKET_QUERY = "INSERT INTO db2022_ticket(musical_title, musical_date, member_id, order_date) "
-			+ "VALUES (?, ?, ?, ?)";
+	private final static String INSERT_TICKET_QUERY = "INSERT INTO db2022_ticket(musical_title, musical_schedule, member_id, order_date) VALUES (?, ?, ?, ?)";
+
+	// 티켓 예매 성공 시 해당 공연의 남은 좌석 수를 갱신하는 쿼리
+	private final static String UPDATE_REMAIN_SEAT_QUERY = "UPDATE db2022_musical_schedule SET remain_seat = remain_seat - 1 WHERE id = ?";
 
 	// 티켓 구매 패널 레이아웃 설정
 	// 예매하려는 공연의 정보를 담은 Musical 객체를 전달 받음
@@ -51,18 +56,14 @@ class TicketPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// 다이얼로그 제목
-			String dialogTitle = "티켓 예매 | " + musical.getTitle();
-			
-			// 미로그인 유저이거나 남은 좌석이 없는 경우, 예매 불가 알림
+			dialogTitle = "티켓 예매 | " + musical.getTitle();
+
+			// 미로그인 유저인 경우, 예매 불가 알림
 			if (User.getId() == null) {
 				NotificationClass.createNotifDialog(dialogTitle, "로그인이 필요합니다");
 				return;
-			} else if (musical.getRemainSeat() == 0) {
-				NotificationClass.createNotifDialog(dialogTitle, "해당 공연은 매진되었습니다 😢");
-				return;
 			}
-			
+
 			// 티켓 예매 다이얼로그 생성
 			ticketDialog = new JDialog();
 			ticketDialog.setTitle(dialogTitle);
@@ -74,29 +75,30 @@ class TicketPanel extends JPanel {
 			JPanel btnPanel = new JPanel();
 			JPanel dateTimePanel = new JPanel();
 
-			noticeLabel = new JLabel("예매 티켓의 정보를 입력해주세요");
+			noticeLabel = new JLabel();
 			noticePanel.add(noticeLabel);
 
-			musicalLabel1 = new JLabel("공연 제목");
+			musicalLabel1 = new JLabel("뮤지컬");
 			musicalLabel2 = new JLabel(musical.getTitle());
 
-			dateTimeLabel = new JLabel("날짜 및 시간");
+			dateTimeLabel = new JLabel("날짜/시간 선택");
 
 			// 날짜 정보 목록 불러오기
 			Vector<String> dateList = musical.getDateVector();
 			// dateSelector를 빈 선택지로 초기화하기 위해 목록 맨 앞에 삽입
 			dateList.insertElementAt(EMPTY_ITEM, 0);
 			dateSelector = new JComboBox<String>(dateList);
-			dateSelector.addActionListener(new timeSelectorCreator());
+			dateSelector.addActionListener(new dateSelectorListener());
 
 			// timeSelector는 빈 선택지로 초기화
 			String[] emptyList = { EMPTY_ITEM };
 			timeSelector = new JComboBox<String>(emptyList);
+			timeSelector.addActionListener(new timeSelectorListener());
 
 			theaterLabel1 = new JLabel("극장");
 			theaterLabel2 = new JLabel(musical.getTheaterName());
-			remainLabel1 = new JLabel("남은 좌석 수");
-			remainLabel2 = new JLabel(Integer.toString(musical.getRemainSeat()));
+			remainLabel1 = new JLabel("잔여 좌석");
+			remainLabel2 = new JLabel();
 			priceLabel1 = new JLabel("예매가");
 			priceLabel2 = new JLabel(musical.getPrice());
 
@@ -129,7 +131,7 @@ class TicketPanel extends JPanel {
 
 	// dateSelector에 대한 리스너
 	// 날짜를 선택할 때마다 timeSelector의 리스트를 변경
-	private class timeSelectorCreator implements ActionListener {
+	private class dateSelectorListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -153,6 +155,32 @@ class TicketPanel extends JPanel {
 
 	}
 
+	// timeSelector에 대한 리스너
+	// 날짜와 시각을 선택할 때마다 remainLabel2의 내용 변경
+	private class timeSelectorListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// 사용자가 선택한 날짜와 시각
+			String selectedDate = (String) dateSelector.getSelectedItem();
+			String selectedTime = (String) timeSelector.getSelectedItem();
+
+			// 해당 회차에 대한 남은 좌석 수 표시
+			if (selectedDate == null || selectedTime == null || selectedDate.equals(EMPTY_ITEM)
+					|| selectedTime.equals(EMPTY_ITEM)) {
+				// 사용자가 빈 선택지를 선택했다면, 텍스트 비우기
+				remainLabel2.setText("");
+			} else {
+				int remainSeat = musical.getRemainSeat(selectedDate, selectedTime);
+				if (remainSeat == 0)
+					remainLabel2.setText("매진");
+				else
+					remainLabel2.setText(Integer.toString(remainSeat));
+			}
+		}
+
+	}
+
 	// <예매하기> 버튼에 대한 리스너
 	// DB에 예매한 티켓 정보를 삽입
 	private class bookBtnListener implements ActionListener {
@@ -163,56 +191,92 @@ class TicketPanel extends JPanel {
 			String selectedDate = (String) dateSelector.getSelectedItem();
 			String selectedTime = (String) timeSelector.getSelectedItem();
 
-			// 날짜 정보 id
-			int musicalDate;
+			// 사용자가 회차 정보를 선택하지 않은 경우, 버튼 동작 X
+			if (selectedDate == null || selectedTime == null || selectedDate.equals(EMPTY_ITEM)
+					|| selectedTime.equals(EMPTY_ITEM)) {
+				noticeLabel.setText("날짜와 시간을 선택해주세요");
+				return;
+			}
 
-			try (Connection conn = new ConnectionClass().getConnection();
-					PreparedStatement getStmt = conn.prepareStatement(GET_DATE_ID_QUERY);
-					PreparedStatement insertStmt = conn.prepareStatement(INSERT_TICKET_QUERY);) {
-				
-				// TODO: 남은 좌석 수 차감 쿼리 추가하기 + 트랜잭션으로 묶기
-				
-				// 날짜 정보 가져오기
+			// 남은 좌석 수가 0이면 예매 불가
+			if (musical.getRemainSeat(selectedDate, selectedTime) == 0) {
+				NotificationClass.createNotifDialog(dialogTitle, "해당 공연은 매진되었습니다");
+				return;
+			}
+
+			Connection conn = null;
+			PreparedStatement getStmt = null, insertStmt = null, updateStmt = null;
+
+			try {
+				// DB 연결 및 Statement 객체 생성
+				conn = new ConnectionClass().getConnection();
+				getStmt = conn.prepareStatement(GET_SCHEDULE_QUERY);
+				insertStmt = conn.prepareStatement(INSERT_TICKET_QUERY);
+				updateStmt = conn.prepareStatement(UPDATE_REMAIN_SEAT_QUERY);
+
+				// 트랜잭션 단위 : 회차 정보 가져오기 + 예매 티켓 정보 삽입 + 남은 좌석 수 차감
+				conn.setAutoCommit(false);
+
+				// 회차 정보 가져오기
 				getStmt.setString(1, musical.getTitle());
 				getStmt.setString(2, selectedDate);
 				getStmt.setString(3, selectedTime);
 				ResultSet rs = getStmt.executeQuery();
 				rs.next();
-				musicalDate = rs.getInt("id");
+				int musicalSchedule = rs.getInt("id");
+				int remainSeat = rs.getInt("remain_seat");
+
+				// 남은 좌석 수가 0이면 예매 불가
+				if (remainSeat == 0)
+					throw new SQLException();
 
 				// 예매 티켓 정보 삽입하기
 				insertStmt.setString(1, musical.getTitle());
-				insertStmt.setInt(2, musicalDate);
+				insertStmt.setInt(2, musicalSchedule);
 				insertStmt.setString(3, User.getId());
 				insertStmt.setString(4, DateClass.getCurrentDate());
 				insertStmt.executeUpdate();
-				
-				// 예매 성공 알림창 생성
-				JDialog sucDialog = new JDialog();
-				sucDialog.setTitle("티켓 예매 | " + musical.getTitle());
-				sucDialog.setSize(200, 100);
-				sucDialog.setLayout(new GridLayout(2, 1));
-				;
 
-				JLabel sucLabel = new JLabel("예매가 완료되었습니다 :)");
-				sucDialog.add(sucLabel);
-				JButton confirmBtn = new JButton("확인");
-				// <확인> 버튼 누를 시 티켓 예매 창 모두 닫기
-				confirmBtn.addActionListener(new ActionListener() {
+				// 해당 회차의 남은 좌석 수 차감하기
+				updateStmt.setInt(1, musicalSchedule);
+				updateStmt.executeUpdate();
+				musical.reduceRemainSeat(selectedDate, selectedTime);
 
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						sucDialog.dispose();
-						ticketDialog.dispose();
-					}
-				});
-				sucDialog.add(confirmBtn);
-				sucDialog.setVisible(true);
+				// 예매 성공 시 트랜잭션 커밋
+				conn.commit();
+				conn.setAutoCommit(true);
+
+				// 예매 성공 알림창 생성 및 티켓 예매 다이얼로그 닫기
+				NotificationClass.createNotifDialog(dialogTitle, "예매가 완료되었습니다");
+				ticketDialog.dispose();
 
 			} catch (SQLException sqle) {
+				// 예매 실패 시 트랜잭션 롤백
+				if (conn != null) {
+					try {
+						conn.rollback();
+						System.out.println("Rollback : 티켓 예매");
+					} catch (SQLException rbError) {
+						System.out.println(rbError);
+					}
+				}
 				System.out.println(sqle);
+				NotificationClass.createNotifDialog(dialogTitle, "예매에 실패했습니다");
+			} finally {
+				// DB 연결 닫기
+				try {
+					if (conn != null)
+						conn.close();
+					if (getStmt != null)
+						getStmt.close();
+					if (insertStmt != null)
+						insertStmt.close();
+					if (updateStmt != null)
+						updateStmt.close();
+				} catch (SQLException closeError) {
+					System.out.println(closeError);
+				}
 			}
-
 		}
 
 	}

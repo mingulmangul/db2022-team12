@@ -6,11 +6,9 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -30,8 +28,10 @@ class ReviewInsertionPanel extends JPanel {
 	private final static String[] scoreList = { "★", "★★", "★★★", "★★★★", "★★★★★" };
 
 	// 사용자가 작성한 리뷰를 DB에 삽입하는 쿼리
-	private final static String INSERT_REVIEW_QUERY = "INSERT INTO db2022_review(musical_title, member_id, rate, written_at) "
-			+ "VALUES (?, ?, ?, ?)";
+	private final static String INSERT_REVIEW_QUERY = "INSERT INTO db2022_review(musical_title, member_id, rate, written_at) VALUES (?, ?, ?, ?)";
+
+	// 이전에 작성했던 리뷰를 갱신하는 쿼리
+	private final static String UPDATE_REVIEW_QUERY = "UPDATE db2022_review SET rate = ? WHERE musical_title = ? AND member_id = ?";
 
 	// 리뷰 작성 패널 레이아웃 설정
 	// 리뷰를 작성하려는 공연의 정보를 담은 Musical 객체를 전달 받음
@@ -57,6 +57,11 @@ class ReviewInsertionPanel extends JPanel {
 			btnGroup.add(scoreBtn[i]);
 			scorePanel.add(scoreBtn[i]);
 		}
+
+		// 이미 존재하는 리뷰 정보가 있다면, 해당 별점을 기본으로 선택
+		int selectedRate = musical.getUserReview();
+		if (selectedRate != 0)
+			scoreBtn[selectedRate - 1].setSelected(true);
 
 		submitBtn = new JButton("등록하기");
 		submitBtn.addActionListener(new submitBtnListener());
@@ -85,7 +90,6 @@ class ReviewInsertionPanel extends JPanel {
 
 			// 사용자가 입력한 리뷰 정보(사용자가 선택한 라디오 버튼 번호 + 1)
 			int rate = 0;
-
 			for (int i = 0; i < 5; i++) {
 				if (scoreBtn[i].isSelected())
 					rate = i + 1;
@@ -98,15 +102,31 @@ class ReviewInsertionPanel extends JPanel {
 			}
 
 			try (Connection conn = new ConnectionClass().getConnection();
-					PreparedStatement pStmt = conn.prepareStatement(INSERT_REVIEW_QUERY);) {
-				pStmt.setString(1, musical.getTitle());
-				pStmt.setString(2, User.getId());
-				pStmt.setInt(3, rate);
-				pStmt.setString(4, DateClass.getCurrentDate());
-				pStmt.executeUpdate();
+					PreparedStatement insertStmt = conn.prepareStatement(INSERT_REVIEW_QUERY);
+					PreparedStatement updateStmt = conn.prepareStatement(UPDATE_REVIEW_QUERY);) {
 
-				// 리뷰 등록 성공 알림창 생성
-				NotificationClass.createNotifDialog(dialogTitle, "리뷰가 등록되었습니다 :)");
+				// 이전에 작성한 리뷰가 있다면 새로 등록, 없다면 기존 리뷰 변경
+				if (musical.getUserReview() == 0) {
+					insertStmt.setString(1, musical.getTitle());
+					insertStmt.setString(2, User.getId());
+					insertStmt.setInt(3, rate);
+					insertStmt.setString(4, DateClass.getCurrentDate());
+					insertStmt.executeUpdate();
+
+					// 리뷰 등록 성공 알림창 생성
+					NotificationClass.createNotifDialog(dialogTitle, "리뷰가 등록되었습니다 :)");
+				} else {
+					System.out.println(rate);
+					updateStmt.setInt(1, rate);
+					updateStmt.setString(2, musical.getTitle());
+					updateStmt.setString(3, User.getId());
+					updateStmt.executeUpdate();
+
+					// 리뷰 변경 성공 알림창 생성
+					NotificationClass.createNotifDialog(dialogTitle, "리뷰가 변경되었습니다 :)");
+				}
+
+				musical.setUserReview(rate);
 
 			} catch (SQLException sqle) {
 				System.out.println(sqle);
