@@ -1,4 +1,5 @@
 package DB2022Team12;
+
 import java.awt.Container;
 import java.awt.GridLayout;
 
@@ -14,21 +15,17 @@ class MainFrame extends JFrame {
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new GridLayout(5, 1));
 
-		DB2022Team12.AuthenticationPanel authPanel = new AuthenticationPanel();
-		DB2022Team12.TicketPanel ticketPanel = new TicketPanel(new Musical("아이다"));
-<<<<<<< Updated upstream
+		AuthenticationPanel authPanel = new AuthenticationPanel();
+
+		Musical musical = new Musical("아이다");
+		TicketPanel ticketPanel = new TicketPanel(musical);
+		ReviewInsertionPanel reviewInsertionPanel = new ReviewInsertionPanel(musical);
+    MusicalPanel musical = new MusicalPanel();
 
 		contentPane.add(authPanel);
 		contentPane.add(ticketPanel);
-
-=======
-		DB2022Team12.MusicalPanel musicalPanel = new MusicalPanel();
-		
-		//contentPane.add(authPanel);
-		//contentPane.add(ticketPanel);
-		contentPane.add(musicalPanel);
-		setSize(1100, 350);
->>>>>>> Stashed changes
+		contentPane.add(reviewInsertionPanel);
+    
 		setVisible(true);
 	}
 }

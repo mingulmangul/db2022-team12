@@ -1,4 +1,5 @@
 package DB2022Team12;
+
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,7 +21,7 @@ class AuthenticationPanel extends JPanel {
 
 	private JDialog signUpDialog;
 	private JPanel authPanel, noticePanel, signInTextFieldPanel;
-	private JButton signInBtn, signUpBtn, submitBtn;
+	private JButton signInBtn, signUpBtn, submitBtn, MypageBtn;
 	private JTextField idField, nameField, phoneField, emailField, addressField;
 	private JPasswordField pwField;
 	private JLabel noticeLabel, idLabel, pwLabel, nameLabel, phoneLabel, emailLabel, addressLabel;
@@ -35,7 +36,7 @@ class AuthenticationPanel extends JPanel {
 	// 로그인 & 회원가입 패널 레이아웃 설정
 	public AuthenticationPanel() {
 		this.setLayout(new GridLayout(2, 1));
-		
+
 		authPanel = new JPanel();
 		noticePanel = new JPanel();
 		signInTextFieldPanel = new JPanel(new GridLayout(2, 3));
@@ -104,6 +105,10 @@ class AuthenticationPanel extends JPanel {
 							// 로그인 & 회원가입 패널 숨기기
 							authPanel.setVisible(false);
 							noticeLabel.setText(User.getName() + "님 안녕하세요 :)");
+
+							MypageBtn = new JButton("마이페이지");
+							MypageBtn.addActionListener(new MypageBtnListener());
+							noticePanel.add(MypageBtn);
 						}
 					}
 				} catch (SQLException sqle) {

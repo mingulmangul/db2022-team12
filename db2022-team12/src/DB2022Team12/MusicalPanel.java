@@ -234,10 +234,12 @@ public class MusicalPanel extends JPanel{
     			
     			Musical musical = new Musical(selectedtitle);
 
+
     			titleLabel = new JLabel("  제목  " + musical.getTitle());
     			theaterLabel = new JLabel("  극장  " + musical.getTheaterName());
     			summaryLabel = new JLabel("  줄거리  "  + musical.getSummary());
-    			//reviewLabel = new JLabel("  평균별점  " + musical.getAvgRate());
+    			reviewLabel = new JLabel("  평균별점  " + musical.getAvgRate());
+            
     			topPanel.add(titleLabel);			
     			topPanel.add(theaterLabel);
     			topPanel.add(summaryLabel);
