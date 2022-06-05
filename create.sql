@@ -69,9 +69,9 @@ CREATE TABLE musical(
 */
 CREATE TABLE musical_date(
     id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(20),
-    date DATE,
-    time TIME,
+    title CHAR(10) NOT NULL,
+    date DATE NOT NULL,
+    time TIME NOT NULL,
     FOREIGN KEY (title) REFERENCES musical(title),
     UNIQUE (title, date, time)
 );
@@ -87,7 +87,7 @@ CREATE TABLE musical_date(
 */
 CREATE TABLE ticket(
     id INT AUTO_INCREMENT PRIMARY KEY,
-    musical_title VARCHAR(20) NOT NULL,
+    musical_title CHAR(10) NOT NULL,
     musical_date INT NOT NULL,
     member_id VARCHAR(20) NOT NULL,
     order_date DATE NOT NULL,
@@ -108,7 +108,7 @@ CREATE TABLE ticket(
 */
 CREATE TABLE review(
     id INT AUTO_INCREMENT PRIMARY KEY,
-    musical_title VARCHAR(20) NOT NULL,
+    musical_title CHAR(10) NOT NULL,
     member_id VARCHAR(20) NOT NULL,
     rate TINYINT NOT NULL,
     written_at DATE NOT NULL,
