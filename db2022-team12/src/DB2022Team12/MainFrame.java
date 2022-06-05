@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 class MainFrame extends JFrame {
 
 	public MainFrame() {
-		setTitle("í”„ë¡œê·¸ëž¨");
+		setTitle("ÇÁ·Î±×·¥");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(500, 500);
 
@@ -15,7 +15,7 @@ class MainFrame extends JFrame {
 		contentPane.setLayout(new GridLayout(5, 1));
 
 		DB2022Team12.AuthenticationPanel authPanel = new AuthenticationPanel();
-		DB2022Team12.TicketPanel ticketPanel = new TicketPanel("í‚¹í‚¤ë¶€ì¸ ");
+		DB2022Team12.TicketPanel ticketPanel = new TicketPanel("Å·Å°ºÎÃ÷");
 
 		contentPane.add(authPanel);
 		contentPane.add(ticketPanel);

@@ -27,7 +27,7 @@ class TicketPanel extends JPanel {
 
 	public TicketPanel(String musical) {
 		this.musical = musical;
-		ticketDialogBtn = new JButton("í‹°ì¼“ êµ¬ë§¤");
+		ticketDialogBtn = new JButton("Æ¼ÄÏ ±¸¸Å");
 		ticketDialogBtn.addActionListener(new TicketDialogCreater());
 		this.add(ticketDialogBtn);
 	}
@@ -36,13 +36,13 @@ class TicketPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// ì˜ˆë§¤í•˜ë ¤ëŠ” ë®¤ì§€ì»¬ ì •ë³´ ê°€ì ¸ì˜¤ê¸°
+			// ¿¹¸ÅÇÏ·Á´Â ¹ÂÁöÄÃ Á¤º¸ °¡Á®¿À±â
 //			getMusicalInfo();
 			new Musical(musical);
 
-			// í‹°ì¼“ ì˜ˆë§¤ ë‹¤ì´ì–¼ë¡œê·¸ ìƒì„±
+			// Æ¼ÄÏ ¿¹¸Å ´ÙÀÌ¾ó·Î±× »ı¼º
 			ticketDialog = new JDialog();
-			ticketDialog.setTitle("ë®¤ì§€ì»¬ ë“±ë¡");
+			ticketDialog.setTitle("¹ÂÁöÄÃ µî·Ï");
 			ticketDialog.setSize(300, 300);
 			ticketDialog.setLayout(new GridLayout(3, 1));
 
@@ -51,18 +51,18 @@ class TicketPanel extends JPanel {
 			JPanel btnPanel = new JPanel();
 			JPanel dateTimePanel = new JPanel();
 
-			noticeLabel = new JLabel("ì˜ˆë§¤ í‹°ì¼“ì˜ ì •ë³´ë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”");
+			noticeLabel = new JLabel("¿¹¸Å Æ¼ÄÏÀÇ Á¤º¸¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä");
 			noticePanel.add(noticeLabel);
 
-			musicalLabel1 = new JLabel("ê³µì—° ì œëª©");
+			musicalLabel1 = new JLabel("°ø¿¬ Á¦¸ñ");
 			musicalLabel2 = new JLabel(musical);
-			dateTimeLabel = new JLabel("ë‚ ì§œ ë° ì‹œê°„");
+			dateTimeLabel = new JLabel("³¯Â¥ ¹× ½Ã°£");
 			dateSelector = new JComboBox<String>();
 			timeSelector = new JComboBox<String>();
-			theaterLabel1 = new JLabel("ê·¹ì¥");
-			theaterLabel2 = new JLabel("ì¶©ë¬´ë¡œì•„íŠ¸ì„¼í„°");
-			priceLabel1 = new JLabel("ì˜ˆë§¤ê°€");
-			priceLabel2 = new JLabel("100,000ì›");
+			theaterLabel1 = new JLabel("±ØÀå");
+			theaterLabel2 = new JLabel("Ãæ¹«·Î¾ÆÆ®¼¾ÅÍ");
+			priceLabel1 = new JLabel("¿¹¸Å°¡");
+			priceLabel2 = new JLabel("100,000¿ø");
 			inputPanel.add(musicalLabel1);
 			inputPanel.add(musicalLabel2);
 			inputPanel.add(dateTimeLabel);
@@ -74,7 +74,7 @@ class TicketPanel extends JPanel {
 			inputPanel.add(priceLabel1);
 			inputPanel.add(priceLabel2);
 			
-			bookBtn = new JButton("ì˜ˆë§¤í•˜ê¸°");
+			bookBtn = new JButton("¿¹¸ÅÇÏ±â");
 			bookBtn.addActionListener(null);
 			btnPanel.add(bookBtn);
 			

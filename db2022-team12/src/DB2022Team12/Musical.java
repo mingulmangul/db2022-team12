@@ -16,8 +16,8 @@ class Musical {
 	private String title, summary, price, avgRate;
 	private String theaterName, theaterAddress, theaterPhone, theaterSize;
 
-	// ë®¤ì§€ì»¬ ê´€ë ¨ ì •ë³´ë¥¼ ëª¨ë‘ ê°€ì ¸ì˜¤ëŠ” ì¿¼ë¦¬ (ë®¤ì§€ì»¬ ì •ë³´ + í‰ê·  ë³„ì  ì •ë³´ + ìƒì˜ ê·¹ì¥ ì •ë³´)
-	// ë®¤ì§€ì»¬ í…Œì´ë¸”ê³¼ í‰ê·  ë³„ì  ë·°ë¥¼ NATURAL LEFT JOIN í•œ í›„, ì´ë¥¼ ê·¹ì¥ í…Œì´ë¸”ê³¼ JOIN 
+	// ¹ÂÁöÄÃ °ü·Ã Á¤º¸¸¦ ¸ğµÎ °¡Á®¿À´Â Äõ¸® (¹ÂÁöÄÃ Á¤º¸ + Æò±Õ º°Á¡ Á¤º¸ + »ó¿µ ±ØÀå Á¤º¸)
+	// ¹ÂÁöÄÃ Å×ÀÌºí°ú Æò±Õ º°Á¡ ºä¸¦ NATURAL LEFT JOIN ÇÑ ÈÄ, ÀÌ¸¦ ±ØÀå Å×ÀÌºí°ú JOIN 
 	private final String GET_MUSICAL_QUERY = "SELECT * "
 			+ "FROM (musical NATURAL LEFT JOIN avg_rate) "
 			+ "JOIN theater ON musical.theater_name = theater.name "
@@ -31,7 +31,7 @@ class Musical {
 			pStmt.setString(1, musical);
 			ResultSet rs = pStmt.executeQuery();
 			
-			// ì²« ë²ˆì§¸ íŠœí”Œì—ì„œ ê³µí†µ ì •ë³´(ì œëª©, ê³µì—°ì¥, ê°€ê²©, ì¤„ê±°ë¦¬) ì €ì¥
+			// Ã¹ ¹øÂ° Æ©ÇÃ¿¡¼­ °øÅë Á¤º¸(Á¦¸ñ, °ø¿¬Àå, °¡°İ, ÁÙ°Å¸®) ÀúÀå
 			rs.next();
 			this.title = rs.getString("title");
 			this.theaterName = rs.getString("theater_name");
