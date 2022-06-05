@@ -36,7 +36,7 @@ class checkTicketListener implements ActionListener {
 		checkTicketDialog.setTitle("예매 티켓 조회");
 		checkTicketDialog.setLayout(new GridLayout(3, 1, 10, 1));
 		
-		myInfoLabel = new JLabel(User.NAME + "님의 TICKET", SwingConstants.CENTER);
+		myInfoLabel = new JLabel(User.getName() + "님의 TICKET", SwingConstants.CENTER);
 		myInfoLabel.setFont(new Font("고딕", Font.BOLD, 20));
 		checkTicketDialog.add(myInfoLabel);
 		
@@ -46,7 +46,7 @@ class checkTicketListener implements ActionListener {
 				PreparedStatement preStmt = conn.prepareStatement(TICKETSEARCH_QUERY)) {
 				
 			// 유저 티켓 검색을 위한 쿼리
-			preStmt.setString(1, User.ID);
+			preStmt.setString(1, User.getId());
 			ResultSet res = preStmt.executeQuery();
 				
 			// 해당 아이디의 티켓이 존재하는지 확인
@@ -160,11 +160,11 @@ class checkTicketListener implements ActionListener {
 				
 				try (	Connection conn = new ConnectionClass().getConnection();
 						Statement preStmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
-					ResultSet res = preStmt.executeQuery("SELECT * FROM Ticket WHERE Member_id = '" + User.ID + "'");
+					ResultSet res = preStmt.executeQuery("SELECT * FROM Ticket WHERE Member_id = '" + User.getId() + "'");
 					
 					// 해당 아이디의 티켓이 존재하는지 확인
 					if (res.next()) {
-						preStmt.executeUpdate("DELETE FROM Ticket WHERE Member_id = '" + User.ID + "'");
+						preStmt.executeUpdate("DELETE FROM Ticket WHERE Member_id = '" + User.getId() + "'");
 						
 						msgTLabel = new JLabel("예매 취소 완료", SwingConstants.CENTER);
 					} else {

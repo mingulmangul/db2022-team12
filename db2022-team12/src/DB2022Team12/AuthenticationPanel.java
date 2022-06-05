@@ -98,17 +98,16 @@ class AuthenticationPanel extends JPanel {
 							noticeLabel.setText("잘못된 비밀번호입니다");
 						} else {
 							// 로그인 성공
-							User.ID = id;
-							User.NAME = res.getString("name");
+							User.setId(id);
+							User.setName(res.getString("name"));
 
 							// 로그인 & 회원가입 패널 숨기기
 							authPanel.setVisible(false);
-							noticeLabel.setText(User.NAME + "님 안녕하세요 :)");
+							noticeLabel.setText(User.getName() + "님 안녕하세요 :)");
 							
 							MypageBtn = new JButton("마이페이지");
 							MypageBtn.addActionListener(new MypageBtnListener());
 							noticePanel.add(MypageBtn);
-							
 						}
 					}
 				} catch (SQLException sqle) {
@@ -118,7 +117,6 @@ class AuthenticationPanel extends JPanel {
 		}
 
 	}
-	
 
 	// <회원가입> 버튼에 대한 리스너
 	// 회원가입 Dialog 창 생성

@@ -36,7 +36,7 @@ class reviewBtnListener implements ActionListener {
 		myreviewDialog.setTitle("작성 리뷰 관리");
 		myreviewDialog.setLayout(new GridLayout(3, 1, 10, 20));
 		
-		myreviewLabel = new JLabel(User.NAME + "님의 REVIEW", SwingConstants.CENTER);
+		myreviewLabel = new JLabel(User.getName() + "님의 REVIEW", SwingConstants.CENTER);
 		myreviewLabel.setFont(new Font("고딕", Font.BOLD, 20));
 		myreviewDialog.add(myreviewLabel);
 		
@@ -46,7 +46,7 @@ class reviewBtnListener implements ActionListener {
 				PreparedStatement preStmt = conn.prepareStatement(REVIEWSEARCH_QUERY)) {
 				
 			// 유저 티켓 검색을 위한 쿼리
-			preStmt.setString(1, User.ID);
+			preStmt.setString(1, User.getId());
 			ResultSet res = preStmt.executeQuery();
 				
 			// 해당 아이디의 리뷰가 존재하는지 확인
@@ -130,11 +130,11 @@ class reviewBtnListener implements ActionListener {
 			
 			try (	Connection conn = new ConnectionClass().getConnection();
 					Statement preStmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
-				ResultSet res = preStmt.executeQuery("SELECT * FROM Review WHERE Member_id = '" + User.ID + "'");
+				ResultSet res = preStmt.executeQuery("SELECT * FROM Review WHERE Member_id = '" + User.getId() + "'");
 				
 				// 해당 아이디의 티켓이 존재하는지 확인
 				if (res.next()) {
-					preStmt.executeUpdate("DELETE FROM Review WHERE Member_id = '" + User.ID + "'");
+					preStmt.executeUpdate("DELETE FROM Review WHERE Member_id = '" + User.getId() + "'");
 					msgRLabel = new JLabel("작성한 리뷰가 모두 삭제되었습니다.", SwingConstants.CENTER);
 					
 				} else {

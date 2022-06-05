@@ -32,7 +32,7 @@ class MypageBtnListener implements ActionListener{
 		personalPanel = new JPanel(new GridLayout(2, 1, 10, 10));
 		MypagePanel = new JPanel(new GridLayout(2, 1, 10, 8));
 		
-		infoLabel = new JLabel(User.NAME + "´Ô", SwingConstants.CENTER);
+		infoLabel = new JLabel(User.getName() + "´Ô", SwingConstants.CENTER);
 		infoLabel.setFont(new Font("°íµñ", Font.BOLD, 30));
 		
 		personalPanel.add(infoLabel);

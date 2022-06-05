@@ -50,11 +50,11 @@ CREATE TABLE theater(
     공연 제목(title)에 인덱스 추가
 */
 CREATE TABLE musical(
-    title VARCHAR(20) PRIMARY KEY,
+    title CHAR(10) PRIMARY KEY,
     theater_name VARCHAR(20) NOT NULL,
     price INT NOT NULL,
     remain_seat INT NOT NULL,
-    summary VARCHAR(100),
+    summary CHAR(100),
     FOREIGN KEY (theater_name) REFERENCES theater(name),
     INDEX musical_title_idx(title)
 );
@@ -72,7 +72,7 @@ CREATE TABLE musical_date(
     title VARCHAR(20),
     date DATE,
     time TIME,
-    FOREIGN KEY (title) REFERENCES musical(title)
+    FOREIGN KEY (title) REFERENCES musical(title),
     UNIQUE (title, date, time)
 );
 
@@ -149,7 +149,7 @@ INSERT INTO musical VALUES
 
 -- insert Musical_date
 -- INSERT INTO Musical_date values(title, date, time);
-INSERT INTO musical_date VALUES
+INSERT INTO musical_date(title, date, time) VALUES
     ('킹키부츠', '2022-07-01', '14:00:00'),
     ('킹키부츠', '2022-07-02', '19:00:00'),
     ('비더슈탄트', '2022-06-30', '20:00:00'),
@@ -163,16 +163,16 @@ INSERT INTO musical_date VALUES
 
 -- insert Ticket
 -- INSERT INTO Ticket values(musical_title, musical_date, member_id, order_date);
-INSERT INTO ticket VALUES
-    ('킹키부츠', 1, 'ga2059', '충무아트센터', '2022-05-28'),
-    ('킹키부츠', 2, '19soo10', '드림아트센터', '2022-05-31'),
-    ('데스노트', 5, '19soo10', '예술의전당', '2022-06-02'),
-    ('아이다', 7, '1684yoon', '블루스퀘어', '2022-06-02'),
-    ('아이다', 7, 'liu1771', '블루스퀘어', '2022-06-04');
+INSERT INTO ticket(musical_title, musical_date, member_id, order_date) VALUES
+    ('킹키부츠', 1, 'ga2059', '2022-05-28'),
+    ('킹키부츠', 2, '19soo10', '2022-05-31'),
+    ('데스노트', 5, '19soo10', '2022-06-02'),
+    ('아이다', 7, '1684yoon', '2022-06-02'),
+    ('아이다', 7, 'liu1771', '2022-06-04');
 
 -- insert Review
 -- INSERT INTO Review values(musical_title, member_id, rate, written_at);
-INSERT INTO review VALUES
+INSERT INTO review(musical_title, member_id, rate, written_at) VALUES
     ('킹키부츠', 'ga2059', 4, '2022-07-02'),
     ('킹키부츠', 'min1905', 3, '2022-07-02'),
     ('비더슈탄트', '19soo10', 5, '2022-06-30'),
@@ -193,18 +193,18 @@ GROUP BY musical.title;
 -- 2. 가격대 별 뮤지컬 이름
 -- 티켓 예매가가 10만원 미만인 뮤지컬 목록
 CREATE VIEW under_10 AS
-SELECT DISTINCT title
+SELECT DISTINCT title, summary
 FROM musical
 WHERE price < 100000;
 
 -- 티켓 예매가가 10만원 ~ 15만원인 뮤지컬 목록
 CREATE VIEW between10_15 AS
-SELECT DISTINCT title
+SELECT DISTINCT title, summary
 FROM musical
 WHERE price BETWEEN 100000 AND 150000;
 
 -- 티켓 예매가가 15만원 초과인 뮤지컬 목록
 CREATE VIEW over_15 AS
-SELECT DISTINCT title
+SELECT DISTINCT title, summary
 FROM musical
 WHERE price > 150000;

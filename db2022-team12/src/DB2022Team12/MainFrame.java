@@ -14,11 +14,15 @@ class MainFrame extends JFrame {
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new GridLayout(5, 1));
 
-		DB2022Team12.AuthenticationPanel authPanel = new AuthenticationPanel();
-		DB2022Team12.TicketPanel ticketPanel = new TicketPanel("킹키부츠");
+		AuthenticationPanel authPanel = new AuthenticationPanel();
+		
+		Musical musical = new Musical("아이다");
+		TicketPanel ticketPanel = new TicketPanel(musical);
+		ReviewInsertionPanel reviewInsertionPanel = new ReviewInsertionPanel(musical);
 
 		contentPane.add(authPanel);
 		contentPane.add(ticketPanel);
+		contentPane.add(reviewInsertionPanel);
 
 		setVisible(true);
 	}
