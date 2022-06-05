@@ -26,6 +26,7 @@ class Musical {
 
 	private String title, summary, price, score;
 	private String theaterName, theaterAddress, theaterPhone, theaterSize;
+	private int userReview = 0;
 
 	// 뮤지컬 관련 정보를 모두 가져오는 쿼리 (뮤지컬 정보 + 평균 별점 정보 + 상영 극장 정보)
 	// 뮤지컬 테이블과 평균 별점 뷰를 NATURAL LEFT JOIN 한 후, 이를 극장 테이블과 JOIN
@@ -34,10 +35,14 @@ class Musical {
 	// 뮤지컬 회차 정보를 가져오는 쿼리
 	private final static String GET_MUSICAL_SCHEDULE_QUERY = "SELECT * FROM musical NATURAL JOIN musical_schedule WHERE title = ? ORDER BY date, time";
 
+	// 로그인한 유저의 리뷰를 가져오는 쿼리
+	private final static String GET_REVIEW_QUERY = "SELECT rate FROM review WHERE musical_title = ? AND member_id = ?";
+
 	public Musical(String musical) {
 		try (Connection conn = new ConnectionClass().getConnection();
 				PreparedStatement musicalStmt = conn.prepareStatement(GET_MUSICAL_QUERY);
-				PreparedStatement dateStmt = conn.prepareStatement(GET_MUSICAL_SCHEDULE_QUERY);) {
+				PreparedStatement dateStmt = conn.prepareStatement(GET_MUSICAL_SCHEDULE_QUERY);
+				PreparedStatement reviewStmt = conn.prepareStatement(GET_REVIEW_QUERY);) {
 			// 뮤지컬 정보 가져오기
 			musicalStmt.setString(1, musical);
 			ResultSet rs = musicalStmt.executeQuery();
@@ -70,6 +75,20 @@ class Musical {
 				v.add(new TimeInfo(time, remainSeat));
 				schedules.put(date, v);
 			}
+
+			// 로그인 유저라면, 해당 유저의 리뷰 정보 가져오기
+			System.out.println("로그인 유저 ID: " + User.getId());
+			if (User.getId() != null) {
+				reviewStmt.setString(1, musical);
+				reviewStmt.setString(2, User.getId());
+				rs = reviewStmt.executeQuery();
+
+				// 유저의 리뷰가 존재한다면, 저장
+				if (rs.next()) {
+					this.userReview = rs.getInt("rate");
+				}
+			}
+
 		} catch (SQLException sqle) {
 			System.out.println(sqle);
 		}
@@ -107,6 +126,14 @@ class Musical {
 	}
 
 	// getter & setter
+
+	int getUserReview() {
+		return userReview;
+	}
+
+	void setUserReview(int rate) {
+		this.userReview = rate;
+	}
 
 	String getTitle() {
 		return title;
