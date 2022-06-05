@@ -1,4 +1,5 @@
 package DB2022Team12;
+
 import java.awt.Container;
 import java.awt.GridLayout;
 
@@ -7,7 +8,7 @@ import javax.swing.JFrame;
 class MainFrame extends JFrame {
 
 	public MainFrame() {
-		setTitle("«¡∑Œ±◊∑•");
+		setTitle("ÌîÑÎ°úÍ∑∏Îû®");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(500, 500);
 
@@ -15,8 +16,8 @@ class MainFrame extends JFrame {
 		contentPane.setLayout(new GridLayout(5, 1));
 
 		AuthenticationPanel authPanel = new AuthenticationPanel();
-		
-		Musical musical = new Musical("æ∆¿Ã¥Ÿ");
+
+		Musical musical = new Musical("ÏïÑÏù¥Îã§");
 		TicketPanel ticketPanel = new TicketPanel(musical);
 		ReviewInsertionPanel reviewInsertionPanel = new ReviewInsertionPanel(musical);
 
