@@ -11,7 +11,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+// <ë§ˆì´í˜ì´ì§€> ë²„íŠ¼ì— ëŒ€í•œ ë¦¬ìŠ¤ë„ˆ
+// ë§ˆì´í˜ì´ì§€ Dialog ì°½ ìƒì„±
 class MypageBtnListener implements ActionListener{
+	
 	private JDialog signInDialog;
 	private JPanel emptyPanel, personalPanel, MypagePanel;
 	private JLabel infoLabel;
@@ -19,28 +22,28 @@ class MypageBtnListener implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// <·Î±×ÀÎ> ¹öÆ°¿¡ ´ëÇÑ ¸®½º³Ê
-		// ¸¶ÀÌÆäÀÌÁö ¿¹¸Å Æ¼ÄÏ Á¶È¸, ¿¹¸Å Ãë¼Ò, ÀÛ¼º ¸®ºä °ü¸® ¹öÆ° ¼±ÅÃ dialog »ı¼º
+		// ë§ˆì´í˜ì´ì§€ Dialog ë ˆì´ì•„ì›ƒ ì„¤ì •
 		signInDialog = new JDialog();
 		signInDialog.setSize(300, 350);
-		signInDialog.setTitle("¸¶ÀÌÆäÀÌÁö");
+		signInDialog.setTitle("ë§ˆì´í˜ì´ì§€");
 		signInDialog.setLayout(new GridLayout(3, 1, 20, 5));
 		
 		emptyPanel = new JPanel();
 		signInDialog.add(emptyPanel);
 		
-		personalPanel = new JPanel(new GridLayout(2, 1, 10, 10));
+		personalPanel = new JPanel();
 		MypagePanel = new JPanel(new GridLayout(2, 1, 10, 8));
 		
-		infoLabel = new JLabel(User.getName() + "´Ô", SwingConstants.CENTER);
-		infoLabel.setFont(new Font("°íµñ", Font.BOLD, 30));
-		
+		// ì‚¬ìš©ì ì´ë¦„ ì¶œë ¥ Label
+		infoLabel = new JLabel(User.getName() + "ë‹˜", SwingConstants.CENTER);
+		infoLabel.setFont(new Font("ê³ ë”•", Font.BOLD, 30));
 		personalPanel.add(infoLabel);
 		signInDialog.add(personalPanel);
 		
-		checkTicketBtn = new JButton("¿¹¸Å Æ¼ÄÏ Á¶È¸");
+		// <ì˜ˆë§¤ í‹°ì¼“ ì¡°íšŒ>, <ì‘ì„± ë¦¬ë·° ê´€ë¦¬> ë²„íŠ¼ Panel
+		checkTicketBtn = new JButton("ì˜ˆë§¤ í‹°ì¼“ ì¡°íšŒ");
 		checkTicketBtn.addActionListener(new checkTicketListener());
-		reviewBtn = new JButton("ÀÛ¼º ¸®ºä °ü¸®");
+		reviewBtn = new JButton("ì‘ì„± ë¦¬ë·° ê´€ë¦¬");
 		reviewBtn.addActionListener(new reviewBtnListener());
 		MypagePanel.add(checkTicketBtn);
 		MypagePanel.add(reviewBtn);

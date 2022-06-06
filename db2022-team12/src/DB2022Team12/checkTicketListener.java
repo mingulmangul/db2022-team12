@@ -1,97 +1,116 @@
 package DB2022Team12;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 
-//<¿¹¸Å Æ¼ÄÏ Á¶È¸> ¹öÆ°¿¡ ´ëÇÑ ¸®½º³Ê
-//¿¹¸Å Æ¼ÄÏ Á¤º¸ DB¿¡¼­ °Ë»ö, Æ¼ÄÏ Á¤º¸¸¦ º¸¿©ÁÖ´Â dialog »ı¼º
+// <ì˜ˆë§¤ í‹°ì¼“ ì¡°íšŒ> ë²„íŠ¼ì— ëŒ€í•œ ë¦¬ìŠ¤ë„ˆ
+// ì˜ˆë§¤ í‹°ì¼“ ì •ë³´ DBì—ì„œ ê²€ìƒ‰, í‹°ì¼“ ì •ë³´ë¥¼ ë³´ì—¬ì£¼ëŠ” ì˜ˆë§¤ í‹°ì¼“ ì¡°íšŒ dialog ìƒì„±
 class checkTicketListener implements ActionListener {
 	
-	// Æ¼ÄÏ Á¤º¸ °Ë»ö Äõ¸®
-	private static String TICKETSEARCH_QUERY = "SELECT id, musical_title, order_date FROM ticket WHERE member_id = ?";
-	
-	private JLabel myInfoLabel, myTicketLabel1, myTicketLabel2, myTicketLabel3, myTicketLabel4;
+	private JLabel myInfoLabel, myTicketLabel;
 	private JButton cancelTicketBtn, closeBtn;
-	private JPanel myTicketPanel, BtnPanel;
+	private JPanel BtnPanel;
 	private JDialog checkTicketDialog;
-		
+	
+	List<UserTicket> Ticket; // ì‚¬ìš©ìì˜ í‹°ì¼“ ì •ë³´ë¥¼ ì €ì¥í•  UserTicket ê°ì²´ ë¦¬ìŠ¤íŠ¸
+	int myTicketNum = 0; // ì‚¬ìš©ì í‹°ì¼“ ê°œìˆ˜
+	int[] deleTId; // ì‚­ì œí•  í‹°ì¼“ id ë°°ì—´
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		// ì˜ˆë§¤ í‹°ì¼“ ì¡°íšŒ Dialog ë ˆì´ì•„ì›ƒ ì„¤ì •
 		checkTicketDialog = new JDialog();
-		checkTicketDialog.setSize(200, 300);
-		checkTicketDialog.setTitle("¿¹¸Å Æ¼ÄÏ Á¶È¸");
-		checkTicketDialog.setLayout(new GridLayout(3, 1, 10, 1));
+		checkTicketDialog.setSize(450, 250);
+		checkTicketDialog.setTitle("ì˜ˆë§¤ í‹°ì¼“ ì¡°íšŒ");
+		checkTicketDialog.setLayout(new BorderLayout());
 		
-		myInfoLabel = new JLabel(User.getName() + "´ÔÀÇ TICKET", SwingConstants.CENTER);
-		myInfoLabel.setFont(new Font("°íµñ", Font.BOLD, 20));
-		checkTicketDialog.add(myInfoLabel);
+		// ì‚¬ìš©ì ì´ë¦„ ì¶œë ¥ Label
+		myInfoLabel = new JLabel(User.getName() + "ë‹˜ì˜ TICKET", SwingConstants.CENTER);
+		myInfoLabel.setFont(new Font("ê³ ë”•", Font.BOLD, 20));
+		checkTicketDialog.add(myInfoLabel, BorderLayout.NORTH);
 		
-		myTicketPanel = new JPanel();
-			
+		Ticket = new ArrayList<UserTicket>(); // ì‚¬ìš©ìì˜ í‹°ì¼“ ì •ë³´ë¥¼ ì €ì¥í•  UserTicket ê°ì²´ ArrayList
+		myTicketNum = 0; // ì‚¬ìš©ì í‹°ì¼“ ê°œìˆ˜ ì´ˆê¸°í™”
+		
+		// ë°ì´í„°ë² ì´ìŠ¤ ì—°ê²°
 		try (Connection conn = new ConnectionClass().getConnection();
-				PreparedStatement preStmt = conn.prepareStatement(TICKETSEARCH_QUERY)) {
-				
-			// À¯Àú Æ¼ÄÏ °Ë»öÀ» À§ÇÑ Äõ¸®
-			preStmt.setString(1, User.getId());
-			ResultSet res = preStmt.executeQuery();
-				
-			// ÇØ´ç ¾ÆÀÌµğÀÇ Æ¼ÄÏÀÌ Á¸ÀçÇÏ´ÂÁö È®ÀÎ
-			if (!res.next()) {
-				myTicketLabel1 = new JLabel("¿¹¸ÅÇÑ Æ¼ÄÏÀÌ ¾ø½À´Ï´Ù.");
-				myTicketPanel.add(myTicketLabel1);
+				Statement stmt = conn.createStatement();) {
+			
+			// ticket SELECTë¥¼ ìœ„í•œ ì¿¼ë¦¬ ìƒì„± ë° UserTicket ê°ì²´ ArrayListë¥¼ ì´ìš©í•´ ì •ë³´ ì €ì¥
+			String TICKETSEARCH_QUERY = "SELECT id, musical_title, order_date FROM db2022_ticket WHERE member_id = '" + User.getId() + "'";
 
-				checkTicketDialog.add(myTicketPanel);
+	        boolean Tresults = stmt.execute(TICKETSEARCH_QUERY);
+	        ResultSet res = stmt.getResultSet();
+	        int Terror = 0;
+
+	        do {
+	            if (Tresults) {
+	                while (res.next()) {
+	                	Terror++;
+	                	UserTicket ticket = new UserTicket();
+	                	ticket.setID(res.getInt("id"));
+	                	ticket.setTitle(res.getString("musical_title"));
+	                	ticket.setOrderDate(res.getString("order_date"));
+	                	Ticket.add(ticket);
+	                }
+	            }
+	            Tresults = stmt.getMoreResults();
+	        } while (Tresults);
+
+			if(Terror != 0) { // ì˜ˆë§¤í•œ í‹°ì¼“ì´ ìˆì„ ê²½ìš°
 				
+				// ì‚¬ìš©ì í‹°ì¼“ ì •ë³´ ì œì‹œ Label
+		        String Tstr = "";
+		        for(int i = 0; i < Ticket.size(); i++) {
+		        	Tstr += "NO." + (i+1) + " --- í‹°ì¼“ id : " + Ticket.get(i).getID() + ",  ê³µì—° ì œëª© : " + Ticket.get(i).getTitle() + ",  í‹°ì¼“ ì˜ˆë§¤ ë‚ ì§œ : " + Ticket.get(i).getOrderDate() + "<br />";
+		        	myTicketNum++;
+		        }
+				myTicketLabel = new JLabel("<html><body style='text-align:center;'>" + Tstr + "</body></html>", SwingConstants.CENTER);
+	
+				// <ì˜ˆë§¤ ì·¨ì†Œ>, <CLOSE> ë²„íŠ¼ Panel
+				BtnPanel = new JPanel(new GridLayout(1, 2, 1, 1));
+				cancelTicketBtn = new JButton("ì˜ˆë§¤ ì·¨ì†Œ");
+				cancelTicketBtn.addActionListener(new cancelTicketBtnListener());
+				closeBtn = new JButton("CLOSE");
+				closeBtn.addActionListener(new delePDlgListener());
+				BtnPanel.add(cancelTicketBtn);
+				BtnPanel.add(closeBtn);
+				
+			}else { // ì˜ˆë§¤í•œ í‹°ì¼“ì´ ì—†ì„ ê²½ìš°
+				
+				// ì‚¬ìš©ì í‹°ì¼“ ì •ë³´ ì œì‹œ Label
+				myTicketLabel = new JLabel("ì˜ˆë§¤í•œ í‹°ì¼“ì´ ì—†ìŠµë‹ˆë‹¤.", SwingConstants.CENTER);
+
+				// <CLOSE> ë²„íŠ¼ Panel
 				BtnPanel = new JPanel();
 				closeBtn = new JButton("CLOSE");
 				closeBtn.addActionListener(new delePDlgListener());
 				BtnPanel.add(closeBtn);
-
-				checkTicketDialog.add(BtnPanel);
-				
-			} else {
-				// À¯Àú Á¤º¸ ÀúÀå
-				// Musical_id, Member_id, Theater_name, Order_date
-				// musical_id, musical_name, theater, orderDate
-				UserTicket.ID = res.getInt("id");
-				UserTicket.title = res.getString("musical_title");
-				UserTicket.orderDate = res.getString("order_date"); 
-			
-			myTicketLabel2 = new JLabel("Æ¼ÄÏ ID : " + UserTicket.ID);
-			myTicketLabel3 = new JLabel("°ø¿¬ Á¦¸ñ : " + UserTicket.title);
-			myTicketLabel4 = new JLabel("Æ¼ÄÏ ¿¹¸Å ³¯Â¥ : " + UserTicket.orderDate);
-			
-			myTicketPanel.add(myTicketLabel2);
-			myTicketPanel.add(myTicketLabel3);
-			myTicketPanel.add(myTicketLabel4);
-			
-			checkTicketDialog.add(myTicketPanel);
-			
-			BtnPanel = new JPanel(new GridLayout(1, 2, 1, 10));
-			cancelTicketBtn = new JButton("¿¹¸Å Ãë¼Ò");
-			cancelTicketBtn.addActionListener(new cancelTicketBtnListener());
-			closeBtn = new JButton("CLOSE");
-			closeBtn.addActionListener(new delePDlgListener());
-			BtnPanel.add(cancelTicketBtn);
-			BtnPanel.add(closeBtn);
-			
-			checkTicketDialog.add(BtnPanel);
-			
 			}
+			
+			checkTicketDialog.add(myTicketLabel, BorderLayout.CENTER);
+			checkTicketDialog.add(BtnPanel, BorderLayout.SOUTH);
+	
 		} catch (SQLException sqle) {
 			System.out.println(sqle);
 		}
@@ -99,8 +118,8 @@ class checkTicketListener implements ActionListener {
 		checkTicketDialog.setVisible(true);
 	}
 	
-	// ¿¹¸Å Æ¼ÄÏ Á¶È¸ dialog¿¡¼­ <CLOSE> ¹öÆ°¿¡ ´ëÇÑ ¸®½º³Ê
-	// ¿¹¸Å Æ¼ÄÏ Á¶È¸ dialog ´İ±â
+	// ì˜ˆë§¤ í‹°ì¼“ ì¡°íšŒ Dialogì—ì„œ <CLOSE> ë²„íŠ¼ì— ëŒ€í•œ ë¦¬ìŠ¤ë„ˆ
+	// ì˜ˆë§¤ í‹°ì¼“ ì¡°íšŒ Dialog ë‹«ê¸°
 	class delePDlgListener implements ActionListener {
 
 		@Override
@@ -109,97 +128,193 @@ class checkTicketListener implements ActionListener {
 		}
 	}
 	
-	// <¿¹¸Å Ãë¼Ò> ¹öÆ°¿¡ ´ëÇÑ ¸®½º³Ê
-	// ¿¹¸ÅÇÑ Æ¼ÄÏ Á¤º¸¿Í ¿¹¸Å Ãë¼Ò µ¿ÀÇ dialog »ı¼º
+	// ì²´í¬ë°•ìŠ¤ë¥¼ í•˜ë‚˜ë„ ì²´í¬í•˜ì§€ ì•Šì„ ê²½ìš°ë¥¼ í™•ì¸í•˜ê¸° ìœ„í•œ í´ë˜ìŠ¤
+	// ì²´í¬ë°•ìŠ¤ë¥¼ í•˜ë‚˜ë„ ì„ íƒí•˜ì§€ ì•Šì•˜ì„ ê²½ìš° num == 0, ì ì–´ë„ í•˜ë‚˜ ì„ íƒí•œ ê²½ìš° num != 0
+	class TerrorC {
+		static int num = 0;
+	}
+	
+	// ì˜ˆë§¤ í‹°ì¼“ ì¡°íšŒ Dialogì—ì„œ <ì˜ˆë§¤ ì·¨ì†Œ> ë²„íŠ¼ì— ëŒ€í•œ ë¦¬ìŠ¤ë„ˆ
+	// ì˜ˆë§¤ í‹°ì¼“ ì¡°íšŒ Dialog ë‹«ê¸°
+	// ì˜ˆë§¤ ì·¨ì†Œ í‹°ì¼“ ì„ íƒ Dialog ìƒì„±
 	class cancelTicketBtnListener implements ActionListener {
-		private JLabel deleTicketInfoLabel1, deleTicketInfoLabel2, deleTicketInfoLabel3;
-		private JButton deleTBtn;
-		private JPanel reserveTicketPanel;
-		private JDialog deleTAgreeDialog;
 		
+		private JButton deleTBtn, closeTBtn;
+		private JPanel reserveTPanel, selectTPanel;
+		private JDialog deleTAgreeDialog;
+		private JLabel explainTLabel;
+		JCheckBox[] chk = new JCheckBox[myTicketNum];
+					
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
-				deleTAgreeDialog = new JDialog();
-				deleTAgreeDialog.setSize(200, 150);
-				deleTAgreeDialog.setTitle("¿¹¸Å Ãë¼Ò");
-				deleTAgreeDialog.setLayout(new GridLayout(2, 1, 10, 5));
+			// ì˜ˆë§¤ í‹°ì¼“ ì¡°íšŒ Dialog ë‹«ê¸°
+			checkTicketDialog.dispose();
+			
+			// ì˜ˆë§¤ ì·¨ì†Œ í‹°ì¼“ ì„ íƒ Dialog ë ˆì´ì•„ì›ƒ ì„¤ì •
+			deleTAgreeDialog = new JDialog();
+			deleTAgreeDialog.setSize(450, 250);
+			deleTAgreeDialog.setTitle("ì˜ˆë§¤ ì·¨ì†Œ í‹°ì¼“ ì„ íƒ");
+			deleTAgreeDialog.setLayout(new BorderLayout());
 				
-				reserveTicketPanel = new JPanel(new GridLayout(4, 1, 10, 1));
+			// ì˜ˆë§¤ ì·¨ì†Œ í‹°ì¼“ ì„ íƒ ì•ˆë‚´ Label
+			explainTLabel = new JLabel("ì˜ˆë§¤ë¥¼ ì·¨ì†Œí•  í‹°ì¼“ì„ ì„ íƒí•˜ì„¸ìš”.", SwingConstants.CENTER);
+			explainTLabel.setFont(new Font("ê³ ë”•", Font.BOLD, 15));
+			deleTAgreeDialog.add(explainTLabel, BorderLayout.NORTH);
 				
-				deleTicketInfoLabel1 = new JLabel("Æ¼ÄÏ ID : " + UserTicket.ID);
-				deleTicketInfoLabel2 = new JLabel("°ø¿¬ Á¦¸ñ : " + UserTicket.title);
-				deleTicketInfoLabel3 = new JLabel("Æ¼ÄÏ ¿¹¸Å ³¯Â¥ : " + UserTicket.orderDate);
+			// ì˜ˆë§¤ë¥¼ ì·¨ì†Œí•  í‹°ì¼“ ì„ íƒ ì²´í¬ë°•ìŠ¤ Panel
+			reserveTPanel = new JPanel();
+			TerrorC.num = 0; // ì²´í¬ë°•ìŠ¤ í™•ì¸ìš© ë³€ìˆ˜ ì´ˆê¸°í™”
+			// ì²´í¬ë°•ìŠ¤ ìƒì„±
+			for (int i = 0; i < myTicketNum; i++){
+				chk[i] = new JCheckBox("NO." + (i+1) + " --- í‹°ì¼“ id : " + Ticket.get(i).getID() + ",  ê³µì—° ì œëª© : " + Ticket.get(i).getTitle() + ",  í‹°ì¼“ ì˜ˆë§¤ ë‚ ì§œ : " + Ticket.get(i).getOrderDate(),false);
+				chk[i].addItemListener(new deleTItem());
+				reserveTPanel.add(chk[i]);
+			}				
+			deleTAgreeDialog.add(reserveTPanel, BorderLayout.CENTER);
 				
-				reserveTicketPanel.add(deleTicketInfoLabel1);
-				reserveTicketPanel.add(deleTicketInfoLabel2);
-				reserveTicketPanel.add(deleTicketInfoLabel3);
+			// <ì˜ˆë§¤ ì·¨ì†Œ ë™ì˜>, <CLOSE> ë²„íŠ¼ Panel
+			selectTPanel = new JPanel(new GridLayout(1, 2, 1, 1));
+			deleTBtn = new JButton("ì˜ˆë§¤ ì·¨ì†Œ ë™ì˜");
+			deleTBtn.addActionListener(new delTcheckListener());			
+			selectTPanel.add(deleTBtn);
+			closeTBtn = new JButton("CLOSE");
+			closeTBtn.addActionListener(new deleSDlgListener());
+			selectTPanel.add(closeTBtn);
 				
-				deleTAgreeDialog.add(reserveTicketPanel);
+			deleTAgreeDialog.add(selectTPanel, BorderLayout.SOUTH);
 				
-				deleTBtn = new JButton("¿¹¸Å Ãë¼Ò µ¿ÀÇ");
-				deleTBtn.addActionListener(new delTcheckListener());
-				deleTAgreeDialog.add(deleTBtn);
-				
-				deleTAgreeDialog.setVisible(true);
+			deleTAgreeDialog.setVisible(true);
+		}		
 		
+		// ì˜ˆë§¤ ì·¨ì†Œ í‹°ì¼“ ì„ íƒ Dialogì—ì„œ <CLOSE> ë²„íŠ¼ì— ëŒ€í•œ ë¦¬ìŠ¤ë„ˆ
+		// ì˜ˆë§¤ ì·¨ì†Œ í‹°ì¼“ ì„ íƒ Dialog ë‹«ê¸°
+		class deleSDlgListener implements ActionListener {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				deleTAgreeDialog.dispose();
+			}
 		}
 		
-		// <¿¹¸Å Ãë¼Ò µ¿ÀÇ> ¹öÆ°¿¡ ´ëÇÑ ¸®½º³Ê
-		// ¿¹¸Å Æ¼ÄÏ Á¤º¸ DB¿¡¼­ »èÁ¦, ¿¹¸Å Ãë¼Ò ¿Ï·á dialog »ı¼º
+		// ì˜ˆë§¤ ì·¨ì†Œ í‹°ì¼“ ì„ íƒ ì²´í¬ë°•ìŠ¤ì— ëŒ€í•œ ë¦¬ìŠ¤ë„ˆ
+		class deleTItem implements ItemListener {
+			public void itemStateChanged(ItemEvent e) {
+				
+				// ticket DELETEì— ì‚¬ìš©í•  í‹°ì¼“ idë¥¼ deleTId ë°°ì—´ì— ì €ì¥
+				deleTId = new int[myTicketNum];
+				for (int i = 0; i < myTicketNum; i++){
+					if(chk[i].isSelected()) {
+						deleTId[i] = Ticket.get(i).getID();
+					}else {
+						deleTId[i] = 0;
+					}
+					
+					TerrorC.num = 0; // ì²´í¬ë°•ìŠ¤ í™•ì¸ìš© ë³€ìˆ˜ ì´ˆê¸°í™”
+					// ì²´í¬ë°•ìŠ¤ë¥¼ í•˜ë‚˜ë„ ì„ íƒí•˜ì§€ ì•Šì•˜ì„ ê²½ìš° TerrorC.num == 0, ì ì–´ë„ í•˜ë‚˜ ì„ íƒí•œ ê²½ìš° TerrorC.num != 0
+					for (int j = 0; j < myTicketNum; j++){
+						TerrorC.num += deleTId[j];
+					}
+				}
+				
+			}			
+		}	
+		
+		// ì˜ˆë§¤ ì·¨ì†Œ í‹°ì¼“ ì„ íƒ Dialogì—ì„œ <ì˜ˆë§¤ ì·¨ì†Œ ë™ì˜> ë²„íŠ¼ì— ëŒ€í•œ ë¦¬ìŠ¤ë„ˆ
+		// ì˜ˆë§¤ ì·¨ì†Œ í‹°ì¼“ ì„ íƒ Dialog ë‹«ê¸°
+		// ì„ íƒëœ ì˜ˆë§¤ í‹°ì¼“ì„ DBì—ì„œ ì‚­ì œ, ì˜ˆë§¤ ì·¨ì†Œ ì™„ë£Œ Dialog ìƒì„±
 		class delTcheckListener implements ActionListener {
-			private JLabel msgTLabel;
-			private JButton checkTBtn;	
+			
+			private JLabel XTLabel, msgTLabel;
+			private JButton XTBtn, checkTBtn;	
 			private JDialog delTcheckDialog;
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				delTcheckDialog = new JDialog();
-				delTcheckDialog.setSize(120, 100);
-				delTcheckDialog.setLayout(new GridLayout(2, 1, 10, 10));
-				
-				try (	Connection conn = new ConnectionClass().getConnection();
-						Statement preStmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
-					ResultSet res = preStmt.executeQuery("SELECT * FROM Ticket WHERE Member_id = '" + User.getId() + "'");
+
+				if(TerrorC.num == 0) { // ì²´í¬ë°•ìŠ¤ë¥¼ í•˜ë‚˜ë„ ì„ íƒí•˜ì§€ ì•Šì•˜ì„ ê²½ìš°
 					
-					// ÇØ´ç ¾ÆÀÌµğÀÇ Æ¼ÄÏÀÌ Á¸ÀçÇÏ´ÂÁö È®ÀÎ
-					if (res.next()) {
-						preStmt.executeUpdate("DELETE FROM Ticket WHERE Member_id = '" + User.getId() + "'");
+					// ì•ˆë‚´ Dialog ë ˆì´ì•„ì›ƒ ì„¤ì •
+					delTcheckDialog = new JDialog();
+					delTcheckDialog.setSize(250, 120);
+					delTcheckDialog.setLayout(new BorderLayout());
+					
+					XTLabel = new JLabel("í•˜ë‚˜ ì´ìƒì˜ ì²´í¬ë°•ìŠ¤ë¥¼ ì„ íƒí•˜ì„¸ìš”.", SwingConstants.CENTER);
+					delTcheckDialog.add(XTLabel, BorderLayout.CENTER);
+					
+					XTBtn = new JButton("OK");
+					XTBtn.addActionListener(new deleEDlgListener());
+					delTcheckDialog.add(XTBtn, BorderLayout.SOUTH);
+					
+					delTcheckDialog.setVisible(true);
+					
+					deleTAgreeDialog.dispose();
+					
+				}else { // ì²´í¬ë°•ìŠ¤ë¥¼ ì ì–´ë„ í•˜ë‚˜ ì„ íƒí•œ ê²½ìš°
+					
+					// ì‚­ì œ ì™„ë£Œ Dialog ë ˆì´ì•„ì›ƒ ì„¤ì •
+					delTcheckDialog = new JDialog();
+					delTcheckDialog.setSize(120, 100);
+					delTcheckDialog.setLayout(new BorderLayout());
+					
+					// ticket DELETE
+					for (int i = 0; i < myTicketNum; i++){
+						if(deleTId[i] != 0) { // ì²´í¬ë°•ìŠ¤ì—ì„œ ì„ íƒí•œ í‹°ì¼“ë§Œ ì‚­ì œ
+							try (	Connection conn = new ConnectionClass().getConnection();
+									Statement preStmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
+								ResultSet res = preStmt.executeQuery("SELECT * FROM db2022_ticket WHERE id = '" + deleTId[i] + "'");
+								
+								// í•´ë‹¹ í‹°ì¼“ idì˜ í‹°ì¼“ì´ ì¡´ì¬í•˜ëŠ”ì§€ í™•ì¸
+								if (res.next()) { // í•´ë‹¹ í‹°ì¼“ idì˜ í‹°ì¼“ì´ ì¡´ì¬
+									// ì‚­ì œ ì„±ê³µ
+									// ticket DELETE ì¿¼ë¦¬ ì‹¤í–‰
+									preStmt.executeUpdate("DELETE FROM db2022_ticket WHERE id = '" + deleTId[i] + "'");
+									msgTLabel = new JLabel("ì˜ˆë§¤ ì·¨ì†Œ ì™„ë£Œ", SwingConstants.CENTER);
+								} else { // í•´ë‹¹ í‹°ì¼“ idì˜ í‹°ì¼“ì´ ì¡´ì¬í•˜ì§€ ì•ŠìŒ
+									msgTLabel = new JLabel("ERROR", SwingConstants.CENTER);
+								}	
+							}catch (SQLException sqle) {
+								System.out.println(sqle);
+							}
+						}
+					}
+					
+					delTcheckDialog.add(msgTLabel, BorderLayout.CENTER);
 						
-						msgTLabel = new JLabel("¿¹¸Å Ãë¼Ò ¿Ï·á", SwingConstants.CENTER);
-					} else {
-						msgTLabel = new JLabel("ERROR", SwingConstants.CENTER);
-					}	
-				}catch (SQLException sqle) {
-					System.out.println(sqle);
+					checkTBtn = new JButton("OK");
+					checkTBtn.addActionListener(new deleTDlgListener());
+					delTcheckDialog.add(checkTBtn, BorderLayout.SOUTH);
+					
+					delTcheckDialog.setVisible(true);
+					
+					deleTAgreeDialog.dispose();
 				}
 				
-				delTcheckDialog.add(msgTLabel);
-				
-				checkTBtn = new JButton("OK");
-				checkTBtn.addActionListener(new deleTDlgListener());
-				delTcheckDialog.add(checkTBtn);
-				
-				delTcheckDialog.setVisible(true);
-				
-				//¿¹¸Å Ãë¼Ò dialog ´İ±â
-				deleTAgreeDialog.dispose();
 			}
 			
-			// Æ¼ÄÏ ¿¹¸Å Ãë¼Ò ¿Ï·á dialog¿¡¼­ <OK> ¹öÆ°¿¡ ´ëÇÑ ¸®½º³Ê
-			// ¿¹¸Å Ãë¼Ò µ¿ÀÇ dialog ´İ±â
-			class deleTDlgListener implements ActionListener {
+			// ì²´í¬ë°•ìŠ¤ ì„ íƒì´ ì—†ìŒì„ ì•Œë¦¬ëŠ” Dialogì—ì„œ <OK> ë²„íŠ¼ì— ëŒ€í•œ ë¦¬ìŠ¤ë„ˆ
+			// ì²´í¬ë°•ìŠ¤ ì„ íƒì´ ì—†ìŒì„ ì•Œë¦¬ëŠ” Dialog ë‹«ê¸°
+			class deleEDlgListener implements ActionListener {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					delTcheckDialog.dispose();
 				}
 			}
+			
+			// ì˜ˆë§¤ ì·¨ì†Œ ì™„ë£Œ dialogì—ì„œ <OK> ë²„íŠ¼ì— ëŒ€í•œ ë¦¬ìŠ¤ë„ˆ
+			// ì˜ˆë§¤ ì·¨ì†Œ ì™„ë£Œ dialog ë‹«ê¸°
+			class deleTDlgListener implements ActionListener {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					delTcheckDialog.dispose();
+				}
+			}			
+			
 		}
 
 	}
 }
-
-
 
 
