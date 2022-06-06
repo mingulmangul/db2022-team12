@@ -18,7 +18,7 @@ import javax.swing.SwingConstants;
  * @author sonab
  */
 class MypageBtnListener implements ActionListener {
-
+  
 	private JDialog signInDialog;
 	private JPanel emptyPanel, personalPanel, MypagePanel;
 	private JLabel infoLabel;
@@ -34,16 +34,16 @@ class MypageBtnListener implements ActionListener {
 
 		emptyPanel = new JPanel();
 		signInDialog.add(emptyPanel);
-
+		
 		personalPanel = new JPanel();
 		MypagePanel = new JPanel(new GridLayout(2, 1, 10, 8));
-
+		
 		// 사용자 이름 출력 Label
 		infoLabel = new JLabel(User.getName() + "님", SwingConstants.CENTER);
 		infoLabel.setFont(new Font("고딕", Font.BOLD, 30));
 		personalPanel.add(infoLabel);
 		signInDialog.add(personalPanel);
-
+    
 		// <예매 티켓 조회>, <작성 리뷰 관리> 버튼 Panel
 		checkTicketBtn = new JButton("예매 티켓 조회");
 		checkTicketBtn.addActionListener(new checkTicketListener());

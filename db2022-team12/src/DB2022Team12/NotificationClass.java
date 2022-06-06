@@ -8,9 +8,19 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 
+/**
+ * 알림창을 생성하는 클래스
+ * 
+ * @author mingulmangul
+ */
 class NotificationClass {
 
-	// 메세지(msg)를 보여주는 알림창을 생성하는 메소드
+	/**
+	 * 알림창을 생성하는 메소드
+	 * 
+	 * @param title 알림창 제목
+	 * @param msg   알림창에 표시할 메세지
+	 */
 	public static void createNotifDialog(String title, String msg) {
 		// 알림창 레이아웃 설정
 		JDialog notifDialog = new JDialog();

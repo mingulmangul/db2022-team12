@@ -135,7 +135,7 @@ class reviewBtnListener implements ActionListener {
 
 		myreviewDialog.setVisible(true);
 	}
-
+  
 	/**
 	 * 작성 리뷰 관리 Dialog에서 CLOSE 버튼에 대한 리스너<br>
 	 * 작성 리뷰 관리 Dialog 닫기
@@ -147,7 +147,7 @@ class reviewBtnListener implements ActionListener {
 			myreviewDialog.dispose();
 		}
 	}
-
+  
 	/**
 	 * 체크박스를 하나도 체크하지 않을 경우를 확인하기 위한 클래스<br>
 	 * 체크박스를 하나도 선택하지 않았을 경우 num == 0, 적어도 하나 선택한 경우 num != 0
@@ -160,7 +160,7 @@ class reviewBtnListener implements ActionListener {
 	 * 작성 리뷰 관리 Dialog에서 리뷰 삭제 버튼에 대한 리스너 작성 리뷰 관리 Dialog 닫기 삭제 리뷰 선택 Dialog 생성
 	 */
 	class selectRListener implements ActionListener {
-
+    
 		private JButton deleRBtn, closeRBtn;
 		private JPanel reserveRPanel, selectRPanel;
 		private JDialog selectRDialog;
