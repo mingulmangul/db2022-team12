@@ -90,6 +90,7 @@ class TicketPanel extends JPanel {
 			ticketDialog.setTitle(dialogTitle);
 			ticketDialog.setSize(500, 500);
 			ticketDialog.setLayout(new GridLayout(3, 1));
+			ticketDialog.setLocationRelativeTo(null);
 
 			JPanel noticePanel = new JPanel();
 			JPanel inputPanel = new JPanel(new GridLayout(5, 2));

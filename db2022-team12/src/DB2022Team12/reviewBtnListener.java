@@ -46,6 +46,7 @@ class reviewBtnListener implements ActionListener {
 		myreviewDialog.setSize(600, 300);
 		myreviewDialog.setTitle("작성 리뷰 관리");
 		myreviewDialog.setLayout(new BorderLayout());
+		myreviewDialog.setLocationRelativeTo(null);
 
 		// 사용자 이름 출력 Label
 		myreviewLabel = new JLabel(User.getName() + "님의 REVIEW", SwingConstants.CENTER);
@@ -173,6 +174,7 @@ class reviewBtnListener implements ActionListener {
 			selectRDialog.setSize(600, 500);
 			selectRDialog.setTitle("삭제 리뷰 선택");
 			selectRDialog.setLayout(new BorderLayout());
+			selectRDialog.setLocationRelativeTo(null);
 
 			// 삭제 리뷰 선택 안내 Label
 			explainRLabel = new JLabel("삭제할 리뷰를 선택하세요.", SwingConstants.CENTER);
@@ -269,6 +271,7 @@ class reviewBtnListener implements ActionListener {
 					delRcheckDialog = new JDialog();
 					delRcheckDialog.setSize(250, 120);
 					delRcheckDialog.setLayout(new BorderLayout());
+					delRcheckDialog.setLocationRelativeTo(null);
 
 					XRLabel = new JLabel("하나 이상의 체크박스를 선택하세요.", SwingConstants.CENTER);
 					delRcheckDialog.add(XRLabel, BorderLayout.CENTER);
@@ -287,6 +290,7 @@ class reviewBtnListener implements ActionListener {
 					delRcheckDialog = new JDialog();
 					delRcheckDialog.setSize(120, 100);
 					delRcheckDialog.setLayout(new BorderLayout());
+					delRcheckDialog.setLocationRelativeTo(null);
 
 					/**
 					 * review DELETE
