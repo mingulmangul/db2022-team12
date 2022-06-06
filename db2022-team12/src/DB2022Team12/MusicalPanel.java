@@ -22,8 +22,18 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+
+/**
+ * 뮤지컲패널<br/>
+ * 가격,평균별점 두가지 필터를 사용해 뮤지컬을 검색할 수 있다.<br/>
+ * 뮤지컬리스트에서 뮤지컬을 클릭하면 상세정보 창으로 연결된다.<br/>
+ * 상세정보창에서는 뮤지컬의 제목, 극장, 가격, 줄거리, 평균별점을 조회할 수 있다.<br/>
+ * 상세정보창에서 예매하기 버튼을 누르면 티켓예매창으로 연결된다.
+ * @author soominkim
+ */
 public class MusicalPanel extends JPanel {
 
+	private static final long serialVersionUID = 1L;
 	// 뮤지컬 검색 쿼리
 	private final String SEARCH_MUSICAL_QUERY = "SELECT Title, Summary FROM db2022_musical WHERE Title LIKE ?";
 	// 뮤지컬 정보 불러오기 쿼리
@@ -289,7 +299,7 @@ public class MusicalPanel extends JPanel {
 		setVisible(true);
 	}
 
-	/**
+	/*
 	 * 라디오버튼으로 조건 선택 후<br/>
 	 * 검색창에 검색 키워드 입력하면<br/>
 	 * 조건에 맞는 뮤지컬을 리스트에 업데이트 해주는 액션리스너
@@ -363,7 +373,7 @@ public class MusicalPanel extends JPanel {
 		}
 	}
 
-	/**
+	/*
 	 * 라디오버튼으로 조건 선택하면<br/>
 	 * 조건에 맞는 뮤지컬을 리스트에 업데이트 해주는 액션리스너
 	 */
@@ -429,7 +439,7 @@ public class MusicalPanel extends JPanel {
 		}
 	}
 
-	/**
+	/*
 	 * 뮤지컬 리스트 항목 클릭시 상세정보창으로 연결<br/>
 	 * 클릭한 뮤지컬의 제목, 극장, 가격, 줄거리, 평균별점 등을 조회할 수 있음<br/>
 	 * 또한 예매 버튼을 누르면 예매 창으로 연결
