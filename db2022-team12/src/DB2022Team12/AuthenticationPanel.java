@@ -16,7 +16,11 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-// 로그인 & 회원가입 패널
+/**
+ * 로그인과 회원가입 기능을 수행하는 패널
+ * 
+ * @author mingulmangul
+ */
 class AuthenticationPanel extends JPanel {
 
 	private JDialog signUpDialog;
@@ -26,14 +30,16 @@ class AuthenticationPanel extends JPanel {
 	private JPasswordField pwField;
 	private JLabel noticeLabel, idLabel, pwLabel, nameLabel, phoneLabel, emailLabel, addressLabel;
 
-	// 유저 정보 검색 쿼리
+	/** 유저 정보 검색 쿼리 */
 	private final String SIGNIN_QUERY = "SELECT pw, name FROM db2022_member WHERE id = ?";
 
-	// 유저 정보 삽입 쿼리
-	// id, pw, name, phone, email, address
+	/** 유저 정보 삽입 쿼리 */
 	private final String SIGNUP_QUERY = "INSERT INTO db2022_member VALUES (?, ?, ?, ?, ?, ?)";
 
-	// 로그인 & 회원가입 패널 레이아웃 설정
+	/**
+	 * 로그인 &amp; 회원가입 패널 생성자<br>
+	 * 패널의 레이아웃을 생성합니다.
+	 */
 	public AuthenticationPanel() {
 		this.setLayout(new GridLayout(2, 1));
 
@@ -56,9 +62,9 @@ class AuthenticationPanel extends JPanel {
 		signInTextFieldPanel.add(pwField);
 
 		signInBtn = new JButton("로그인");
-		signInBtn.addActionListener(new signInBtnListener());
+		signInBtn.addActionListener(new SignInBtnListener());
 		signUpBtn = new JButton("회원가입");
-		signUpBtn.addActionListener(new signUpBtnListener());
+		signUpBtn.addActionListener(new SignUpBtnListener());
 
 		authPanel.add(signInTextFieldPanel);
 		authPanel.add(signInBtn);
@@ -66,10 +72,18 @@ class AuthenticationPanel extends JPanel {
 		this.add(authPanel);
 	}
 
-	// <로그인> 버튼에 대한 리스너
-	// DB에 사용자로부터 받은 입력과 일치하는 데이터가 존재하는지 확인 후 로그인
-	private class signInBtnListener implements ActionListener {
+	/**
+	 * [로그인] 버튼에 대한 리스너<br>
+	 * DB에 사용자로부터 받은 입력과 일치하는 데이터가 존재하는지 확인 후 존재하면 로그인을 수행합니다.
+	 * 
+	 * @author mingulmangul
+	 */
+	private class SignInBtnListener implements ActionListener {
 
+		/**
+		 * [로그인] 버튼 클릭 시 수행되는 메소드<br>
+		 * 사용자가 입력한 값을 가져와 유효성을 검증합니다. 그 후 DB에 입력과 일치하는 유저 정보가 존재하는 지 확인하고, 로그인을 수행합니다.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String id = idField.getText().strip();
@@ -119,10 +133,18 @@ class AuthenticationPanel extends JPanel {
 
 	}
 
-	// <회원가입> 버튼에 대한 리스너
-	// 회원가입 Dialog 창 생성
-	private class signUpBtnListener implements ActionListener {
+	/**
+	 * [회원가입] 버튼에 대한 리스너<br>
+	 * 회원가입 Dialog 창을 생성합니다.
+	 * 
+	 * @author mingulmangul
+	 */
+	private class SignUpBtnListener implements ActionListener {
 
+		/**
+		 * [회원가입] 버튼 클릭 시 수행되는 메소드<br>
+		 * 회원가입 Dialog 창을 생성하고, 레이아웃을 설정합니다.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// 회원가입 Dialog 레이아웃 설정
@@ -163,7 +185,7 @@ class AuthenticationPanel extends JPanel {
 			inputPanel.add(addressField);
 
 			submitBtn = new JButton("가입하기");
-			submitBtn.addActionListener(new submitBtnListener());
+			submitBtn.addActionListener(new SubmitBtnListener());
 			btnPanel.add(submitBtn);
 
 			signUpDialog.add(noticePanel);
@@ -174,22 +196,40 @@ class AuthenticationPanel extends JPanel {
 
 	}
 
-	// <가입하기> 버튼 리스너
-	// 사용자로부터 받은 입력으로 쿼리 생성 후 DB에 삽입
-	private class submitBtnListener implements ActionListener {
+	/**
+	 * [가입하기] 버튼에 대한 리스너<br>
+	 * 사용자로부터 받은 입력으로 유저 정보 삽입 쿼리를 생성한 후 DB에 삽입합니다.
+	 * 
+	 * @author mingulmangul
+	 */
+	private class SubmitBtnListener implements ActionListener {
 
-		// 유효한 전화번호인지 검증
+		/**
+		 * 사용자로부터 입력 받은 전화번호가 유효한지 검증하는 메소드
+		 * 
+		 * @param phone 사용자로부터 입력 받은 전화번호
+		 * @return 유효하다면 true, 아니면 false
+		 */
 		private boolean isValidPhone(String phone) {
 			String phonePattern = "^\\d{2,3}-\\d{3,4}-\\d{4}$";
 			return Pattern.matches(phonePattern, phone);
 		}
 
-		// 유효한 이메일 주소인지 검증
+		/**
+		 * 사용자로부터 입력 받은 이메일이 유효한지 검증하는 메소드
+		 * 
+		 * @param email 사용자로부터 입력 받은 이메일
+		 * @return 유효하다면 true, 아니면 false
+		 */
 		private boolean isValidEmail(String email) {
 			String emailPattern = "^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\\.[a-zA-Z]{2,3}$";
 			return Pattern.matches(emailPattern, email);
 		}
 
+		/**
+		 * [가입하기] 버튼 클릭 시 수행되는 메소드<br>
+		 * 사용자가 입력한 값을 가져와 유효성을 검증합니다. 그 후 유저 정보 삽입 쿼리를 생성한 후 DB에 삽입합니다.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// 사용자 입력 가져오기

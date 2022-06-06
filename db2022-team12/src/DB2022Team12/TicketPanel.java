@@ -15,34 +15,47 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * 티켓 예매 기능을 수행하는 패널
+ * 
+ * @author mingulmangul
+ */
 class TicketPanel extends JPanel {
 
 	private JDialog ticketDialog;
 	private JButton ticketDialogBtn, bookBtn;
 	private JLabel noticeLabel, musicalLabel1, musicalLabel2, dateTimeLabel, theaterLabel1, theaterLabel2, remainLabel1,
 			remainLabel2, priceLabel1, priceLabel2;
-	private JComboBox<String> dateSelector, timeSelector;
 
-	// 다이얼로그 제목
+	/** 날짜 선택 콤보박스 */
+	private JComboBox<String> dateSelector;
+	/** 시간 선택 콤보박스 */
+	private JComboBox<String> timeSelector;
+
+	/** 다이얼로그 제목 */
 	private String dialogTitle;
 
-	// 예매하려는 공연의 정보를 담은 Musical 객체
+	/** 예매하려는 공연의 정보를 담은 {@link Musical} 객체 */
 	private Musical musical;
 
-	// JComboBox의 default 값으로 사용할 빈 선택지
+	/** JComboBox의 default 값으로 사용할 빈 선택지 */
 	private final static String EMPTY_ITEM = "======";
 
-	// 선택한 날짜와 시간에 대한 뮤지컬 회차 정보를 가져오는 쿼리
+	/** 선택한 날짜와 시간에 대한 뮤지컬 회차 정보를 가져오는 쿼리 */
 	private final static String GET_SCHEDULE_QUERY = "SELECT id, remain_seat FROM db2022_musical_schedule WHERE title = ? AND date = ? AND time = ?";
 
-	// 예매한 티켓 정보를 DB에 삽입하는 쿼리
+	/** 예매한 티켓 정보를 DB에 삽입하는 쿼리 */
 	private final static String INSERT_TICKET_QUERY = "INSERT INTO db2022_ticket(musical_title, musical_schedule, member_id, order_date) VALUES (?, ?, ?, ?)";
 
-	// 티켓 예매 성공 시 해당 공연의 남은 좌석 수를 갱신하는 쿼리
+	/** 티켓 예매 성공 시 해당 공연의 남은 좌석 수를 갱신하는 쿼리 */
 	private final static String UPDATE_REMAIN_SEAT_QUERY = "UPDATE db2022_musical_schedule SET remain_seat = remain_seat - 1 WHERE id = ?";
 
-	// 티켓 구매 패널 레이아웃 설정
-	// 예매하려는 공연의 정보를 담은 Musical 객체를 전달 받음
+	/**
+	 * 티켓 예매 패널의 생성자<br>
+	 * 패널의 레이아웃을 설정합니다.
+	 * 
+	 * @param musical 예매하려는 공연의 정보를 담은 {@link Musical} 객체
+	 */
 	public TicketPanel(Musical musical) {
 		this.musical = musical;
 		ticketDialogBtn = new JButton("티켓 구매");
@@ -50,10 +63,18 @@ class TicketPanel extends JPanel {
 		this.add(ticketDialogBtn);
 	}
 
-	// <티켓 구매> 버튼에 대한 리스너
-	// 티켓 예매 다이얼로그를 생성
+	/**
+	 * [티켓 구매] 버튼에 대한 리스너<br>
+	 * 티켓 예매 다이얼로그를 생성하고, 레이아웃을 설정합니다.
+	 * 
+	 * @author mingulmangul
+	 */
 	private class TicketDialogCreator implements ActionListener {
 
+		/**
+		 * [티켓 구매] 버튼 클릭 시 수행되는 메소드<br>
+		 * 티켓 예매 다이얼로그를 생성하고, 레이아웃을 설정합니다. 미로그인 유저의 경우 예매 불가 알림창을 생성합니다.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			dialogTitle = "티켓 예매 | " + musical.getTitle();
@@ -88,12 +109,12 @@ class TicketPanel extends JPanel {
 			// dateSelector를 빈 선택지로 초기화하기 위해 목록 맨 앞에 삽입
 			dateList.insertElementAt(EMPTY_ITEM, 0);
 			dateSelector = new JComboBox<String>(dateList);
-			dateSelector.addActionListener(new dateSelectorListener());
+			dateSelector.addActionListener(new DateSelectorListener());
 
 			// timeSelector는 빈 선택지로 초기화
 			String[] emptyList = { EMPTY_ITEM };
 			timeSelector = new JComboBox<String>(emptyList);
-			timeSelector.addActionListener(new timeSelectorListener());
+			timeSelector.addActionListener(new TimeSelectorListener());
 
 			theaterLabel1 = new JLabel("극장");
 			theaterLabel2 = new JLabel(musical.getTheaterName());
@@ -118,7 +139,7 @@ class TicketPanel extends JPanel {
 			inputPanel.add(priceLabel2);
 
 			bookBtn = new JButton("예매하기");
-			bookBtn.addActionListener(new bookBtnListener());
+			bookBtn.addActionListener(new BookBtnListener());
 			btnPanel.add(bookBtn);
 
 			ticketDialog.add(noticePanel);
@@ -129,10 +150,20 @@ class TicketPanel extends JPanel {
 
 	}
 
-	// dateSelector에 대한 리스너
-	// 날짜를 선택할 때마다 timeSelector의 리스트를 변경
-	private class dateSelectorListener implements ActionListener {
+	/**
+	 * {@link TicketPanel#dateSelector dateSelector}(날짜 선택 콤보박스) 대한 리스너<br>
+	 * 유저가 선택한 날짜에 존재하는 공연 시간 정보로 {@link TicketPanel#timeSelector
+	 * timeSelector}(시간 선택 콤보박스)의 내용을 변경합니다.
+	 * 
+	 * @author mingulmangul
+	 */
+	private class DateSelectorListener implements ActionListener {
 
+		/**
+		 * {@link TicketPanel#dateSelector dateSelector}(날짜 선택 콤보박스) 변경 시 수행되는 메소드<br>
+		 * 유저가 날짜를 선택할 때마다 {@link TicketPanel#timeSelector timeSelector}(시간 선택 콤보박스)의
+		 * 리스트 내용을 변경합니다.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// timeSelector의 리스트 초기화
@@ -155,10 +186,20 @@ class TicketPanel extends JPanel {
 
 	}
 
-	// timeSelector에 대한 리스너
-	// 날짜와 시각을 선택할 때마다 remainLabel2의 내용 변경
-	private class timeSelectorListener implements ActionListener {
+	/**
+	 * {@link TicketPanel#timeSelector timeSelector}(시간 선택 콤보박스) 대한 리스너<br>
+	 * 유저가 선택한 회차에 대한 잔여 좌석 수를 화면에 표시합니다.
+	 * 
+	 * @author mingulmangul
+	 */
+	private class TimeSelectorListener implements ActionListener {
 
+		/**
+		 * {@link TicketPanel#timeSelector timeSelector}(시간 선택 콤보박스) 변경 시 수행되는 메소드<br>
+		 * 유저가 시간을 선택할 때마다 화면에 표시되는 잔여 좌석 수를 변경합니다.
+		 * 
+		 * @author mingulmangul
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// 사용자가 선택한 날짜와 시각
@@ -181,10 +222,18 @@ class TicketPanel extends JPanel {
 
 	}
 
-	// <예매하기> 버튼에 대한 리스너
-	// DB에 예매한 티켓 정보를 삽입
-	private class bookBtnListener implements ActionListener {
+	/**
+	 * [예매하기] 버튼에 대한 리스너<br>
+	 * 사용자가 예매한 티켓 정보를 데이터베이스에 삽입합니다.
+	 * 
+	 * @author mingulmangul
+	 */
+	private class BookBtnListener implements ActionListener {
 
+		/**
+		 * [예매하기] 버튼 클릭 시 수행되는 메소드<br>
+		 * 사용자가 예매한 티켓 정보를 데이터베이스에 삽입합니다. 잔여 좌석 수가 0이면 예매 불가 알림창이 생성됩니다.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// 사용자가 선택한 날짜 및 시각

@@ -5,8 +5,17 @@ import java.awt.GridLayout;
 
 import javax.swing.JFrame;
 
+/**
+ * 뮤지컬 예매 프로그램의 메인 프레임을 생성하는 클래스
+ * 
+ * @author mingulmangul
+ */
 class MainFrame extends JFrame {
 
+	/**
+	 * 메인 프레임 생성자<br>
+	 * 메인 프레임의 레이아웃을 설정합니다.
+	 */
 	public MainFrame() {
 		setTitle("프로그램");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);

@@ -13,6 +13,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
+/**
+ * 리뷰 등록 및 변경 기능을 수행하는 패널
+ * 
+ * @author mingulmangul
+ */
 class ReviewInsertionPanel extends JPanel {
 
 	private JPanel noticePanel, reviewPanel, scorePanel, btnPanel;
@@ -21,20 +26,24 @@ class ReviewInsertionPanel extends JPanel {
 	private JButton submitBtn;
 	private ButtonGroup btnGroup;
 
-	// 리뷰를 작성하려는 공연의 정보를 담은 Musical 객체
+	/** 리뷰를 작성하려는 공연의 정보를 담은 {@link Musical} 객체 */
 	private Musical musical;
 
-	// 별점(0~5)
+	/** 별점(0~5) */
 	private final static String[] scoreList = { "★", "★★", "★★★", "★★★★", "★★★★★" };
 
-	// 사용자가 작성한 리뷰를 DB에 삽입하는 쿼리
+	/** 사용자가 작성한 리뷰를 DB에 삽입하는 쿼리 */
 	private final static String INSERT_REVIEW_QUERY = "INSERT INTO db2022_review(musical_title, member_id, rate, written_at) VALUES (?, ?, ?, ?)";
 
-	// 이전에 작성했던 리뷰를 갱신하는 쿼리
+	/** 이전에 작성했던 리뷰를 갱신하는 쿼리 */
 	private final static String UPDATE_REVIEW_QUERY = "UPDATE db2022_review SET rate = ? WHERE musical_title = ? AND member_id = ?";
 
-	// 리뷰 작성 패널 레이아웃 설정
-	// 리뷰를 작성하려는 공연의 정보를 담은 Musical 객체를 전달 받음
+	/**
+	 * 리뷰 등록 및 변경 패널 생성자<br>
+	 * 패널의 레이아웃을 설정합니다.
+	 * 
+	 * @param musical 리뷰를 작성하려는 공연의 정보를 담은 {@link Musical} 객체
+	 */
 	public ReviewInsertionPanel(Musical musical) {
 		this.musical = musical;
 		this.setSize(300, 100);
@@ -64,7 +73,7 @@ class ReviewInsertionPanel extends JPanel {
 			scoreBtn[selectedRate - 1].setSelected(true);
 
 		submitBtn = new JButton("등록하기");
-		submitBtn.addActionListener(new submitBtnListener());
+		submitBtn.addActionListener(new SubmitBtnListener());
 		btnPanel.add(submitBtn);
 
 		reviewPanel.add(scorePanel);
@@ -73,10 +82,19 @@ class ReviewInsertionPanel extends JPanel {
 		this.add(reviewPanel);
 	}
 
-	// <등록하기> 버튼에 대한 리스너
-	// 사용자로부터 입력 받은 리뷰(별점)를 DB에 저장
-	private class submitBtnListener implements ActionListener {
+	/**
+	 * [등록하기] 버튼에 대한 리스너<br>
+	 * 사용자로부터 입력 받은 리뷰(별점)를 데이터베이스에 삽입합니다.
+	 * 
+	 * @author mingulmangul
+	 */
+	private class SubmitBtnListener implements ActionListener {
 
+		/**
+		 * [등록하기] 버튼 클릭 시 수행되는 메소드<br>
+		 * 사용자의 리뷰를 데이터베이스에 삽입합니다. 미로그인 유저의 경우 리뷰 등록이 제한되며, 기존에 작성한 리뷰가 있는 경우 새로운 리뷰를
+		 * 삽입하지 않고 기존 리뷰를 갱신합니다.
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// 알림창 제목
