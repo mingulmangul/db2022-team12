@@ -1,7 +1,26 @@
 package DB2022Team12;
 
 class UserTicket {
-	public static int ID;
-	public static String title;
-	public static String orderDate;
+	int ID;
+	String title;
+	String orderDate;
+	
+	int getID() {
+		return ID;
+	}
+	void setID(int iD) {
+		ID = iD;
+	}
+	String getTitle() {
+		return title;
+	}
+	void setTitle(String title) {
+		this.title = title;
+	}
+	String getOrderDate() {
+		return orderDate;
+	}
+	void setOrderDate(String orderDate) {
+		this.orderDate = orderDate;
+	}
 }

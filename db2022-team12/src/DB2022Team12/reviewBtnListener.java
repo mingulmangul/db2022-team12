@@ -5,10 +5,11 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -17,86 +18,63 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 
-//<ÀÛ¼º ¸®ºä °ü¸®> ¹öÆ°¿¡ ´ëÇÑ ¸®½º³Ê
-//ÀÛ¼º ¸®ºä Á¤º¸¿Í »èÁ¦ µ¿ÀÇ dialog »ı¼º
+//<ì‘ì„± ë¦¬ë·° ê´€ë¦¬> ë²„íŠ¼ì— ëŒ€í•œ ë¦¬ìŠ¤ë„ˆ
+//ì‘ì„± ë¦¬ë·° ì •ë³´ì™€ ì‚­ì œ ë™ì˜ dialog ìƒì„±
 class reviewBtnListener implements ActionListener {
 	
 	private JDialog myreviewDialog;
-	private JLabel myreviewLabel, ReviewinfoLabel1, ReviewinfoLabel2, ReviewinfoLabel3, ReviewinfoLabel4, ReviewinfoLabel5;
+	private JLabel myreviewLabel, ReviewinfoLabel;
 	private JButton deleRBtn, closeRBtn;
-	private JPanel myreviewPanel, BtnRPanel;
-	
-	// ¸®ºä Á¤º¸ °Ë»ö Äõ¸®
-	private static String REVIEWSEARCH_QUERY = "SELECT id, musical_title, rate, written_at FROM Review WHERE member_id = ?";
+	private JPanel BtnRPanel;
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		myreviewDialog = new JDialog();
 		myreviewDialog.setSize(400, 250);
-		myreviewDialog.setTitle("ÀÛ¼º ¸®ºä °ü¸®");
+		myreviewDialog.setTitle("ì‘ì„± ë¦¬ë·° ê´€ë¦¬");
 		myreviewDialog.setLayout(new GridLayout(3, 1, 10, 20));
 		
-		myreviewLabel = new JLabel(User.getName() + "´ÔÀÇ REVIEW", SwingConstants.CENTER);
-		myreviewLabel.setFont(new Font("°íµñ", Font.BOLD, 20));
+		myreviewLabel = new JLabel(User.getName() + "ë‹˜ì˜ REVIEW", SwingConstants.CENTER);
+		myreviewLabel.setFont(new Font("ê³ ë”•", Font.BOLD, 20));
 		myreviewDialog.add(myreviewLabel);
 		
-		myreviewPanel = new JPanel();
+		List<Object> Review = new ArrayList<Object>();
 		
 		try (Connection conn = new ConnectionClass().getConnection();
-				PreparedStatement preStmt = conn.prepareStatement(REVIEWSEARCH_QUERY)) {
+				Statement stmt = conn.createStatement();) {
 				
-			// À¯Àú Æ¼ÄÏ °Ë»öÀ» À§ÇÑ Äõ¸®
-			preStmt.setString(1, User.getId());
-			ResultSet res = preStmt.executeQuery();
-				
-			// ÇØ´ç ¾ÆÀÌµğÀÇ ¸®ºä°¡ Á¸ÀçÇÏ´ÂÁö È®ÀÎ
-			if (!res.next()) {
-				ReviewinfoLabel1 = new JLabel("ÀÛ¼ºÇÑ ¸®ºä°¡ ¾ø½À´Ï´Ù.");
-				myreviewPanel.add(ReviewinfoLabel1);
+			String REVIEWSEARCH_QUERY = "SELECT * FROM db2022_review WHERE member_id = '" + User.getId() + "'";
+			
+			boolean Rresults = stmt.execute(REVIEWSEARCH_QUERY);
+			
+	        do {
+	            if (Rresults) {
+	                ResultSet res = stmt.getResultSet();
 
-				myreviewDialog.add(myreviewPanel);
-				
-				BtnRPanel = new JPanel();
-				closeRBtn = new JButton("CLOSE");
-				closeRBtn.addActionListener(new deleRDlgListener());
-				BtnRPanel.add(closeRBtn);
-
-				myreviewDialog.add(BtnRPanel);
-			} else {
-				// À¯Àú ¸®ºä Á¤º¸ ÀúÀå
-				// ID, Musical_id, Rate, Written_at
-				// review_id. musical_id, musical_name, rate, written_at
-				UserReview.ID = res.getInt("id");
-				UserReview.title = res.getString("musical_title");
-				UserReview.rate = res.getInt("rate");
-				UserReview.time = res.getString("written_at");
+	                while (res.next()) {
+	                	Review.add(res.getInt("id") + ", " + res.getString("musical_title") + ", " + res.getInt("rate") + ", " + res.getString("written_at"));
+	                }
+	            }
+	            Rresults = stmt.getMoreResults();
+	        } while (Rresults);
+	        
+	        String Rstr = "";
+	        for(int i = 0; i < Review.size(); i++) {
+	        	Rstr += Review.get(i) + "<br />";
+	        }
+	        ReviewinfoLabel = new JLabel("<html><body style='text-align:center;'>" + Rstr +"</body></html>");
+	        myreviewDialog.add(ReviewinfoLabel);
 			
-			// ID, Musical_id, Rate, Written_at
-			// review_id. musical_id, musical_name, rate, written_at
-			ReviewinfoLabel2 = new JLabel("¸®ºäID : " + UserReview.ID);
-			ReviewinfoLabel3 = new JLabel("°ø¿¬ Á¦¸ñ : " + UserReview.title);
-			ReviewinfoLabel4 = new JLabel("ÆòÁ¡ : " + UserReview.rate);
-			ReviewinfoLabel5 = new JLabel("¸®ºä ÀÛ¼º ³¯Â¥ : " + UserReview.time);
-			
-			myreviewPanel.add(ReviewinfoLabel2);
-			myreviewPanel.add(ReviewinfoLabel3);
-			myreviewPanel.add(ReviewinfoLabel4);
-			myreviewPanel.add(ReviewinfoLabel5);
-			
-			myreviewDialog.add(myreviewPanel);
-			
-			BtnRPanel = new JPanel();
-			
-			deleRBtn = new JButton("¸®ºä ÀüÃ¼ »èÁ¦");
+			BtnRPanel = new JPanel(new GridLayout(1, 2, 1, 10));
+			deleRBtn = new JButton("ë¦¬ë·° ì „ì²´ ì‚­ì œ");
 			deleRBtn.addActionListener(new delRcheckListener());
 			closeRBtn = new JButton("CLOSE");
 			closeRBtn.addActionListener(new deleRDlgListener());
-			
 			BtnRPanel.add(deleRBtn);
 			BtnRPanel.add(closeRBtn);
 
 			myreviewDialog.add(BtnRPanel);
-			}
+			
 		} catch (SQLException sqle) {
 			System.out.println(sqle);
 		}
@@ -104,8 +82,8 @@ class reviewBtnListener implements ActionListener {
 		myreviewDialog.setVisible(true);
 	}
 	
-	// ÀÛ¼º ¸®ºä °ü¸® dialog¿¡¼­ <CLOSE> ¹öÆ°¿¡ ´ëÇÑ ¸®½º³Ê
-	// ÀÛ¼º ¸®ºä °ü¸® dialog ´İ±â
+	// ì‘ì„± ë¦¬ë·° ê´€ë¦¬ dialogì—ì„œ <CLOSE> ë²„íŠ¼ì— ëŒ€í•œ ë¦¬ìŠ¤ë„ˆ
+	// ì‘ì„± ë¦¬ë·° ê´€ë¦¬ dialog ë‹«ê¸°
 	class deleRDlgListener implements ActionListener {
 
 		@Override
@@ -114,8 +92,8 @@ class reviewBtnListener implements ActionListener {
 		}
 	}
 	
-	// ÀÛ¼º ¸®ºä °ü¸® dialog¿¡¼­ <¸®ºä ÀüÃ¼ »èÁ¦> ¹öÆ°¿¡ ´ëÇÑ ¸®½º³Ê
-	// ¼±ÅÃÇÑ ¸®ºä¸¦ DB¿¡¼­ »èÁ¦, »èÁ¦ ¿Ï·á dialog »ı¼º
+	// ì‘ì„± ë¦¬ë·° ê´€ë¦¬ dialogì—ì„œ <ë¦¬ë·° ì „ì²´ ì‚­ì œ> ë²„íŠ¼ì— ëŒ€í•œ ë¦¬ìŠ¤ë„ˆ
+	// ì„ íƒí•œ ë¦¬ë·°ë¥¼ DBì—ì„œ ì‚­ì œ, ì‚­ì œ ì™„ë£Œ dialog ìƒì„±
 	class delRcheckListener implements ActionListener {
 		private JLabel msgRLabel;
 		private JButton checkRBtn;
@@ -125,17 +103,17 @@ class reviewBtnListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			delRcheckDialog = new JDialog();
 			delRcheckDialog.setSize(250, 100);
-			delRcheckDialog.setTitle("¸®ºä »èÁ¦");
+			delRcheckDialog.setTitle("ë¦¬ë·° ì‚­ì œ");
 			delRcheckDialog.setLayout(new GridLayout(2, 1, 10, 10));
 			
 			try (	Connection conn = new ConnectionClass().getConnection();
 					Statement preStmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
-				ResultSet res = preStmt.executeQuery("SELECT * FROM Review WHERE Member_id = '" + User.getId() + "'");
+				ResultSet res = preStmt.executeQuery("SELECT * FROM db2022_Review WHERE Member_id = '" + User.getId() + "'");
 				
-				// ÇØ´ç ¾ÆÀÌµğÀÇ Æ¼ÄÏÀÌ Á¸ÀçÇÏ´ÂÁö È®ÀÎ
+				// í•´ë‹¹ ì•„ì´ë””ì˜ í‹°ì¼“ì´ ì¡´ì¬í•˜ëŠ”ì§€ í™•ì¸
 				if (res.next()) {
-					preStmt.executeUpdate("DELETE FROM Review WHERE Member_id = '" + User.getId() + "'");
-					msgRLabel = new JLabel("ÀÛ¼ºÇÑ ¸®ºä°¡ ¸ğµÎ »èÁ¦µÇ¾ú½À´Ï´Ù.", SwingConstants.CENTER);
+					preStmt.executeUpdate("DELETE FROM db2022_Review WHERE Member_id = '" + User.getId() + "'");
+					msgRLabel = new JLabel("ì‘ì„±í•œ ë¦¬ë·°ê°€ ëª¨ë‘ ì‚­ì œë˜ì—ˆìŠµë‹ˆë‹¤.", SwingConstants.CENTER);
 					
 				} else {
 					msgRLabel = new JLabel("ERROR", SwingConstants.CENTER);
@@ -152,12 +130,12 @@ class reviewBtnListener implements ActionListener {
 			
 			delRcheckDialog.setVisible(true);
 			
-			//ÀÛ¼º ¸®ºä °ü¸® dialog ´İ±â
+			//ì‘ì„± ë¦¬ë·° ê´€ë¦¬ dialog ë‹«ê¸°
 			myreviewDialog.dispose();
 		}
 		
-		// ¸®ºä »èÁ¦ dialog¿¡¼­ <OK> ¹öÆ°¿¡ ´ëÇÑ ¸®½º³Ê
-		// ¸®ºä »èÁ¦ dialog ´İ±â
+		// ë¦¬ë·° ì‚­ì œ dialogì—ì„œ <OK> ë²„íŠ¼ì— ëŒ€í•œ ë¦¬ìŠ¤ë„ˆ
+		// ë¦¬ë·° ì‚­ì œ dialog ë‹«ê¸°
 		class deleODlgListener implements ActionListener {
 
 			@Override
@@ -167,4 +145,3 @@ class reviewBtnListener implements ActionListener {
 		}
 	}
 }
-

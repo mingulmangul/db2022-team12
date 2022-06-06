@@ -19,11 +19,11 @@ class MypageBtnListener implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// <·Î±×ÀÎ> ¹öÆ°¿¡ ´ëÇÑ ¸®½º³Ê
-		// ¸¶ÀÌÆäÀÌÁö ¿¹¸Å Æ¼ÄÏ Á¶È¸, ¿¹¸Å Ãë¼Ò, ÀÛ¼º ¸®ºä °ü¸® ¹öÆ° ¼±ÅÃ dialog »ı¼º
+		// <ë¡œê·¸ì¸> ë²„íŠ¼ì— ëŒ€í•œ ë¦¬ìŠ¤ë„ˆ
+		// ë§ˆì´í˜ì´ì§€ ì˜ˆë§¤ í‹°ì¼“ ì¡°íšŒ, ì˜ˆë§¤ ì·¨ì†Œ, ì‘ì„± ë¦¬ë·° ê´€ë¦¬ ë²„íŠ¼ ì„ íƒ dialog ìƒì„±
 		signInDialog = new JDialog();
 		signInDialog.setSize(300, 350);
-		signInDialog.setTitle("¸¶ÀÌÆäÀÌÁö");
+		signInDialog.setTitle("ë§ˆì´í˜ì´ì§€");
 		signInDialog.setLayout(new GridLayout(3, 1, 20, 5));
 		
 		emptyPanel = new JPanel();
@@ -32,15 +32,15 @@ class MypageBtnListener implements ActionListener{
 		personalPanel = new JPanel(new GridLayout(2, 1, 10, 10));
 		MypagePanel = new JPanel(new GridLayout(2, 1, 10, 8));
 		
-		infoLabel = new JLabel(User.getName() + "´Ô", SwingConstants.CENTER);
-		infoLabel.setFont(new Font("°íµñ", Font.BOLD, 30));
+		infoLabel = new JLabel(User.getName() + "ë‹˜", SwingConstants.CENTER);
+		infoLabel.setFont(new Font("ê³ ë”•", Font.BOLD, 30));
 		
 		personalPanel.add(infoLabel);
 		signInDialog.add(personalPanel);
 		
-		checkTicketBtn = new JButton("¿¹¸Å Æ¼ÄÏ Á¶È¸");
+		checkTicketBtn = new JButton("ì˜ˆë§¤ í‹°ì¼“ ì¡°íšŒ");
 		checkTicketBtn.addActionListener(new checkTicketListener());
-		reviewBtn = new JButton("ÀÛ¼º ¸®ºä °ü¸®");
+		reviewBtn = new JButton("ì‘ì„± ë¦¬ë·° ê´€ë¦¬");
 		reviewBtn.addActionListener(new reviewBtnListener());
 		MypagePanel.add(checkTicketBtn);
 		MypagePanel.add(reviewBtn);
