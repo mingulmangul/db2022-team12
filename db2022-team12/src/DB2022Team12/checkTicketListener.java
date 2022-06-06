@@ -152,7 +152,7 @@ class checkTicketListener implements ActionListener {
 
 	/**
 	 * 예매 티켓 조회 Dialog에서 예매 취소 버튼에 대한 리스너<br>
-	 * 예매 티켓 조회 Dialog 닫기<br> 
+	 * 예매 티켓 조회 Dialog 닫기<br>
 	 * 예매 취소 티켓 선택 Dialog 생성
 	 */
 
@@ -257,7 +257,7 @@ class checkTicketListener implements ActionListener {
 
 		/**
 		 * 예매 취소 티켓 선택 Dialog에서 예매 취소 동의 버튼에 대한 리스너<br>
-		 * 예매 취소 티켓 선택 Dialog 닫기<br> 
+		 * 예매 취소 티켓 선택 Dialog 닫기<br>
 		 * 선택된 예매 티켓을 DB에서 삭제<br>
 		 * 예매 취소 완료 Dialog 생성
 		 */

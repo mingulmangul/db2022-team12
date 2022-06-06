@@ -1,7 +1,7 @@
 package DB2022Team12;
 
 /**
- * 사용자 티켓 정보 저장
+ * 사용자 티켓 정보 저장 클래스
  * 
  * @author sonab
  *

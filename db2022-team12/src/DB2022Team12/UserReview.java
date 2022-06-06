@@ -13,7 +13,6 @@ class UserReview {
 	int rate;
 	String time;
 
-
 	/**
 	 * getter & setter
 	 */

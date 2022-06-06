@@ -34,7 +34,6 @@ import DB2022Team12.checkTicketListener.cancelTicketBtnListener.delTcheckListene
  * 리뷰 정보를 보여주는 작성 리뷰 관리 dialog 생성
  * 
  * @author sonab
- * 
  */
 class reviewBtnListener implements ActionListener {
 
