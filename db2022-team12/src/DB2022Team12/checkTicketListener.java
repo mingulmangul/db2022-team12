@@ -1,7 +1,6 @@
 package DB2022Team12;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -36,11 +35,11 @@ class checkTicketListener implements ActionListener {
 	private JButton cancelTicketBtn, closeBtn;
 	private JPanel BtnPanel;
 	private JDialog checkTicketDialog;
-	
+
 	List<UserTicket> Ticket; // 사용자의 티켓 정보를 저장할 UserTicket 객체 리스트
 	int myTicketNum = 0; // 사용자 티켓 개수
 	int[] deleTId; // 삭제할 티켓 id 배열
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// 예매 티켓 조회 Dialog 레이아웃 설정
@@ -48,7 +47,7 @@ class checkTicketListener implements ActionListener {
 		checkTicketDialog.setSize(450, 250);
 		checkTicketDialog.setTitle("예매 티켓 조회");
 		checkTicketDialog.setLayout(new BorderLayout());
-    
+
 		// 사용자 이름 출력 Label
 		myInfoLabel = new JLabel(User.getName() + "님의 TICKET", SwingConstants.CENTER);
 		myInfoLabel.setFont(new Font("고딕", Font.BOLD, 20));
@@ -121,7 +120,7 @@ class checkTicketListener implements ActionListener {
 
 			checkTicketDialog.add(myTicketLabel, BorderLayout.CENTER);
 			checkTicketDialog.add(BtnPanel, BorderLayout.SOUTH);
-      
+
 		} catch (SQLException sqle) {
 			System.out.println(sqle);
 		}
@@ -175,12 +174,12 @@ class checkTicketListener implements ActionListener {
 			deleTAgreeDialog.setSize(450, 250);
 			deleTAgreeDialog.setTitle("예매 취소 티켓 선택");
 			deleTAgreeDialog.setLayout(new BorderLayout());
-      
+
 			// 예매 취소 티켓 선택 안내 Label
 			explainTLabel = new JLabel("예매를 취소할 티켓을 선택하세요.", SwingConstants.CENTER);
 			explainTLabel.setFont(new Font("고딕", Font.BOLD, 15));
 			deleTAgreeDialog.add(explainTLabel, BorderLayout.NORTH);
-      
+
 			// 예매를 취소할 티켓 선택 체크박스 Panel
 			reserveTPanel = new JPanel();
 			TerrorC.num = 0; // 체크박스 확인용 변수 초기화
@@ -288,7 +287,7 @@ class checkTicketListener implements ActionListener {
 					deleTAgreeDialog.dispose();
 
 				} else { // 체크박스를 적어도 하나 선택한 경우
-          
+
 					// 삭제 완료 Dialog 레이아웃 설정
 					delTcheckDialog = new JDialog();
 					delTcheckDialog.setSize(120, 100);
