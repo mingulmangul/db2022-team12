@@ -15,27 +15,41 @@ class UserTicket {
 	/**
 	 * getter & setter
 	 */
-
 	int getID() {
 		return ID;
 	}
 
+	/**
+	 * getter & setter
+	 */
 	void setID(int iD) {
 		ID = iD;
 	}
 
+	/**
+	 * getter & setter
+	 */
 	String getTitle() {
 		return title;
 	}
 
+	/**
+	 * getter & setter
+	 */
 	void setTitle(String title) {
 		this.title = title;
 	}
 
+	/**
+	 * getter & setter
+	 */
 	String getOrderDate() {
 		return orderDate;
 	}
 
+	/**
+	 * getter & setter
+	 */
 	void setOrderDate(String orderDate) {
 		this.orderDate = orderDate;
 	}

@@ -29,7 +29,9 @@ import DB2022Team12.checkTicketListener.cancelTicketBtnListener.deleTItem;
 import DB2022Team12.checkTicketListener.cancelTicketBtnListener.delTcheckListener.deleEDlgListener;
 
 /**
- * 작성 리뷰 관리 버튼에 대한 리스너 작성 리뷰 정보 DB에서 검색, 리뷰 정보를 보여주는 작성 리뷰 관리 dialog 생성
+ * 작성 리뷰 관리 버튼에 대한 리스너<br>
+ * 작성 리뷰 정보 DB에서 검색<br>
+ * 리뷰 정보를 보여주는 작성 리뷰 관리 dialog 생성
  * 
  * @author sonab
  * 
@@ -136,7 +138,8 @@ class reviewBtnListener implements ActionListener {
 	}
 
 	/**
-	 * 작성 리뷰 관리 Dialog에서 <CLOSE> 버튼에 대한 리스너 작성 리뷰 관리 Dialog 닫기
+	 * 작성 리뷰 관리 Dialog에서 CLOSE 버튼에 대한 리스너<br>
+	 * 작성 리뷰 관리 Dialog 닫기
 	 */
 	class deleRDlgListener implements ActionListener {
 
@@ -147,8 +150,8 @@ class reviewBtnListener implements ActionListener {
 	}
 
 	/**
-	 * 체크박스를 하나도 체크하지 않을 경우를 확인하기 위한 클래스 체크박스를 하나도 선택하지 않았을 경우 num == 0, 적어도 하나 선택한
-	 * 경우 num != 0
+	 * 체크박스를 하나도 체크하지 않을 경우를 확인하기 위한 클래스<br>
+	 * 체크박스를 하나도 선택하지 않았을 경우 num == 0, 적어도 하나 선택한 경우 num != 0
 	 */
 	class RerrorC {
 		static int num = 0;
@@ -215,7 +218,8 @@ class reviewBtnListener implements ActionListener {
 		}
 
 		/**
-		 * 삭제 리뷰 선택 Dialog에서 CLOSE 버튼에 대한 리스너 삭제 리뷰 선택 Dialog 닫기
+		 * 삭제 리뷰 선택 Dialog에서 CLOSE 버튼에 대한 리스너<br>
+		 * 삭제 리뷰 선택 Dialog 닫기
 		 */
 		class deleCDlgListener implements ActionListener {
 
@@ -253,8 +257,10 @@ class reviewBtnListener implements ActionListener {
 		}
 
 		/**
-		 * 삭제 리뷰 선택 Dialog에서 리뷰 삭제 동의 버튼에 대한 리스너 삭제 리뷰 선택 Dialog 닫기 선택된 리뷰를 DB에서 삭제, 리뷰
-		 * 삭제 완료 Dialog 생성
+		 * 삭제 리뷰 선택 Dialog에서 리뷰 삭제 동의 버튼에 대한 리스너<br>
+		 * 삭제 리뷰 선택 Dialog 닫기<br>
+		 * 선택된 리뷰를 DB에서 삭제<br>
+		 * 리뷰 삭제 완료 Dialog 생성
 		 */
 		class delRcheckListener implements ActionListener {
 
@@ -336,7 +342,8 @@ class reviewBtnListener implements ActionListener {
 			}
 
 			/**
-			 * 체크박스 선택이 없음을 알리는 Dialog에서 OK 버튼에 대한 리스너 체크박스 선택이 없음을 알리는 Dialog 닫기
+			 * 체크박스 선택이 없음을 알리는 Dialog에서 OK 버튼에 대한 리스너<br>
+			 * 체크박스 선택이 없음을 알리는 Dialog 닫기
 			 */
 			class deleBDlgListener implements ActionListener {
 
@@ -347,7 +354,8 @@ class reviewBtnListener implements ActionListener {
 			}
 
 			/**
-			 * 리뷰 삭제 완료 dialog에서 OK 버튼에 대한 리스너 리뷰 삭제 완료 dialog 닫기
+			 * 리뷰 삭제 완료 dialog에서 OK 버튼에 대한 리스너<br>
+			 * 리뷰 삭제 완료 dialog 닫기
 			 */
 			class deleODlgListener implements ActionListener {
 

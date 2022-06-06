@@ -12,7 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 /**
- * 마이페이지 버튼에 대한 리스너 마이페이지 Dialog 창 생성
+ * 마이페이지 버튼에 대한 리스너<br> 
+ * 마이페이지 Dialog 창 생성
  * 
  * @author sonab
  */

@@ -23,7 +23,9 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 /**
- * 예매 티켓 조회 버튼에 대한 리스너 예매 티켓 정보 DB에서 검색, 티켓 정보를 보여주는 예매 티켓 조회 dialog 생성
+ * 예매 티켓 조회 버튼에 대한 리스너<br>
+ * 예매 티켓 정보 DB에서 검색<br>
+ * 티켓 정보를 보여주는 예매 티켓 조회 dialog 생성
  * 
  * @author sonab
  * 
@@ -129,7 +131,8 @@ class checkTicketListener implements ActionListener {
 	}
 
 	/**
-	 * 예매 티켓 조회 Dialog에서 CLOSE 버튼에 대한 리스너 예매 티켓 조회 Dialog 닫기
+	 * 예매 티켓 조회 Dialog에서 CLOSE 버튼에 대한 리스너<br>
+	 * 예매 티켓 조회 Dialog 닫기
 	 */
 	class delePDlgListener implements ActionListener {
 
@@ -140,15 +143,17 @@ class checkTicketListener implements ActionListener {
 	}
 
 	/**
-	 * 체크박스를 하나도 체크하지 않을 경우를 확인하기 위한 클래스 체크박스를 하나도 선택하지 않았을 경우 num == 0, 적어도 하나 선택한
-	 * 경우 num != 0
+	 * 체크박스를 하나도 체크하지 않을 경우를 확인하기 위한 클래스<br>
+	 * 체크박스를 하나도 선택하지 않았을 경우 num == 0, 적어도 하나 선택한 경우 num != 0
 	 */
 	class TerrorC {
 		static int num = 0;
 	}
 
 	/**
-	 * 예매 티켓 조회 Dialog에서 예매 취소 버튼에 대한 리스너 예매 티켓 조회 Dialog 닫기 예매 취소 티켓 선택 Dialog 생성
+	 * 예매 티켓 조회 Dialog에서 예매 취소 버튼에 대한 리스너<br>
+	 * 예매 티켓 조회 Dialog 닫기<br> 
+	 * 예매 취소 티켓 선택 Dialog 생성
 	 */
 
 	class cancelTicketBtnListener implements ActionListener {
@@ -208,7 +213,8 @@ class checkTicketListener implements ActionListener {
 		}
 
 		/**
-		 * 예매 취소 티켓 선택 Dialog에서 CLOSE 버튼에 대한 리스너 예매 취소 티켓 선택 Dialog 닫기
+		 * 예매 취소 티켓 선택 Dialog에서 CLOSE 버튼에 대한 리스너<br>
+		 * 예매 취소 티켓 선택 Dialog 닫기
 		 */
 
 		class deleSDlgListener implements ActionListener {
@@ -250,8 +256,10 @@ class checkTicketListener implements ActionListener {
 		}
 
 		/**
-		 * 예매 취소 티켓 선택 Dialog에서 예매 취소 동의 버튼에 대한 리스너 예매 취소 티켓 선택 Dialog 닫기 선택된 예매 티켓을
-		 * DB에서 삭제, 예매 취소 완료 Dialog 생성
+		 * 예매 취소 티켓 선택 Dialog에서 예매 취소 동의 버튼에 대한 리스너<br>
+		 * 예매 취소 티켓 선택 Dialog 닫기<br> 
+		 * 선택된 예매 티켓을 DB에서 삭제<br>
+		 * 예매 취소 완료 Dialog 생성
 		 */
 
 		class delTcheckListener implements ActionListener {
@@ -334,7 +342,8 @@ class checkTicketListener implements ActionListener {
 			}
 
 			/**
-			 * 체크박스 선택이 없음을 알리는 Dialog에서 OK 버튼에 대한 리스너 체크박스 선택이 없음을 알리는 Dialog 닫기
+			 * 체크박스 선택이 없음을 알리는 Dialog에서 OK 버튼에 대한 리스너<br>
+			 * 체크박스 선택이 없음을 알리는 Dialog 닫기
 			 */
 			class deleEDlgListener implements ActionListener {
 
@@ -345,7 +354,8 @@ class checkTicketListener implements ActionListener {
 			}
 
 			/**
-			 * 예매 취소 완료 dialog에서 OK 버튼에 대한 리스너 예매 취소 완료 dialog 닫기
+			 * 예매 취소 완료 dialog에서 OK 버튼에 대한 리스너<br>
+			 * 예매 취소 완료 dialog 닫기
 			 */
 
 			class deleTDlgListener implements ActionListener {
