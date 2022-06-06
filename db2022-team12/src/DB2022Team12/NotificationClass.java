@@ -27,6 +27,7 @@ class NotificationClass {
 		notifDialog.setTitle(title);
 		notifDialog.setSize(200, 100);
 		notifDialog.setLayout(new GridLayout(2, 1));
+		notifDialog.setLocationRelativeTo(null);
 
 		JLabel notifLabel = new JLabel(msg);
 		notifDialog.add(notifLabel);

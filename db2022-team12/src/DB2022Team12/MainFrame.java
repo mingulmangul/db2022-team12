@@ -1,7 +1,8 @@
 package DB2022Team12;
 
 import java.awt.Container;
-import java.awt.GridLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
 
 import javax.swing.JFrame;
 
@@ -17,23 +18,32 @@ class MainFrame extends JFrame {
 	 * 메인 프레임의 레이아웃을 설정합니다.
 	 */
 	public MainFrame() {
-		setTitle("프로그램");
+		setTitle("뮤지컬 예매 프로그램");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(500, 500);
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
 
 		Container contentPane = getContentPane();
-		contentPane.setLayout(new GridLayout(5, 1));
+		contentPane.setLayout(new GridBagLayout());
+
+		GridBagConstraints gbc1 = new GridBagConstraints();
+		gbc1.gridx = 0;
+		gbc1.gridy = 0;
+		gbc1.weightx = 1;
+		gbc1.weighty = 0.1;
+		gbc1.fill = GridBagConstraints.BOTH;
 
 		AuthenticationPanel authPanel = new AuthenticationPanel();
+		contentPane.add(authPanel, gbc1);
 
-		Musical musical = new Musical("최후진술");
-		TicketPanel ticketPanel = new TicketPanel(musical);
-		ReviewInsertionPanel reviewInsertionPanel = new ReviewInsertionPanel(musical);
-		// MusicalPanel musical = new MusicalPanel();
+		GridBagConstraints gbc2 = new GridBagConstraints();
+		gbc2.gridx = 0;
+		gbc2.gridy = 1;
+		gbc2.weightx = 1;
+		gbc2.weighty = 0.9;
+		gbc2.fill = GridBagConstraints.BOTH;
 
-		contentPane.add(authPanel);
-		contentPane.add(ticketPanel);
-		contentPane.add(reviewInsertionPanel);
+		MusicalPanel musicalPanel = new MusicalPanel();
+		contentPane.add(musicalPanel, gbc2);
 
 		setVisible(true);
 	}

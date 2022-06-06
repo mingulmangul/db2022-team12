@@ -47,6 +47,7 @@ class checkTicketListener implements ActionListener {
 		checkTicketDialog.setSize(450, 250);
 		checkTicketDialog.setTitle("예매 티켓 조회");
 		checkTicketDialog.setLayout(new BorderLayout());
+		checkTicketDialog.setLocationRelativeTo(null);
 
 		// 사용자 이름 출력 Label
 		myInfoLabel = new JLabel(User.getName() + "님의 TICKET", SwingConstants.CENTER);
@@ -174,6 +175,7 @@ class checkTicketListener implements ActionListener {
 			deleTAgreeDialog.setSize(450, 250);
 			deleTAgreeDialog.setTitle("예매 취소 티켓 선택");
 			deleTAgreeDialog.setLayout(new BorderLayout());
+			deleTAgreeDialog.setLocationRelativeTo(null);
 
 			// 예매 취소 티켓 선택 안내 Label
 			explainTLabel = new JLabel("예매를 취소할 티켓을 선택하세요.", SwingConstants.CENTER);
@@ -274,6 +276,7 @@ class checkTicketListener implements ActionListener {
 					delTcheckDialog = new JDialog();
 					delTcheckDialog.setSize(250, 120);
 					delTcheckDialog.setLayout(new BorderLayout());
+					delTcheckDialog.setLocationRelativeTo(null);
 
 					XTLabel = new JLabel("하나 이상의 체크박스를 선택하세요.", SwingConstants.CENTER);
 					delTcheckDialog.add(XTLabel, BorderLayout.CENTER);
@@ -292,6 +295,7 @@ class checkTicketListener implements ActionListener {
 					delTcheckDialog = new JDialog();
 					delTcheckDialog.setSize(120, 100);
 					delTcheckDialog.setLayout(new BorderLayout());
+					delTcheckDialog.setLocationRelativeTo(null);
 
 					/**
 					 * ticket DELETE

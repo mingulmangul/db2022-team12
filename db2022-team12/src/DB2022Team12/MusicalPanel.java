@@ -1,5 +1,8 @@
 package DB2022Team12;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,13 +25,13 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-
 /**
  * 뮤지컲패널<br/>
  * 가격,평균별점 두가지 필터를 사용해 뮤지컬을 검색할 수 있다.<br/>
  * 뮤지컬리스트에서 뮤지컬을 클릭하면 상세정보 창으로 연결된다.<br/>
  * 상세정보창에서는 뮤지컬의 제목, 극장, 가격, 줄거리, 평균별점을 조회할 수 있다.<br/>
  * 상세정보창에서 예매하기 버튼을 누르면 티켓예매창으로 연결된다.
+ * 
  * @author soominkim
  */
 public class MusicalPanel extends JPanel {
@@ -66,7 +69,7 @@ public class MusicalPanel extends JPanel {
 	private final String PRICE3_SCORE_VIEW = "SELECT distinct musical.title, musical.summary FROM db2022_musical as musical, (SELECT price.title, price.summary FROM db2022_over_15 as price, db2022_avg_rate as review WHERE price.title = review.title and review.score>=?) as pricexscore WHERE musical.title = pricexscore.title";
 
 	private JPanel searchPanel, listPanel;
-	private JLabel searchLabel, fakeLabel1, fakeLabel2, fakeLabel3;
+	private JLabel searchLabel;
 	private JLabel titleLabel, theaterLabel, priceLabel, summaryLabel, reviewLabel;
 	private JButton searchBtn;
 	private JRadioButton under10Btn, bw1015Btn, over15Btn, allBtn;
@@ -85,6 +88,7 @@ public class MusicalPanel extends JPanel {
 	public Vector<String> getMusicals(String query) {
 		Connection conn;
 		Vector<String> musicalList = new Vector<String>();
+		musicalList.add(String.format("%-20s", "[뮤지컬]") + "줄거리");
 		try {
 			conn = new ConnectionClass().getConnection();
 			PreparedStatement preStmt = conn.prepareStatement(query);
@@ -92,15 +96,15 @@ public class MusicalPanel extends JPanel {
 			// Fetch each row from the result set
 			while (res.next()) {
 				String title = res.getString("Title");
+				title = String.format("%-10s", "[" + title + "]");
 				String summary = res.getString("Summary");
 
-				musicalList.add(title + "  " + summary + " 보러가기 ");
+				musicalList.add(title + summary);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (musicalList.isEmpty()) {
+		if (musicalList.size() == 1) {
 			musicalList.add("검색하신 뮤지컬이 존재하지 않습니다.");
 		}
 		return musicalList;
@@ -117,6 +121,7 @@ public class MusicalPanel extends JPanel {
 	public Vector<String> getMusicals(String query, String searchkey) {
 		Connection conn;
 		Vector<String> musicalList = new Vector<String>();
+		musicalList.add(String.format("%-20s", "[뮤지컬]") + "줄거리");
 		try {
 			conn = new ConnectionClass().getConnection();
 			PreparedStatement preStmt = conn.prepareStatement(query);
@@ -126,15 +131,15 @@ public class MusicalPanel extends JPanel {
 			// Fetch each row from the result set
 			while (res.next()) {
 				String title = res.getString("Title");
+				title = String.format("%-10s", "[" + title + "]");
 				String summary = res.getString("Summary");
 
-				musicalList.add(title + "  " + summary + " 보러가기 ");
+				musicalList.add(title + summary);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (musicalList.isEmpty()) {
+		if (musicalList.size() == 1) {
 			musicalList.add("검색하신 뮤지컬이 존재하지 않습니다.");
 		}
 		return musicalList;
@@ -151,6 +156,7 @@ public class MusicalPanel extends JPanel {
 	public Vector<String> getMusicals(String query, int reviewScore) {
 		Connection conn;
 		Vector<String> musicalList = new Vector<String>();
+		musicalList.add(String.format("%-20s", "[뮤지컬]") + "줄거리");
 		try {
 			conn = new ConnectionClass().getConnection();
 			PreparedStatement preStmt = conn.prepareStatement(query);
@@ -160,15 +166,15 @@ public class MusicalPanel extends JPanel {
 			// Fetch each row from the result set
 			while (res.next()) {
 				String title = res.getString("Title");
+				title = String.format("%-10s", "[" + title + "]");
 				String summary = res.getString("Summary");
 
-				musicalList.add(title + "  " + summary + " 보러가기 ");
+				musicalList.add(title + summary);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (musicalList.isEmpty()) {
+		if (musicalList.size() == 1) {
 			musicalList.add("검색하신 뮤지컬이 존재하지 않습니다.");
 		}
 		return musicalList;
@@ -186,6 +192,7 @@ public class MusicalPanel extends JPanel {
 	public Vector<String> getMusicals(String query, int reviewScore, String searchkey) {
 		Connection conn;
 		Vector<String> musicalList = new Vector<String>();
+		musicalList.add(String.format("%-20s", "[뮤지컬]") + "줄거리");
 		try {
 			conn = new ConnectionClass().getConnection();
 			PreparedStatement preStmt = conn.prepareStatement(query);
@@ -196,15 +203,15 @@ public class MusicalPanel extends JPanel {
 			// Fetch each row from the result set
 			while (res.next()) {
 				String title = res.getString("Title");
+				title = String.format("%-10s", "[" + title + "]");
 				String summary = res.getString("Summary");
 
-				musicalList.add(title + "  " + summary + " 보러가기 ");
+				musicalList.add(title + summary);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (musicalList.isEmpty()) {
+		if (musicalList.size() == 1) {
 			musicalList.add("검색하신 뮤지컬이 존재하지 않습니다.");
 		}
 		return musicalList;
@@ -212,90 +219,98 @@ public class MusicalPanel extends JPanel {
 
 	public MusicalPanel() {
 
-		this.setLayout(new GridLayout(2, 1));
+		this.setLayout(new BorderLayout());
 
 		searchPanel = new JPanel();
-		this.add(searchPanel);
+		this.add(searchPanel, BorderLayout.NORTH);
 
 		listPanel = new JPanel();
-		this.add(listPanel);
+		this.add(listPanel, BorderLayout.CENTER);
 
-		searchPanel.setLayout(new GridLayout(3, 5));
+		searchPanel.setLayout(new GridLayout(3, 1));
 
-		fakeLabel1 = new JLabel("                ");
-		searchPanel.add(fakeLabel1);
+		JPanel p1 = new JPanel();
+		searchPanel.add(p1);
 
-		searchLabel = new JLabel("뮤지컬 조회 : ");
-		searchPanel.add(searchLabel);
+		searchLabel = new JLabel("뮤지컬 제목:    ");
+		p1.add(searchLabel);
 
-		searchTextField = new JTextField(20);
-		searchPanel.add(searchTextField);
+		searchTextField = new JTextField(55);
+		searchTextField.setPreferredSize(new Dimension(100, 31));
+		p1.add(searchTextField);
 
-		searchBtn = new JButton("Search");
-		searchPanel.add(searchBtn);
+		searchBtn = new JButton("검색");
+		searchBtn.setPreferredSize(new Dimension(60, 30));
+		p1.add(searchBtn);
 		searchBtn.addActionListener(new searchIntegratedListner());
 
-		fakeLabel2 = new JLabel("                ");
-		searchPanel.add(fakeLabel2);
 		// ----------------------------
+
+		JPanel p2 = new JPanel();
+		searchPanel.add(p2);
 
 		ButtonGroup priceGroup = new ButtonGroup();
 
 		allBtn = new JRadioButton("전체", true);
-		searchPanel.add(allBtn);
+		p2.add(allBtn);
 		allBtn.addActionListener(new radioListener());
 		priceGroup.add(allBtn);
 
-		under10Btn = new JRadioButton("~10만원");
-		searchPanel.add(under10Btn);
+		under10Btn = new JRadioButton("~ 100,000");
+		p2.add(under10Btn);
 		under10Btn.addActionListener(new radioListener());
 		priceGroup.add(under10Btn);
 
-		bw1015Btn = new JRadioButton("11만원~15만원");
-		searchPanel.add(bw1015Btn);
+		bw1015Btn = new JRadioButton("100,000 ~ 150,000");
+		p2.add(bw1015Btn);
 		bw1015Btn.addActionListener(new radioListener());
 		priceGroup.add(bw1015Btn);
 
-		over15Btn = new JRadioButton("16만원~");
-		searchPanel.add(over15Btn);
+		over15Btn = new JRadioButton("150,000 ~");
+		p2.add(over15Btn);
 		over15Btn.addActionListener(new radioListener());
 		priceGroup.add(over15Btn);
 
-		fakeLabel3 = new JLabel("                ");
-		searchPanel.add(fakeLabel3);
-
 		// ----------------------------
+
+		JPanel p3 = new JPanel();
+		searchPanel.add(p3);
+
 		ButtonGroup scoreGroup = new ButtonGroup();
 
 		allradio = new JRadioButton("전체", true);
-		searchPanel.add(allradio);
+		p3.add(allradio);
 		allradio.addActionListener(new radioListener());
 		scoreGroup.add(allradio);
 
-		over4radio = new JRadioButton("★★★★ 이상");
-		searchPanel.add(over4radio);
+		over4radio = new JRadioButton("★★★★ ~");
+		p3.add(over4radio);
 		over4radio.addActionListener(new radioListener());
 		scoreGroup.add(over4radio);
 
-		over3radio = new JRadioButton("★★★ 이상");
-		searchPanel.add(over3radio);
+		over3radio = new JRadioButton("★★★ ~");
+		p3.add(over3radio);
 		over3radio.addActionListener(new radioListener());
 		scoreGroup.add(over3radio);
 
-		over2radio = new JRadioButton("★★ 이상");
-		searchPanel.add(over2radio);
+		over2radio = new JRadioButton("★★ ~");
+		p3.add(over2radio);
 		over2radio.addActionListener(new radioListener());
 		scoreGroup.add(over2radio);
 
-		over1radio = new JRadioButton("★ 이상");
-		searchPanel.add(over1radio);
+		over1radio = new JRadioButton("★ ~");
+		p3.add(over1radio);
 		over1radio.addActionListener(new radioListener());
 		scoreGroup.add(over1radio);
 
 		resultList = new JList<String>(getMusicals(LOAD_MUSICAL_QUERY));
+		resultList.setFixedCellWidth(1000);
+		resultList.setFixedCellHeight(30);
 		resultList.addMouseListener(mouseListener);
-		listPanel.add(resultList);
-		listPanel.add(new JScrollPane(resultList));
+
+		JScrollPane scroll = new JScrollPane(resultList);
+		scroll.setPreferredSize(new Dimension(1300, 500));
+		listPanel.add(scroll);
 		setVisible(true);
 	}
 
@@ -451,23 +466,27 @@ public class MusicalPanel extends JPanel {
 				// 제목가져오기
 				String selectedMusical = resultList.getSelectedValue();
 				String[] text = selectedMusical.split(" ");
-				String selectedtitle = text[0].strip();
+				String selectedTitle = text[0].substring(1, text[0].length() - 1);
 
-				System.out.print(selectedtitle);
+				if (selectedTitle.equals("뮤지컬"))
+					return;
 
 				infoDialog = new JDialog();
-				infoDialog.setSize(500, 400);
-				infoDialog.setLayout(new GridLayout(2, 1));
+				infoDialog.setTitle(selectedTitle);
+				infoDialog.setSize(1200, 500);
+				infoDialog.setLayout(new BorderLayout());
+				infoDialog.setLocationRelativeTo(null);
 
-				JPanel topPanel = new JPanel(new GridLayout(5, 1));
+				JPanel topPanel = new JPanel(new GridLayout(6, 1));
 				JPanel botPanel = new JPanel();
 
 				// 뮤지컬 객체에 뮤지컬 리스트에서 클릭한 뮤지컬 정보 저장
-				Musical musical = new Musical(selectedtitle);
+				Musical musical = new Musical(selectedTitle);
 
-				titleLabel = new JLabel("   제목  :  " + musical.getTitle());
+				titleLabel = new JLabel("  [뮤지컬]   " + musical.getTitle());
+				titleLabel.setFont(new Font(null, Font.BOLD, 17));
 				theaterLabel = new JLabel("   극장  :  " + musical.getTheaterName());
-				priceLabel = new JLabel("  가격  :  " + musical.getPrice());
+				priceLabel = new JLabel("   가격  :  " + musical.getPrice());
 				summaryLabel = new JLabel("   줄거리  :  " + musical.getSummary());
 				reviewLabel = new JLabel("   평균별점  :  ★" + musical.getScore());
 
@@ -478,10 +497,13 @@ public class MusicalPanel extends JPanel {
 				topPanel.add(reviewLabel);
 
 				TicketPanel ticketPanel = new TicketPanel(musical);
-				botPanel.add(ticketPanel);
+				topPanel.add(ticketPanel);
 
-				infoDialog.add(topPanel);
-				infoDialog.add(botPanel);
+				ReviewInsertionPanel reviewPanel = new ReviewInsertionPanel(musical);
+				botPanel.add(reviewPanel);
+
+				infoDialog.add(topPanel, BorderLayout.CENTER);
+				infoDialog.add(botPanel, BorderLayout.SOUTH);
 				infoDialog.setVisible(true);
 			}
 		}

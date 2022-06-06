@@ -1,6 +1,10 @@
 package DB2022Team12;
 
+import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -24,11 +28,11 @@ import javax.swing.JTextField;
 class AuthenticationPanel extends JPanel {
 
 	private JDialog signUpDialog;
-	private JPanel authPanel, noticePanel, signInTextFieldPanel;
+	private JPanel authPanel, userPanel, signInTextFieldPanel, noticePanel;
 	private JButton signInBtn, signUpBtn, submitBtn, MypageBtn;
 	private JTextField idField, nameField, phoneField, emailField, addressField;
 	private JPasswordField pwField;
-	private JLabel noticeLabel, idLabel, pwLabel, nameLabel, phoneLabel, emailLabel, addressLabel;
+	private JLabel noticeLabel, idLabel, pwLabel, nameLabel, phoneLabel1, phoneLabel2, emailLabel, addressLabel;
 
 	/** 유저 정보 검색 쿼리 */
 	private final String SIGNIN_QUERY = "SELECT pw, name FROM db2022_member WHERE id = ?";
@@ -41,20 +45,25 @@ class AuthenticationPanel extends JPanel {
 	 * 패널의 레이아웃을 생성합니다.
 	 */
 	public AuthenticationPanel() {
-		this.setLayout(new GridLayout(2, 1));
+		this.setLayout(new BorderLayout());
 
+		userPanel = new JPanel(new BorderLayout());
 		authPanel = new JPanel();
-		noticePanel = new JPanel();
-		signInTextFieldPanel = new JPanel(new GridLayout(2, 3));
+		signInTextFieldPanel = new JPanel(new GridLayout(2, 2));
 
-		noticeLabel = new JLabel();
+		noticePanel = new JPanel();
+		noticeLabel = new JLabel(" ");
+		noticeLabel.setFont(new Font(null, Font.PLAIN, 14));
 		noticePanel.add(noticeLabel);
-		this.add(noticePanel);
+		userPanel.add(noticePanel, JLabel.CENTER);
+		this.add(userPanel, BorderLayout.NORTH);
 
 		idLabel = new JLabel("ID: ");
 		idField = new JTextField();
+		idField.setPreferredSize(new Dimension(150, 25));
 		pwLabel = new JLabel("Password: ");
 		pwField = new JPasswordField();
+		pwField.setPreferredSize(new Dimension(150, 25));
 
 		signInTextFieldPanel.add(idLabel);
 		signInTextFieldPanel.add(idField);
@@ -63,8 +72,10 @@ class AuthenticationPanel extends JPanel {
 
 		signInBtn = new JButton("로그인");
 		signInBtn.addActionListener(new SignInBtnListener());
+		signInBtn.setPreferredSize(new Dimension(85, 50));
 		signUpBtn = new JButton("회원가입");
 		signUpBtn.addActionListener(new SignUpBtnListener());
+		signUpBtn.setPreferredSize(new Dimension(85, 50));
 
 		authPanel.add(signInTextFieldPanel);
 		authPanel.add(signInBtn);
@@ -120,9 +131,16 @@ class AuthenticationPanel extends JPanel {
 							authPanel.setVisible(false);
 							noticeLabel.setText(User.getName() + "님 안녕하세요 :)");
 
+							// 정렬을 위한 빈 공간 추가하기
+							JLabel emptyPanel = new JLabel();
+							emptyPanel.setPreferredSize(new Dimension(110, 25));
+							userPanel.add(emptyPanel, BorderLayout.WEST);
+
+							// 마이페이지 버튼 추가하기
 							MypageBtn = new JButton("마이페이지");
 							MypageBtn.addActionListener(new MypageBtnListener());
-							noticePanel.add(MypageBtn);
+							MypageBtn.setPreferredSize(new Dimension(110, 25));
+							userPanel.add(MypageBtn, BorderLayout.EAST);
 						}
 					}
 				} catch (SQLException sqle) {
@@ -149,48 +167,61 @@ class AuthenticationPanel extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			// 회원가입 Dialog 레이아웃 설정
 			signUpDialog = new JDialog();
-			signUpDialog.setSize(300, 400);
-			signUpDialog.setLayout(new GridLayout(3, 1));
+			signUpDialog.setTitle("회원가입");
+			signUpDialog.setSize(400, 330);
+			signUpDialog.setLayout(new BorderLayout(20, 20));
+			signUpDialog.setLocationRelativeTo(null);
 
 			JPanel noticePanel = new JPanel();
 			JPanel inputPanel = new JPanel(new GridLayout(6, 2));
 			JPanel btnPanel = new JPanel();
 
-			noticeLabel = new JLabel();
+			noticeLabel = new JLabel("회원 정보를 입력해주세요");
 			noticePanel.add(noticeLabel);
 
-			idLabel = new JLabel("ID: ");
+			idLabel = new JLabel("   ID:");
 			idField = new JTextField();
-			pwLabel = new JLabel("Password: ");
-			pwField = new JPasswordField();
-			nameLabel = new JLabel("이름: ");
-			nameField = new JTextField("홍길동");
-			phoneLabel = new JLabel("전화번호: ");
-			phoneField = new JTextField("010-0000-0000");
-			emailLabel = new JLabel("이메일: ");
-			emailField = new JTextField("example@example.com");
-			addressLabel = new JLabel("주소: ");
-			addressField = new JTextField("서울시 서대문구 이화여대길");
 			inputPanel.add(idLabel);
 			inputPanel.add(idField);
+
+			pwLabel = new JLabel("   Password:");
+			pwField = new JPasswordField();
 			inputPanel.add(pwLabel);
 			inputPanel.add(pwField);
+
+			nameLabel = new JLabel("   이름:");
+			nameField = new JTextField();
 			inputPanel.add(nameLabel);
 			inputPanel.add(nameField);
-			inputPanel.add(phoneLabel);
+
+			phoneLabel1 = new JLabel("   전화번호:");
+			phoneLabel2 = new JLabel("   ex: 010-0000-0000");
+			phoneLabel2.setFont(new Font(null, Font.ITALIC, 10));
+			phoneLabel2.setForeground(Color.gray);
+			JPanel phonePanel = new JPanel(new BorderLayout());
+			phonePanel.add(phoneLabel1);
+			phonePanel.add(phoneLabel2, BorderLayout.SOUTH);
+			inputPanel.add(phonePanel);
+			phoneField = new JTextField();
 			inputPanel.add(phoneField);
+
+			emailLabel = new JLabel("   이메일:");
+			emailField = new JTextField();
 			inputPanel.add(emailLabel);
 			inputPanel.add(emailField);
+
+			addressLabel = new JLabel("   주소:");
+			addressField = new JTextField();
 			inputPanel.add(addressLabel);
 			inputPanel.add(addressField);
 
-			submitBtn = new JButton("가입하기");
+			submitBtn = new JButton("   가입하기");
 			submitBtn.addActionListener(new SubmitBtnListener());
 			btnPanel.add(submitBtn);
 
-			signUpDialog.add(noticePanel);
+			signUpDialog.add(noticePanel, BorderLayout.NORTH);
 			signUpDialog.add(inputPanel);
-			signUpDialog.add(btnPanel);
+			signUpDialog.add(btnPanel, BorderLayout.SOUTH);
 			signUpDialog.setVisible(true);
 		}
 

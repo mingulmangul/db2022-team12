@@ -1,5 +1,6 @@
 package DB2022Team12;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -46,13 +47,13 @@ class ReviewInsertionPanel extends JPanel {
 	 */
 	public ReviewInsertionPanel(Musical musical) {
 		this.musical = musical;
-		this.setSize(300, 100);
+		// this.setPreferredSize(new Dimension(1000, 80));
 		this.setLayout(new GridLayout(2, 1));
 
 		noticePanel = new JPanel();
 		reviewPanel = new JPanel();
 
-		noticeLabel = new JLabel("리뷰 등록");
+		noticeLabel = new JLabel("리뷰를 등록해주세요 :)");
 		noticePanel.add(noticeLabel);
 
 		scorePanel = new JPanel();
