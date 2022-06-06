@@ -1,9 +1,12 @@
 package DB2022Team12;
 
 class UserTicket {
+	// 사용자 티켓 정보 저장
 	int ID;
 	String title;
 	String orderDate;
+	
+	// getter & setter
 	
 	int getID() {
 		return ID;
